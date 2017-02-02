@@ -76,6 +76,11 @@ public class JavaFinal extends Application {
          *  3) Determine location based on time-zone information
          */
         loginButton.setOnAction((ActionEvent event) -> {
+            
+            /*
+                Based on the success or failure of the login...
+                launch the other windows
+            */
             System.out.println("Hello there my friend");
             actionTarget.setFill(Color.FIREBRICK);
             actionTarget.setText("Login button pressed");
