@@ -65,7 +65,16 @@ public class JavaFinal extends Application {
         final Text actionTarget = new Text();
         myGrid.add(actionTarget, 1, 6);
         
-        
+        /**
+         * This is the event listener for the login button
+         * Add functionality to:
+         * 
+         *  1) Check for credentials
+         *  2) Use properties file for localization and translation
+         *      of the login success and error based on location
+         *      [Phoenix, Arizona; New York, New York; London, England]
+         *  3) Determine location based on time-zone information
+         */
         loginButton.setOnAction((ActionEvent event) -> {
             System.out.println("Hello there my friend");
             actionTarget.setFill(Color.FIREBRICK);
