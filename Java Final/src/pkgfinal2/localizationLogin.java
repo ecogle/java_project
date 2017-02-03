@@ -1,0 +1,35 @@
+package pkgfinal2;
+
+import java.util.*;
+
+public class localizationLogin {
+    
+    public localizationLogin(Locale locale) {
+        Locale.setDefault(locale);
+    }
+    
+    
+    
+    public static void main(String[] args) {
+        
+        Locale us = new Locale("en","US");
+        Locale fr = new Locale("fr","FR");
+        Locale es = new Locale("es","US");
+        printProperties(us);
+        printProperties(fr);
+        printProperties(es);
+        
+        //list all of the locales
+//        List<Locale> l = Arrays.asList(Locale.getAvailableLocales());
+//        l.stream().map(x -> x.toString()).sorted().forEach(System.out::println);
+    }
+    
+    public static void printProperties(Locale locale){
+        ResourceBundle rb = ResourceBundle.getBundle("login",locale);
+        System.out.println(rb.getString("loginSuccess"));
+        System.out.println(rb.getString("loginFailed"));
+        
+     
+    }
+
+}
