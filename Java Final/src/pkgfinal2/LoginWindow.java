@@ -49,10 +49,19 @@ public class LoginWindow {
         Button btnLogin = new Button("Login");
         btnLogin.setOnAction(e->{
             // verify username and password and login to the screen
+            // if login is successful, log  timestamp to file.
+            if(txtUsername.getText().equals("ecogle")){
+                LogFile.write(txtUsername.getText(),LogEvents.LOGIN);
+            }
+            else
+            {
+                LogFile.write(txtUsername.getText(),LogEvents.LOGINFAIL);
+            }
+            
             
             // track timestamps for user log-in data in a .txt file
             // each record should be appeneded to the log file.
-            
+            window.close();
             
         });
         
