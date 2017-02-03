@@ -1,0 +1,5 @@
+LOGIN	ecogle	Feb 03 2017	2:05PM
+LOGIN	ecogle	Feb 03 2017	2:05PM
+LOGIN	ecogle	Feb 03 2017	2:20PM
+LOGIN	ecogle	Feb 03 2017	2:21PM
+LOGINFAIL	gordonramsay	Feb 03 2017	2:29PM
