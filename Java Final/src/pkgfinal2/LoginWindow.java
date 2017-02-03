@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.util.Locale;
 
 public class LoginWindow {
     
@@ -57,6 +58,8 @@ public class LoginWindow {
             {
                 LogFile.write(txtUsername.getText(),LogEvents.LOGINFAIL);
             }
+            
+            // use localization here
             
             
             // track timestamps for user log-in data in a .txt file
