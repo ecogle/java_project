@@ -49,6 +49,8 @@ public class LoginWindow {
         Button btnLogin = new Button("Login");
         btnLogin.setOnAction(e->{
             // verify username and password and login to the screen
+            // if login is successful, log  timestamp to file.
+            LogFile.write(txtUsername.getText(),LogEvents.LOGIN);
             
             // track timestamps for user log-in data in a .txt file
             // each record should be appeneded to the log file.
