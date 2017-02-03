@@ -19,9 +19,7 @@ public class localizationLogin {
         printProperties(fr);
         printProperties(es);
         
-        //list all of the locales
-//        List<Locale> l = Arrays.asList(Locale.getAvailableLocales());
-//        l.stream().map(x -> x.toString()).sorted().forEach(System.out::println);
+        
     }
     
     public static void printProperties(Locale locale){
