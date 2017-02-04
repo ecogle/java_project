@@ -35,7 +35,7 @@ public class MainScreen extends Application {
     public void start(Stage primaryStage) {
         window = primaryStage;
         window.setTitle("TESTING MAIN PAGE");
-        window.setMaximized(true);
+        //window.setMaximized(true);
         GridPane layout = new GridPane();
         layout.setAlignment(Pos.CENTER);
         Button btnConfirm = new Button("Confirm please...");
@@ -55,9 +55,16 @@ public class MainScreen extends Application {
         btnLogin.setOnAction(e-> {
             new LoginWindow().show();
         });
+
+        //user list
+        Button btnUserList = new Button("User List");
+        btnUserList.setOnAction(event -> {
+            new UserList().display();
+        });
         
         layout.add(btnConfirm,0,0);
         layout.add(btnLogin,1,0);
+        layout.add(btnUserList,2,0);
         
         Scene scene = new Scene(layout,300,250);
         
