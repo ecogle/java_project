@@ -1,13 +1,11 @@
 package pkgfinal2;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -30,9 +28,11 @@ public class LoginWindow {
         message.setPadding(new Insets(0,0,30,0));
         message.setFont(fMessage);
         layout.add(message, 0, 0,2,1);
-        
-        
-        
+
+
+        ChoiceBox cb = new ChoiceBox();
+        cb.setItems(FXCollections.observableArrayList("Spanish","French","English"));
+
         Label lblUsername = new Label("Username: ");
         layout.add(lblUsername, 0, 1);
         
@@ -60,6 +60,8 @@ public class LoginWindow {
             }
             
             // use localization here
+
+
             
             
             // track timestamps for user log-in data in a .txt file
@@ -70,7 +72,7 @@ public class LoginWindow {
         
         
         layout.add(btnLogin, 1, 3);
-        
+        layout.add(cb,1,4);
         Scene scene = new Scene(layout,300,250);
         Platform.runLater(() ->{
             btnLogin.requestFocus();
