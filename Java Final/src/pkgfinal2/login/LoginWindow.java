@@ -90,6 +90,7 @@ public class LoginWindow {
     }
     
     public static boolean checkValidLogin(String username, String passwd){
+        // access the database and verify username and password...
         if(username.equals("ecogle")){
                 LogFile.write(username,LogEvents.LOGIN);
                 return true;
