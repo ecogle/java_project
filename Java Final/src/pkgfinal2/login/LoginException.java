@@ -1,4 +1,4 @@
-package pkgfinal2;
+package pkgfinal2.login;
 
 public class LoginException extends Exception {
     

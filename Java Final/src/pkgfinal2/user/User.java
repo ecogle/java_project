@@ -1,43 +1,43 @@
-package pkgfinal2;
+package pkgfinal2.user;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import pkgfinal2.audit.Audit;
 
 
-public class User {
+public class User extends Audit {
     
-    private SimpleIntegerProperty userId;
-    private SimpleStringProperty userName;
-    private SimpleStringProperty password;
-    private SimpleBooleanProperty active;
-    private SimpleStringProperty createdBy;
-    private SimpleStringProperty createDate;
-    private SimpleStringProperty lastUpdate;
-    private SimpleStringProperty lastUpdatedBy;
+    private SimpleIntegerProperty userId = new SimpleIntegerProperty();
+    private SimpleStringProperty userName = new SimpleStringProperty();
+    private SimpleStringProperty password = new SimpleStringProperty();
+    private SimpleBooleanProperty active = new SimpleBooleanProperty();
 
-
-    public User(String username,boolean active,String createdBy){
-        this.userName= new SimpleStringProperty(username);
-
-        this.active = new SimpleBooleanProperty(active);
-        this.createdBy = new SimpleStringProperty(createdBy);
-
+    public User(){
+        super();
     }
-    public SimpleIntegerProperty getUserId() {
-        return userId;
+
+    public Integer getUserId() {
+        return userId.get();
     }
 
     public void setUserId(SimpleIntegerProperty userId) {
         this.userId = userId;
     }
 
-    public String getUserName() {
+    public void setUserId(int id){
+        this.userId.set(id);
+    }
+
+    public String getUserName(){
         return userName.get();
     }
 
     public void setUserName(SimpleStringProperty userName) {
         this.userName = userName;
+    }
+
+    public void setUserNameString(String username){
+        this.userName.set(username);
     }
 
     public SimpleStringProperty getPassword() {
@@ -55,15 +55,18 @@ public class User {
     public void setActive(SimpleBooleanProperty active) {
         this.active = active;
     }
+    public void setActiveBoolean(boolean active){
+        this.active.set(active);
+    }
 
     public String getCreatedBy() {
         return createdBy.get();
     }
 
-    public void setCreatedBy(SimpleStringProperty createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy.set(createdBy);
     }
-
+/*
     public SimpleStringProperty getCreateDate() {
         return createDate;
     }
@@ -87,8 +90,10 @@ public class User {
     public void setLastUpdatedBy(SimpleStringProperty lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
     }
+    */
     @Override
     public String toString(){
-        return this.userName.toString() + " " + this.createdBy.toString() + " " + this.active.toString();
+        //return this.userName.toString() + " " + this.getCreatedByProperty().toString() + " " + this.active.toString();
+        return "";
     }
 }

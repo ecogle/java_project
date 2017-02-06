@@ -1,4 +1,4 @@
-package pkgfinal2;
+package pkgfinal2.login;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -10,11 +10,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import java.util.Locale;
+import pkgfinal2.Displayable;
 
-public class LoginWindow {
-    
-    public void show(){
+public class LoginWindow implements Displayable {
+
+    @Override
+    public void display(){
         Stage window = new Stage();
         window.setTitle("Login...");
         window.initModality(Modality.APPLICATION_MODAL);
