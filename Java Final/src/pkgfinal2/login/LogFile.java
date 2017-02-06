@@ -1,9 +1,7 @@
-package pkgfinal2;
+package pkgfinal2.login;
 
 import java.io.*;
 import java.time.*;
-import java.nio.file.*;
-import java.nio.*;
 import java.time.format.DateTimeFormatter;
 
 

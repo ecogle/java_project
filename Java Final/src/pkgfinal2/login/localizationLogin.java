@@ -1,4 +1,4 @@
-package pkgfinal2;
+package pkgfinal2.login;
 
 import java.util.*;
 
@@ -11,14 +11,16 @@ public class localizationLogin {
     
     
     public static void main(String[] args) {
-        
+        Locale defLocale = Locale.getDefault();
+
         Locale us = new Locale("en","US");
         Locale fr = new Locale("fr","FR");
         Locale es = new Locale("es","US");
         printProperties(us);
         printProperties(fr);
         printProperties(es);
-        
+
+        System.out.println(defLocale.equals(us) + " " + defLocale.equals(fr));
         
     }
     
