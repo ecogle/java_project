@@ -10,12 +10,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import pkgfinal2.Displayable;
+import pkgfinal2.MainScreen;
 
-public class LoginWindow implements Displayable {
 
-    @Override
+public class LoginWindow {
+    private boolean success=false;
+    
+    
     public void display(){
+        
         Stage window = new Stage();
         window.setTitle("Login...");
         window.initModality(Modality.APPLICATION_MODAL);
@@ -50,24 +53,26 @@ public class LoginWindow implements Displayable {
         
         Button btnLogin = new Button("Login");
         btnLogin.setOnAction(e->{
-            // verify username and password and login to the screen
-            // if login is successful, log  timestamp to file.
-            if(txtUsername.getText().equals("ecogle")){
-                LogFile.write(txtUsername.getText(),LogEvents.LOGIN);
+            try{
+                success = checkValidLogin(txtUsername.getText(), passPassword.getText());
+                if(success){
+                    MainScreen.setAuthUser(txtUsername.getText());
+                    window.close();
+                }
+                else{
+                    throw new LoginException();
+                }
             }
-            else
-            {
-                LogFile.write(txtUsername.getText(),LogEvents.LOGINFAIL);
+            catch(LoginException h){
+                Alert alt = new Alert(Alert.AlertType.ERROR);
+                alt.setHeaderText("LOGIN FAILURE");
+                alt.setContentText("Username and/or password are incorrect.\nPlease try again");
+                alt.showAndWait();
+                txtUsername.setText("");
+                txtUsername.requestFocus();
+                passPassword.setText("");
+                
             }
-            
-            // use localization here
-
-
-            
-            
-            // track timestamps for user log-in data in a .txt file
-            // each record should be appeneded to the log file.
-            window.close();
             
         });
         
@@ -81,7 +86,19 @@ public class LoginWindow implements Displayable {
         window.setScene(scene);
         window.showAndWait();
         
+        //return success;
         
-        
+    }
+    
+    public static boolean checkValidLogin(String username, String passwd){
+        if(username.equals("ecogle")){
+                LogFile.write(username,LogEvents.LOGIN);
+                return true;
+            }
+            else
+            {
+                LogFile.write(username,LogEvents.LOGINFAIL);
+                return false;
+            }            
     }
 }
