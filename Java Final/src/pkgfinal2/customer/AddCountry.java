@@ -66,14 +66,20 @@ public class AddCountry implements Displayable {
 
         btnAdd.setOnAction(e -> {
             try {
-                PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement("insert into U03PfE.country (countryId,country,createDate)" +
-                        "values (?,?,?)");
-                pstmnt.setInt(1, getNextId());
-                pstmnt.setString(2, txtCountry.getText());
-                pstmnt.setString(3, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd")));
-                pstmnt.execute();
+                LocalDate nowDate = LocalDate.now();
+                String date = nowDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+                Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+                String sql = "insert into U03PfE.country (countryId,country,createDate) values (" + getNextId() + ",'"+txtCountry.getText() + "'," + "'"+date+"')";
+                stmnt.execute(sql);
+                //PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement("insert into U03PfE.country (countryId,country,createDate)" +
+                //        "values (?,?,?)");
+                //pstmnt.setInt(1, getNextId());
+                //pstmnt.setString(2, txtCountry.getText());
+                //pstmnt.setString(3, nowDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+                //System.out.println(pstmnt.toString());
+                //pstmnt.execute();
             } catch (SQLException f) {
-                f.printStackTrace();
+                System.out.println("There has been an error with the SQL statement");
             }
             window.close();
         });
