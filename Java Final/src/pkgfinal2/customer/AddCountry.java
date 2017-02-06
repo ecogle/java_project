@@ -8,14 +8,24 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
+import pkgfinal2.MySQLDatabase;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Adds a country to the database
  */
 public class AddCountry implements Displayable {
     Stage window;
+    private static int countryID;
+
     @Override
-    public void display(){
+    public void display() {
         window = new Stage();
         window.setTitle("Add Country");
 
@@ -35,47 +45,64 @@ public class AddCountry implements Displayable {
         layout.setHgap(10);
         layout.setVgap(10);
         //layout.setGridLinesVisible(true);
-        layout.setPadding(new Insets(20,0,20,20));
-        layout.add(lblCountryName,0,0);
-        layout.add(txtCountry,1,0);
+        layout.setPadding(new Insets(20, 0, 20, 20));
+        layout.add(lblCountryName, 0, 0);
+        layout.add(txtCountry, 1, 0);
         Separator sep = new Separator();
-        layout.add(sep,0,2,2,1);
+        layout.add(sep, 0, 2, 2, 1);
 
-        layout.add(btnClear,0,3);
+        layout.add(btnClear, 0, 3);
 
-        HBox hb=new HBox();
+        HBox hb = new HBox();
         hb.setAlignment(Pos.CENTER_RIGHT);
         hb.getChildren().add(btnAdd);
-        layout.add(hb,1,3);
+        layout.add(hb, 1, 3);
 
         // Clear Button actions
-        btnClear.setOnAction(e->{
+        btnClear.setOnAction(e -> {
             txtCountry.setText("");
             txtCountry.requestFocus();
         });
 
-        btnAdd.setOnAction(e->{
-            Alert alrt = new Alert(Alert.AlertType.INFORMATION);
-            alrt.setHeaderText("Coming Soon!");
-            alrt.setTitle("Under development...");
-
-            alrt.setContentText("Providing functionality for error checking input\n" +
-                    "and inserting the value into the database");
-            alrt.showAndWait();
+        btnAdd.setOnAction(e -> {
+            try {
+                PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement("insert into U03PfE.country (countryId,country,createDate)" +
+                        "values (?,?,?)");
+                pstmnt.setInt(1, getNextId());
+                pstmnt.setString(2, txtCountry.getText());
+                pstmnt.setString(3, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd")));
+                pstmnt.execute();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
             window.close();
         });
-
-
 
         Scene scene= new Scene(layout,275,125);
         window.setScene(scene);
         window.show();
-
-
     }
 
-    public static void main(String[] args) {
-       AddCountry m = new AddCountry();
-       m.display();
+
+    private static int getNextId() {
+        int c = 0;
+        int x = -1;
+        try {
+            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+            String sql = "Select count(country) as myInt from country;";
+            ResultSet rs = stmnt.executeQuery(sql);
+            if(rs.next()){
+                x = rs.getInt("myInt");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ++x;
     }
+
+
+
+
 }
+
+
