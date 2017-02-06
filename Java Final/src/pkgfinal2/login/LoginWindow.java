@@ -37,6 +37,7 @@ public class LoginWindow {
         ChoiceBox cb = new ChoiceBox();
         cb.setItems(FXCollections.observableArrayList("Spanish","French","English"));
 
+        //sets up the controls
         Label lblUsername = new Label("Username: ");
         layout.add(lblUsername, 0, 1);
         
@@ -51,10 +52,15 @@ public class LoginWindow {
         passPassword.setPromptText("password");
         layout.add(passPassword, 1, 2);
         
+        //functionality of the login button
         Button btnLogin = new Button("Login");
         btnLogin.setOnAction(e->{
             try{
+                //validates the login
                 success = checkValidLogin(txtUsername.getText(), passPassword.getText());
+                //if login is successful, do stuff
+                // need to add the localization stuff for the alert box.
+                // throws exception if the login fails.
                 if(success){
                     MainScreen.setAuthUser(txtUsername.getText());
                     window.close();
@@ -70,13 +76,9 @@ public class LoginWindow {
                 alt.showAndWait();
                 txtUsername.setText("");
                 txtUsername.requestFocus();
-                passPassword.setText("");
-                
-            }
-            
+                passPassword.setText("");                
+            }            
         });
-        
-        
         layout.add(btnLogin, 1, 3);
         layout.add(cb,1,4);
         Scene scene = new Scene(layout,300,250);
@@ -85,9 +87,6 @@ public class LoginWindow {
         });
         window.setScene(scene);
         window.showAndWait();
-        
-        //return success;
-        
     }
     
     public static boolean checkValidLogin(String username, String passwd){
