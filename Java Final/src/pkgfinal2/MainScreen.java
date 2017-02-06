@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -17,19 +18,29 @@ import pkgfinal2.login.LoginWindow;
 import pkgfinal2.user.UserList;
 
 /**
- *
+ * Main entry-point for the application. Login screen will pop-up as soon as main
+ * screen loads. Nothing will be visible until the user authenticates. Once the
+ * user authenticates, the authenticated username will be displayed discretely 
+ * on the screen somewhere and then the main screen will be populated with the 
+ * controls.
+ * 
+ * 
  * @author ecogle
  */
 public class MainScreen extends Application {
     Stage window;
+    private static String authUserString=null;
+    boolean loginSuccedded = false;
+    
     
     @Override
     public void start(Stage primaryStage) {
         window = primaryStage;
         window.setTitle("TESTING MAIN PAGE");
         //window.setMaximized(true);
+        Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
         GridPane layout = new GridPane();
-        //layout.setGridLinesVisible(true);
+        layout.setGridLinesVisible(true);
         layout.setHgap(8);
         layout.setVgap(10);
         layout.setAlignment(Pos.CENTER);
@@ -46,9 +57,18 @@ public class MainScreen extends Application {
         });
         
         //Login screen
+        /*
+        
+        */
         Button btnLogin = new Button("Show login");
         btnLogin.setOnAction(e-> {
-            new LoginWindow().display();
+            LoginWindow liwin = new LoginWindow(); //instantiates the login window
+            liwin.display(); //displays the login window
+            if(MainScreen.getAuthUser()!= null){
+                //displays the username if authenticated properly
+                lblAuthUserLabel.setText(MainScreen.getAuthUser());
+            }
+            
         });
 
         //user list
@@ -74,6 +94,8 @@ public class MainScreen extends Application {
         btnAddAddress.setOnAction(e->{
             new AddAddress().display();
         });
+        
+        
 
         VBox vbox1 = new VBox();
         vbox1.setSpacing(8);
@@ -86,8 +108,9 @@ public class MainScreen extends Application {
         vbox2.getChildren().add(btnAddCountry);
         vbox2.getChildren().addAll(btnAddAddress);
 
-        layout.add(vbox1,0,0);
-        layout.add(vbox2,1,0);
+        layout.add(vbox1,0,1);
+        layout.add(vbox2,1,1);
+        layout.add(lblAuthUserLabel, 4, 0);
         Scene scene = new Scene(layout,300,250);
         
         
@@ -95,12 +118,26 @@ public class MainScreen extends Application {
         window.show();
         
     }
+    
+    //making it immutable
+//    public static Map<String,String> getCredentials(){
+//        Map<String,String> temp = new TreeMap<>();
+//        temp = credentials;
+//        return temp;
+//    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
+    }
+    public static void setAuthUser(String user){
+        authUserString = user;
+    }
+    
+    public static String getAuthUser(){
+        return authUserString;
     }
     
 }
