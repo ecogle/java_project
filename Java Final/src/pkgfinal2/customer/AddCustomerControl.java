@@ -57,6 +57,8 @@ public class AddCustomerControl {
 
     public static void countryWork(String str){
         CountryController c = new CountryController(str);
+        System.out.println(c.getMyCountry().getCountryId());
+
 
     }
     //country work

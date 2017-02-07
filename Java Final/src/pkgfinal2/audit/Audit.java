@@ -23,7 +23,7 @@ public class Audit {
         this.lastUpdatedBy.set(user);
     }
 
-    public String getCreateDateString(){
+    public String getCreateDate(){
         return this.createDate.get();
     }
     public SimpleStringProperty getCreateDateProperty(){
