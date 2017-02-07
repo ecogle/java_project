@@ -40,7 +40,7 @@ public class MainScreen extends Application {
         //window.setMaximized(true);
         Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
         GridPane layout = new GridPane();
-        layout.setGridLinesVisible(true);
+        //layout.setGridLinesVisible(true);
         layout.setHgap(8);
         layout.setVgap(10);
         layout.setAlignment(Pos.CENTER);
