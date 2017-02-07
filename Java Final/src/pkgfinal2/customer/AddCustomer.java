@@ -20,7 +20,7 @@ import pkgfinal2.audit.Audit;
  *  do the same for the city and address
  */
 public class AddCustomer extends Audit implements Displayable {
-
+    private static int countryId;
     @Override
     public void display(){
 
@@ -111,7 +111,12 @@ public class AddCustomer extends Audit implements Displayable {
         btnGridPane.setHgap(8);
         
         gpControls.add(btnGridPane, 1, 9);
-        
+
+        //provide functionality for the ADD button
+        int x;
+        btnAdd.setOnAction(event -> {
+            AddCustomerControl.countryWork(txtCountry.getText());
+        });
         
         
         layout.setCenter(gpControls);
