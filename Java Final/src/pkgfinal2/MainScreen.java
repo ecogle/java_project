@@ -77,13 +77,13 @@ public class MainScreen extends Application {
             new UserList().display();
         });
 
-        //Add Customer
+        //Add Country
         Button btnAddCountry = new Button("Add country");
         btnAddCountry.setOnAction(e->{
             new AddCountry().display();
         });
 
-        //Add Customer
+        //Add City
         Button btnAddCity = new Button("Add city");
         btnAddCity.setOnAction(e->{
             new AddCity().display();
@@ -93,6 +93,12 @@ public class MainScreen extends Application {
         Button btnAddAddress = new Button("Add address");
         btnAddAddress.setOnAction(e->{
             new AddAddress().display();
+        });
+
+        //add Customer
+        Button btnAddCustomer = new Button("Add Customer");
+        btnAddCustomer.setOnAction(event -> {
+            new AddCustomer().display();
         });
         
         
@@ -104,9 +110,10 @@ public class MainScreen extends Application {
         vbox1.getChildren().add(btnConfirm);
         vbox1.getChildren().add(btnLogin);
         vbox1.getChildren().add(btnAddCity);
+        vbox1.getChildren().add(btnAddCustomer);
         vbox2.getChildren().add(btnUserList);
         vbox2.getChildren().add(btnAddCountry);
-        vbox2.getChildren().addAll(btnAddAddress);
+        vbox2.getChildren().add(btnAddAddress);
 
         layout.add(vbox1,0,1);
         layout.add(vbox2,1,1);
