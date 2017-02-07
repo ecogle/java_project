@@ -1,6 +1,7 @@
 package pkgfinal2.customer;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -52,9 +53,15 @@ public class AddCustomer extends Audit implements Displayable {
 
         TextField txtCountry = new TextField();
         txtCountry.setPromptText("Country");
+        
+        TextField txtPhoneNumber= new TextField();
+        txtPhoneNumber.setPromptText("Phone number");
 
         CheckBox chkActive = new CheckBox("Active");
         chkActive.setSelected(false);
+        
+        Button btnReset = new Button("Reset");
+        Button btnAdd = new Button("Add");
 
         // borderpane for the overall layout of the screen
         BorderPane layout = new BorderPane();
@@ -77,9 +84,36 @@ public class AddCustomer extends Audit implements Displayable {
         layout.setTop(hbxMenu);
 
         GridPane gpControls = new GridPane();
-        gpControls
+        gpControls.setPadding(new Insets(10));
+        gpControls.setHgap(15);
+        gpControls.setVgap(8);
         gpControls.add(lblCustomerName,0,0);
         gpControls.add(txtCustomerName,1,0);
+        gpControls.add(lblAddress1, 0, 1);
+        gpControls.add(txtAddress1, 1, 1);
+        gpControls.add(lblAddress2,0,2);
+        gpControls.add(txtAddress2,1,2);
+        gpControls.add(lblCity, 0, 3);
+        gpControls.add(txtCity, 1, 3);
+        gpControls.add(lblCountry, 0, 4);
+        gpControls.add(txtCountry, 1, 4);
+        gpControls.add(lblPhoneNumber, 0, 5);
+        gpControls.add(txtPhoneNumber, 1, 5);
+        gpControls.add(lblZipCode, 0, 6);
+        gpControls.add(txtZip, 1, 6);
+        gpControls.add(lblActive, 0, 7);
+        gpControls.add(chkActive, 1, 7);
+        
+        
+        GridPane btnGridPane = new GridPane();
+        btnGridPane.add(btnReset, 0, 0);
+        btnGridPane.add(btnAdd, 1, 0);
+        btnGridPane.setHgap(8);
+        
+        gpControls.add(btnGridPane, 1, 9);
+        
+        
+        
         layout.setCenter(gpControls);
 
         Scene scene = new Scene(layout,450,400);
