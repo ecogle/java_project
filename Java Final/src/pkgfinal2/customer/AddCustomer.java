@@ -1,7 +1,12 @@
 package pkgfinal2.customer;
 
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.audit.Audit;
@@ -27,6 +32,60 @@ public class AddCustomer extends Audit implements Displayable {
         Label lblCity = new Label("City: ");
         Label lblZipCode = new Label("Zip: ");
         Label lblPhoneNumber = new Label("Phone #: ");
+        Label lblCountry = new Label("Country: ");
+        Label lblActive = new Label("Active?");
+
+        TextField txtCustomerName = new TextField();
+        txtCustomerName.setPromptText("Customer name");
+
+        TextField txtAddress1 = new TextField();
+        txtAddress1.setPromptText("Address");
+
+        TextField txtAddress2 = new TextField();
+        txtAddress2.setPromptText("Address2");
+
+        TextField txtCity = new TextField();
+        txtCity.setPromptText("City");
+
+        TextField txtZip = new TextField();
+        txtZip.setPromptText("Zip");
+
+        TextField txtCountry = new TextField();
+        txtCountry.setPromptText("Country");
+
+        CheckBox chkActive = new CheckBox("Active");
+        chkActive.setSelected(false);
+
+        // borderpane for the overall layout of the screen
+        BorderPane layout = new BorderPane();
+        MenuBar custMenu = new MenuBar();
+
+        //binds the width of the menubar to the width of the scene
+        custMenu.prefWidthProperty().bind(window.widthProperty());
+
+        Menu mnuFile = new Menu("File");
+        MenuItem fileNew = new MenuItem("New");
+        MenuItem fileSave = new MenuItem("Save");
+        MenuItem fileSaveAs = new MenuItem("Save As...");
+        Menu mnuEdit = new Menu("Edit");
+        Menu mnuView = new Menu("View");
+
+        mnuFile.getItems().addAll(fileNew,fileSave,fileSaveAs);
+        custMenu.getMenus().addAll(mnuFile,mnuEdit,mnuView);
+        HBox hbxMenu = new HBox();
+        hbxMenu.getChildren().add(custMenu);
+        layout.setTop(hbxMenu);
+
+        GridPane gpControls = new GridPane();
+        gpControls
+        gpControls.add(lblCustomerName,0,0);
+        gpControls.add(txtCustomerName,1,0);
+        layout.setCenter(gpControls);
+
+        Scene scene = new Scene(layout,450,400);
+
+        window.setScene(scene);
+        window.show();
 
     }
 
