@@ -26,7 +26,7 @@ public class CityController {
      * the textfield.
      * @param str text from the txtCity control
      */
-    public CityController(String str){
+    public CityController(String str,int countryId){
 
         /*
             if the city does not exist, get the max value of the existing
@@ -36,9 +36,9 @@ public class CityController {
             if the city does exist, a new myCity object is created with
             the existing values.
         */
-        if(!countryExists(str)){
+        if(!cityExists(str)){
             this.highestCityId = getHighestCityId();
-            addCityToBase(str);
+            addCityToBase(str,countryId);
         }
         else{
             myCity.setCityId(existingCityId);
@@ -69,10 +69,10 @@ public class CityController {
      *
      * @param cityName the text from the textField
      */
-    public void addCityToBase(String cityName){
+    public void addCityToBase(String cityName, int countryId){
 
         try {
-            String sql = "insert into city (cityId,city,createDate,createdBy,lastUpdate,lastUpdateBy) values "
+            String sql = "insert into city (cityId,city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?)";
             PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
             String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
@@ -80,19 +80,21 @@ public class CityController {
             this.myCity = new City();
             this.myCity.setCityName(cityName.trim());
             this.myCity.setCityId(this.highestCityId+1);
+            this.myCity.setCountryId(countryId);
             this.myCity.setCreateDate(nowDate + " " + nowTime);
             this.myCity.setCreatedBy(MainScreen.getAuthUser());
             this.myCity.setLastUpdate(nowDate + " " + nowTime);
             this.myCity.setLastUpdateBy(MainScreen.getAuthUser());
             ps.setInt(1,this.myCity.getCityId());
             ps.setString(2,this.myCity.getCityName());
-            ps.setString(3, this.myCity.getCreateDate());
-            ps.setString(4, this.myCity.getCreatedBy());
-            ps.setString(5, this.myCity.getLastUpdate());
-            ps.setString(6, this.myCity.getLastUpdateBy());
+            ps.setInt(3,this.myCity.getCountryId());
+            ps.setString(4, this.myCity.getCreateDate());
+            ps.setString(5, this.myCity.getCreatedBy());
+            ps.setString(6, this.myCity.getLastUpdate());
+            ps.setString(7, this.myCity.getLastUpdateBy());
             System.out.println(ps);
             ps.execute();
-            Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New country Added to database");
+            Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New city Added to database");
             alrt.showAndWait();
             this.newCityAdded=true;
         } catch (SQLException e) {
@@ -101,12 +103,12 @@ public class CityController {
     }
 
     /**
-     * Determines if the country exists
+     * Determines if the city exists
      *
-     * @param str text from the country textfield
+     * @param str text from the city textfield
      * @return
      */
-    private boolean countryExists(String str){
+    private boolean cityExists(String str){
 
         try {
             Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();

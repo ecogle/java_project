@@ -6,6 +6,7 @@ import pkgfinal2.MySQLDatabase;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +14,7 @@ public class AddCustomerControl {
     
     private static CountryController c;
     private static CityController ci;
-    
+    private static AddressController adr;
     //general work
         // error check all inputs for correct types
 
@@ -59,6 +60,29 @@ public class AddCustomerControl {
     }
 
     /**
+     * checks if value is empty string or null
+     * @param str
+     * @return
+     */
+    public static boolean isEmptyValue(String str){
+        if(str.trim().equals("") || str.trim()==null){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    //country work
+        //search for matching country in database
+
+        //if match get primarykey and insert that key in database
+        //if NO match, add country to database
+
+        //get primary key
+        //look for highest value in the ID field, add 1 to it
+
+        //add the audit information to the database for adding the country
+    /**
      * Instantiates a new CountryController
      * @param str 
      */
@@ -67,31 +91,29 @@ public class AddCustomerControl {
         System.out.println(c.getMyCountry().getCountryId());
     }
 
-    public static void cityWork(String str){
-        ci=new CityController(str);
-
-    }
-    //country work
-        //search for matching country in database
-
-            //if match get primarykey and insert that key in database
-            //if NO match, add country to database
-    
-        //get primary key
-            //look for highest value in the ID field, add 1 to it
-    
-        //add the audit information to the database for adding the country
-    
-    
     //city work
         //search for matching city in database
-            //if match get primarykey and insert that key in database
-            //if NO match, add country to database
-    
+        //if match get primarykey and insert that key in database
+        //if NO match, add country to database
+
         //get primary key
-            //look for highest value in the ID field, add 1 to it
-    
+        //look for highest value in the ID field, add 1 to it
+
         //add the audit information to the database for adding the country
+    public static void cityWork(String str){
+        ci=new CityController(str,c.getMyCountry().getCountryId());
+
+    }
+
+
+
+    public static void addressWork(Map<String,String> addressFields){
+        adr = new AddressController(addressFields,ci.getMyCity().getCityId());
+    }
+
+    
+    
+
     
     
     //address work

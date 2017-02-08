@@ -12,7 +12,7 @@ public class Address extends Audit{
     private SimpleStringProperty address2 = new SimpleStringProperty();
     private SimpleIntegerProperty cityId = new SimpleIntegerProperty();
     private SimpleStringProperty phoneNumber = new SimpleStringProperty();
-    private SimpleIntegerProperty postalCode = new SimpleIntegerProperty();
+    private SimpleStringProperty postalCode = new SimpleStringProperty();
 
     public void setAddressId(int id){
         this.addressId.set(id);
@@ -59,11 +59,11 @@ public class Address extends Audit{
     }
 
     //****************************************
-    public void setPostalCode(int id){
+    public void setPostalCode(String id){
         this.postalCode.set(id);
     }
 
-    public Integer getPostalCode(){
+    public String getPostalCode(){
         return this.postalCode.get();
     }
 }

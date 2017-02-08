@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.audit.Audit;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Customer form for adding information.
@@ -112,10 +115,17 @@ public class AddCustomer extends Audit implements Displayable {
         
         gpControls.add(btnGridPane, 1, 9);
 
+        Map<String,String> map = new HashMap<>();
+        map.put("address",txtAddress1.getText());
+        map.put("address2",txtAddress2.getText());
+        map.put("phone",txtPhoneNumber.getText());
+        map.put("postalCode",txtZip.getText());
         //provide functionality for the ADD button
         int x;
         btnAdd.setOnAction(event -> {
             AddCustomerControl.countryWork(txtCountry.getText());
+            AddCustomerControl.cityWork(txtCity.getText());
+            AddCustomerControl.addressWork(map);
 
         });
         
@@ -128,6 +138,8 @@ public class AddCustomer extends Audit implements Displayable {
         window.show();
 
     }
+
+
 
 
 

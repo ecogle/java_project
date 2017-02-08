@@ -26,6 +26,14 @@ public class City extends Audit {
         return this.cityName.get();
     }
 
+    public void setCountryId(int id){
+        this.countryId.set(id);
+    }
+
+    public Integer getCountryId(){
+        return this.countryId.get();
+    }
+
 
 
 }
