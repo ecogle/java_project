@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 public class AddCustomerControl {
     
     private static CountryController c;
+    private static CityController ci;
     
     //general work
         // error check all inputs for correct types
@@ -64,7 +65,10 @@ public class AddCustomerControl {
     public static void countryWork(String str){
         c = new CountryController(str);
         System.out.println(c.getMyCountry().getCountryId());
+    }
 
+    public static void cityWork(String str){
+        ci=new CityController(str);
 
     }
     //country work

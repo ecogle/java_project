@@ -116,6 +116,7 @@ public class AddCustomer extends Audit implements Displayable {
         int x;
         btnAdd.setOnAction(event -> {
             AddCustomerControl.countryWork(txtCountry.getText());
+
         });
         
         
