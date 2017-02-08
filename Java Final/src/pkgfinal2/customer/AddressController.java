@@ -35,13 +35,14 @@ public class AddressController {
 
             if the city does exist, a new myCity object is created with
             the existing values.
+        
         */
         if(!addressExists(addressFields)){
             this.highestAddressId = getHighestAddressId();
             addAddressToBase(addressFields,cityId);
         }
         else{
-            myAddress.setCityId(existingAddressId);
+            myAddress.setAddressId(existingAddressId);
         }
     }
 
