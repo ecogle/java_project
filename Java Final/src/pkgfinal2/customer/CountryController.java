@@ -1,6 +1,5 @@
 package pkgfinal2.customer;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
@@ -10,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -136,19 +134,10 @@ public class CountryController {
         return false;
     }
 
-//    private int getNextCountryId(){
-//        try {
-//            PreparedStatement smnt2 = MySQLDatabase.getMySQLConnection().prepareStatement("insert into " +
-//                    "country (countryid,country,createdBy,createDate,lastUpdate,lastUpdateBy) values(?,?,?,?,?,?)");
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        finally {
-//            MySQLDatabase.closeConnection();
-//        }
-//        return -1;
-//    }
-
+    /**
+     * Returns an instance of the myCountry object
+     * @return
+     */
     public Country getMyCountry (){
         Country c = new Country();
         c = this.myCountry;
