@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 public class AddCustomerControl {
     
+    private static CountryController c;
+    
     //general work
         // error check all inputs for correct types
 
@@ -55,8 +57,12 @@ public class AddCustomerControl {
         }
     }
 
+    /**
+     * Instantiates a new CountryController
+     * @param str 
+     */
     public static void countryWork(String str){
-        CountryController c = new CountryController(str);
+        c = new CountryController(str);
         System.out.println(c.getMyCountry().getCountryId());
 
 
