@@ -15,6 +15,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
+ * This is the controller class for the country aspect of the database.
  * Created by ecogle on 2/7/2017.
  */
 public class CountryController {
@@ -24,8 +25,22 @@ public class CountryController {
     public int existingCountryId;
     public boolean newCountryAdded;
 
+    /**
+     * This is the brains of the Country class
+     * everything is done in the constructor. All you need is the text from
+     * the textfield.
+     * @param str text from the txtCountry control
+     */
     public CountryController(String str){
-        this.myCountry = new Country();
+        
+        /*
+            if the country does not exist, get the max value of the existing
+            primary keys then add the new value to the database. A new myCounty
+            object is created with the values.
+        
+            if the country does exist, a new myCountry object is created with
+            the existing values.
+        */
         if(!countryExists(str)){
             this.highestCountryId = getHighestCountryId();
             addCountryToBase(str);
@@ -35,6 +50,11 @@ public class CountryController {
         }
     }
 
+    /*
+        returns the max value of the primary keys of the country table
+        
+        -- could probably return void and just set the private property
+    */
     private int getHighestCountryId(){
         try{
             Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement();
@@ -49,6 +69,11 @@ public class CountryController {
         return -1;
     }
 
+    /**
+     * adds the country to the database and creates a new myCountry object
+     * 
+     * @param countryName the text from the textField
+     */
     public void addCountryToBase(String countryName){
 
         try {
@@ -57,6 +82,7 @@ public class CountryController {
             PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
             String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
             String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+            this.myCountry = new Country();
             this.myCountry.setCountryName(countryName.trim());
             this.myCountry.setCountryId(this.highestCountryId+1);
             this.myCountry.setCreateDate(nowDate + " " + nowTime);
@@ -78,13 +104,21 @@ public class CountryController {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Determines if the country exists
+     * 
+     * @param str text from the country textfield
+     * @return 
+     */
     private boolean countryExists(String str){
 
         try {
             Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
             ResultSet rs = stmnt.executeQuery("Select * from U03PfE.country where country = '" + str.trim() + "'");
             if(rs.next()){
-                int x = rs.getInt("countryId");
+                //int x = rs.getInt("countryId");
+                this.myCountry = new Country();
                 this.myCountry.setCountryId(rs.getInt("countryId"));
                 this.myCountry.setCountryName(rs.getString("country"));
                 this.myCountry.setCreateDate(rs.getString("createDate"));
@@ -93,7 +127,7 @@ public class CountryController {
                 this.myCountry.setLastUpdateBy(rs.getString("lastUpdateBy"));
                 stmnt.close();
                 MySQLDatabase.closeConnection();
-                this.existingCountryId=x;
+                //this.existingCountryId=x;
                 return true;
             }
         } catch (SQLException e) {
@@ -102,18 +136,18 @@ public class CountryController {
         return false;
     }
 
-    private int getNextCountryId(){
-        try {
-            PreparedStatement smnt2 = MySQLDatabase.getMySQLConnection().prepareStatement("insert into " +
-                    "country (countryid,country,createdBy,createDate,lastUpdate,lastUpdateBy) values(?,?,?,?,?,?)");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            MySQLDatabase.closeConnection();
-        }
-        return -1;
-    }
+//    private int getNextCountryId(){
+//        try {
+//            PreparedStatement smnt2 = MySQLDatabase.getMySQLConnection().prepareStatement("insert into " +
+//                    "country (countryid,country,createdBy,createDate,lastUpdate,lastUpdateBy) values(?,?,?,?,?,?)");
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        finally {
+//            MySQLDatabase.closeConnection();
+//        }
+//        return -1;
+//    }
 
     public Country getMyCountry (){
         Country c = new Country();
