@@ -27,6 +27,8 @@ public class AddCustomerControl {
      */
     public static boolean textContainsNumbers(String str) throws InputTypeException {
         // if str contains numbers, throw exception
+
+
         Pattern pattern = Pattern.compile("\\d");
 
         Matcher matcher = pattern.matcher(str);
