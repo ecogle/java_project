@@ -115,7 +115,7 @@ public class CountryController {
             Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
             ResultSet rs = stmnt.executeQuery("Select * from U03PfE.country where country = '" + str.trim() + "'");
             if(rs.next()){
-                //int x = rs.getInt("countryId");
+
                 this.myCountry = new Country();
                 this.myCountry.setCountryId(rs.getInt("countryId"));
                 this.myCountry.setCountryName(rs.getString("country"));
@@ -125,7 +125,7 @@ public class CountryController {
                 this.myCountry.setLastUpdateBy(rs.getString("lastUpdateBy"));
                 stmnt.close();
                 MySQLDatabase.closeConnection();
-                //this.existingCountryId=x;
+                this.existingCountryId= this.myCountry.getCountryId();
                 return true;
             }
         } catch (SQLException e) {

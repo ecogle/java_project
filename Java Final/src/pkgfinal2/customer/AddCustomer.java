@@ -24,6 +24,7 @@ import java.util.Map;
  */
 public class AddCustomer extends Audit implements Displayable {
     private static int countryId;
+    private Map<String,String> map = new HashMap<>();
     @Override
     public void display(){
 
@@ -115,18 +116,25 @@ public class AddCustomer extends Audit implements Displayable {
         
         gpControls.add(btnGridPane, 1, 9);
 
-        Map<String,String> map = new HashMap<>();
-        map.put("address",txtAddress1.getText());
-        map.put("address2",txtAddress2.getText());
-        map.put("phone",txtPhoneNumber.getText());
-        map.put("postalCode",txtZip.getText());
+        // todo error check and trim the tet input
+
+
+
         //provide functionality for the ADD button
         int x;
         btnAdd.setOnAction(event -> {
+            map.put("address",txtAddress1.getText());
+            map.put("address2",txtAddress2.getText());
+            map.put("phone",txtPhoneNumber.getText());
+            map.put("postalCode",txtZip.getText());
+            map.put("customerName",txtCustomerName.getText());
+            map.put("city",txtCity.getText());
+            map.put("country",txtCountry.getText());
+            map.put("active",chkActive.getText());
             AddCustomerControl.countryWork(txtCountry.getText());
             AddCustomerControl.cityWork(txtCity.getText());
             AddCustomerControl.addressWork(map);
-
+            AddCustomerControl.customerWork(map);
         });
         
         

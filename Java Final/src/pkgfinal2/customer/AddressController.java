@@ -120,10 +120,12 @@ public class AddressController {
 
         try {
             Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
-            ResultSet rs = stmnt.executeQuery("Select * from U03PfE.address where address = '" + addressFields.get("address") + "'");
+            String sql = "Select * from U03PfE.address where address = '" + addressFields.get("address") + "'";
+            ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){
 
                 this.myAddress = new Address();
+
                 this.myAddress.setAddressId(rs.getInt("addressId"));
                 this.myAddress.setAddress(rs.getString("address"));
                 this.myAddress.setAddress2(rs.getString("address2"));
@@ -136,6 +138,8 @@ public class AddressController {
                 this.myAddress.setPostalCode(rs.getString("postalCode"));
                 stmnt.close();
                 MySQLDatabase.closeConnection();
+
+                this.existingAddressId = this.myAddress.getAddressId();
                 return true;
             }
         } catch (SQLException e) {

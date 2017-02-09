@@ -44,7 +44,7 @@ public class Customer extends Audit{
     }
 
     public String getCustomerName(){
-        return this.customerName.getName();
+        return this.customerName.get();
     }
 
 

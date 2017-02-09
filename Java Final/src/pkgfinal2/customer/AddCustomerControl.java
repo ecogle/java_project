@@ -15,6 +15,7 @@ public class AddCustomerControl {
     private static CountryController c;
     private static CityController ci;
     private static AddressController adr;
+    private static CustomerController ct;
     //general work
     // error check all inputs for correct types
 
@@ -119,14 +120,18 @@ public class AddCustomerControl {
 
             //add the audit information to the database for adding the country
 
-            //customer work
-            //look for customer with matching name and phone
-            //if true, throw duplicate customer exception
+
 
     public static void addressWork(Map<String, String> addressFields) {
         adr = new AddressController(addressFields, ci.getMyCity().getCityId());
     }
 
+    //customer work
+    //look for customer with matching name and phone
+    //if true, throw duplicate customer exception
+    public static void customerWork(Map<String,String> customerFields){
+        ct = new CustomerController(customerFields,adr.getMyAddress().getAddressId());
+    }
 
 }
 

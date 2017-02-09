@@ -61,15 +61,7 @@ public class MainScreen extends Application {
         
         */
         Button btnLogin = new Button("Show login");
-        btnLogin.setOnAction(e-> {
-            LoginWindow liwin = new LoginWindow(); //instantiates the login window
-            liwin.display(); //displays the login window
-            if(MainScreen.getAuthUser()!= null){
-                //displays the username if authenticated properly
-                lblAuthUserLabel.setText(MainScreen.getAuthUser());
-            }
-            
-        });
+
 
         //user list
         Button btnUserList = new Button("User List");
@@ -97,11 +89,21 @@ public class MainScreen extends Application {
 
         //add Customer
         Button btnAddCustomer = new Button("Add Customer");
+        btnAddCustomer.setVisible(false);
         btnAddCustomer.setOnAction(event -> {
             new AddCustomer().display();
         });
-        
-        
+
+        btnLogin.setOnAction(e-> {
+            LoginWindow liwin = new LoginWindow(); //instantiates the login window
+            liwin.display(); //displays the login window
+            if(MainScreen.getAuthUser()!= null){
+                //displays the username if authenticated properly
+                lblAuthUserLabel.setText(MainScreen.getAuthUser());
+                btnAddCustomer.setVisible(true);
+            }
+
+        });
 
         VBox vbox1 = new VBox();
         vbox1.setSpacing(8);

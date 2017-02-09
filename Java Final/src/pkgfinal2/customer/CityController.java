@@ -70,10 +70,10 @@ public class CityController {
      * @param cityName the text from the textField
      */
     public void addCityToBase(String cityName, int countryId){
-
+        //todo fix the functionality of the add customer interface
         try {
             String sql = "insert into city (cityId,city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy) values "
-                    + " (?,?,?,?,?,?)";
+                    + " (?,?,?,?,?,?,?)";
             PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
             String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
             String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -124,7 +124,7 @@ public class CityController {
                 this.myCity.setLastUpdateBy(rs.getString("lastUpdateBy"));
                 stmnt.close();
                 MySQLDatabase.closeConnection();
-                //this.existingCountryId=x;
+                this.existingCityId = this.myCity.getCityId();
                 return true;
             }
         } catch (SQLException e) {

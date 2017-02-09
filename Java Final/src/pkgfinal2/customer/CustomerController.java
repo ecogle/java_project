@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
@@ -24,16 +26,16 @@ public class CustomerController {
     /**
      *
      * @param customerFields
-     * @param cityId
+     * @param addressId
      */
     public CustomerController(Map<String,String> customerFields,int addressId){
 
         /*
-            if the city does not exist, get the max value of the existing
+            if the customer does not exist, get the max value of the existing
             primary keys then add the new value to the database. A new myCounty
             object is created with the values.
 
-            if the city does exist, a new myCity object is created with
+            if the customer does exist, a new myCity object is created with
             the existing values.
         */
         if(!customerExists(customerFields)){
@@ -46,7 +48,7 @@ public class CustomerController {
     }
 
     /*
-        returns the max value of the primary keys of the city table
+        returns the max value of the primary keys of the customer table
 
         -- could probably return void and just set the private property
     */
@@ -66,8 +68,9 @@ public class CustomerController {
 
     /**
      *
+     *
      * @param customerFields
-     * @param cityId
+     * @param addressId
      */
     public void addCustomerToBase(Map<String,String> customerFields, int addressId){
 
@@ -80,8 +83,8 @@ public class CustomerController {
             this.myCustomer = new Customer();
 
             this.myCustomer.setCustomerId(this.highestCustomerId+1);
-            this.myCustomer.setCustomerName(customerFields.get("customer").trim());
-            
+            this.myCustomer.setCustomerName(customerFields.get("customerName").trim());
+            this.myCustomer.setActive(new Boolean(customerFields.get("active")));
             this.myCustomer.setAddressId(addressId);
             this.myCustomer.setCreateDate(nowDate + " " + nowTime);
             this.myCustomer.setCreatedBy(MainScreen.getAuthUser());
@@ -116,7 +119,8 @@ public class CustomerController {
 
         try {
             Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
-            ResultSet rs = stmnt.executeQuery("Select * from U03PfE.customer where customerName = '" + customerFields.get("customerName") + "'");
+            String sql = "Select * from U03PfE.customer where customerName = '" + customerFields.get("customerName") + "'";
+            ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){
 
                 this.myCustomer = new Customer();
@@ -132,6 +136,8 @@ public class CustomerController {
                 
                 stmnt.close();
                 MySQLDatabase.closeConnection();
+
+                this.existingCustomerId = this.myCustomer.getCustomerId();
                 return true;
             }
         } catch (SQLException e) {
