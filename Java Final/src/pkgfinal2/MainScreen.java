@@ -5,17 +5,28 @@
 package pkgfinal2;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pkgfinal2.customer.*;
 import pkgfinal2.login.LoginWindow;
 import pkgfinal2.user.UserList;
+import sun.util.resources.cldr.om.CurrencyNames_om;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Main entry-point for the application. Login screen will pop-up as soon as main
@@ -31,62 +42,56 @@ public class MainScreen extends Application {
     Stage window;
     private static String authUserString=null;
     boolean loginSuccedded = false;
-    
-    
+    Button btnLogin = new Button("Show login");
+
+
+
     @Override
     public void start(Stage primaryStage) {
         window = primaryStage;
         window.setTitle("TESTING MAIN PAGE");
         //window.setMaximized(true);
         Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
-        GridPane layout = new GridPane();
-        //layout.setGridLinesVisible(true);
-        layout.setHgap(8);
-        layout.setVgap(10);
-        layout.setAlignment(Pos.CENTER);
-        Button btnConfirm = new Button("Confirm please...");
-//        btnConfirm.setOnAction( e ->{
-//            ConfirmWindow.display("Are you sure? ");
-//        });
-        btnConfirm.setOnAction( e ->{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("This is a pre-packaged Information alert");
-            alert.setHeaderText("INFORMATIONAL DIALOG");
-            alert.setContentText("This is the information to deliver to the client");
-            alert.showAndWait();
+
+        // todo Need to create a new class for properties of the ENTIRE customer in order to display it in the list.
+
+
+        BorderPane layout = new BorderPane();
+        layout.setPrefSize(700,600);
+        TableView tvCustomer = new TableView();
+        TableColumn colCustName = new TableColumn("Name");
+        TableColumn colAddress = new TableColumn("Address");
+        TableColumn colCity = new TableColumn("City");
+        TableColumn colCountry = new TableColumn("Country");
+        TableColumn colActive = new TableColumn("Active");
+        tvCustomer.getColumns().addAll(colCustName,colAddress,colCity,colCountry,colActive);
+
+        colCustName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+
+        ObservableList<Customer> custList = FXCollections.observableArrayList();
+
+        try {
+            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+            ResultSet rs = stmnt.executeQuery("Select * from customer");
+            while(rs.next()){
+                Customer c = new Customer();
+                c.setCustomerName(rs.getString("customerName"));
+                custList.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        VBox vbxLeft = new VBox();
+        vbxLeft.getChildren().addAll(btnLogin);
+        layout.setLeft(vbxLeft);
+        layout.setCenter(tvCustomer);
+
+        tvCustomer.setItems(custList);
+
+        window.setOnShown(event -> {
+
         });
-        
-        //Login screen
-        /*
-        
-        */
-        Button btnLogin = new Button("Show login");
-
-
-        //user list
-        Button btnUserList = new Button("User List");
-        btnUserList.setOnAction(event -> {
-            new UserList().display();
-        });
-
-        //Add Country
-        Button btnAddCountry = new Button("Add country");
-        btnAddCountry.setOnAction(e->{
-            new AddCountry().display();
-        });
-
-        //Add City
-        Button btnAddCity = new Button("Add city");
-        btnAddCity.setOnAction(e->{
-            new AddCity().display();
-        });
-
-        //add address
-        Button btnAddAddress = new Button("Add address");
-        btnAddAddress.setOnAction(e->{
-            new AddAddress().display();
-        });
-
         //add Customer
         Button btnAddCustomer = new Button("Add Customer");
         btnAddCustomer.setVisible(false);
@@ -105,22 +110,10 @@ public class MainScreen extends Application {
 
         });
 
-        VBox vbox1 = new VBox();
-        vbox1.setSpacing(8);
-        VBox vbox2 = new VBox();
-        vbox2.setSpacing(8);
-        vbox1.getChildren().add(btnConfirm);
-        vbox1.getChildren().add(btnLogin);
-        vbox1.getChildren().add(btnAddCity);
-        vbox1.getChildren().add(btnAddCustomer);
-        vbox2.getChildren().add(btnUserList);
-        vbox2.getChildren().add(btnAddCountry);
-        vbox2.getChildren().add(btnAddAddress);
 
-        layout.add(vbox1,0,1);
-        layout.add(vbox2,1,1);
-        layout.add(lblAuthUserLabel, 4, 0);
-        Scene scene = new Scene(layout,300,250);
+
+
+        Scene scene = new Scene(layout,700,600);
         
         
         window.setScene(scene);
