@@ -39,12 +39,12 @@ public class Customer extends Audit{
         return this.addressId.get();
     }
 
-    public void setCustomerName(String fname, String lname){
-        this.customerName.set(fname + " " + lname);
+    public void setCustomerName(String name){
+        this.customerName.set(name);
     }
 
     public String getCustomerName(){
-        return this.customerName.getName();
+        return this.customerName.get();
     }
 
 

@@ -5,17 +5,31 @@
 package pkgfinal2;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pkgfinal2.customer.*;
 import pkgfinal2.login.LoginWindow;
 import pkgfinal2.user.UserList;
+import sun.util.resources.cldr.om.CurrencyNames_om;
+
+import javax.swing.plaf.nimbus.State;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Main entry-point for the application. Login screen will pop-up as soon as main
@@ -31,100 +45,147 @@ public class MainScreen extends Application {
     Stage window;
     private static String authUserString=null;
     boolean loginSuccedded = false;
-    
-    
+    Button btnLogin = new Button("Show login");
+
+
+
+
     @Override
     public void start(Stage primaryStage) {
+        int intButtonWidth = 120;
         window = primaryStage;
         window.setTitle("TESTING MAIN PAGE");
         //window.setMaximized(true);
         Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
-        GridPane layout = new GridPane();
-        layout.setGridLinesVisible(true);
-        layout.setHgap(8);
-        layout.setVgap(10);
-        layout.setAlignment(Pos.CENTER);
-        Button btnConfirm = new Button("Confirm please...");
-//        btnConfirm.setOnAction( e ->{
-//            ConfirmWindow.display("Are you sure? ");
-//        });
-        btnConfirm.setOnAction( e ->{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("This is a pre-packaged Information alert");
-            alert.setHeaderText("INFORMATIONAL DIALOG");
-            alert.setContentText("This is the information to deliver to the client");
-            alert.showAndWait();
+        Button btnAddCustomer = new Button("Add Customer");
+        Button btnEditCustomer = new Button("Edit Customer");
+        Button btnDeleteCustomer = new Button("Delete Customer");
+        Button btnRefreshList = new Button("Refresh list");
+        btnLogin.setPrefWidth(intButtonWidth);
+        btnAddCustomer.setPrefWidth(intButtonWidth);
+        btnDeleteCustomer.setPrefWidth(intButtonWidth);
+        btnEditCustomer.setPrefWidth(intButtonWidth);
+
+
+
+        BorderPane layout = new BorderPane();
+        layout.setPrefSize(700,600);
+        TableView tvCustomer = new TableView();
+        TableColumn colCustName = new TableColumn("Name");
+        TableColumn colAddress = new TableColumn("Address");
+        TableColumn colAddress2 = new TableColumn("Address2");
+        TableColumn colCity = new TableColumn("City");
+        TableColumn colCountry = new TableColumn("Country");
+        TableColumn colActive = new TableColumn("Active");
+        tvCustomer.getColumns().addAll(colCustName,colAddress,colAddress2,colCity,colCountry,colActive);
+
+        colCustName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colAddress2.setCellValueFactory(new PropertyValueFactory<>("address2"));
+        colCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        colCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        colActive.setCellValueFactory(new PropertyValueFactory<>("active"));
+
+        VBox vbxLeft = new VBox();
+        vbxLeft.setPadding(new Insets(30,10,10,15));
+        vbxLeft.setSpacing(10);
+        vbxLeft.getChildren().addAll(btnLogin,btnAddCustomer,btnEditCustomer,btnDeleteCustomer);
+        layout.setLeft(vbxLeft);
+        layout.setCenter(tvCustomer);
+
+
+
+        tvCustomer.setItems(buildCustList());
+
+
+
+        //add Customer
+
+        btnAddCustomer.setVisible(false);
+        btnEditCustomer.setVisible(false);
+        btnDeleteCustomer.setVisible(false);
+
+        btnAddCustomer.setOnAction(event -> {
+            AddCustomer a = new AddCustomer();
+            a.display();
+
+            tvCustomer.setItems(buildCustList());
         });
-        
-        //Login screen
-        /*
-        
-        */
-        Button btnLogin = new Button("Show login");
+
         btnLogin.setOnAction(e-> {
             LoginWindow liwin = new LoginWindow(); //instantiates the login window
             liwin.display(); //displays the login window
             if(MainScreen.getAuthUser()!= null){
                 //displays the username if authenticated properly
                 lblAuthUserLabel.setText(MainScreen.getAuthUser());
+                btnAddCustomer.setVisible(true);
+                btnEditCustomer.setVisible(true);
+                btnDeleteCustomer.setVisible(true);
             }
-            
+
         });
 
-        //user list
-        Button btnUserList = new Button("User List");
-        btnUserList.setOnAction(event -> {
-            new UserList().display();
+        btnEditCustomer.setOnAction(event -> {
+            //gets the selected object for editing
+            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
         });
 
-        //Add Customer
-        Button btnAddCountry = new Button("Add country");
-        btnAddCountry.setOnAction(e->{
-            new AddCountry().display();
+        btnDeleteCustomer.setOnAction(event -> {
+            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+            try{
+                String sql = "delete from customer where customerId = ?";
+                PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
+                pstmnt.setInt(1,compCust.getCustomerId());
+                pstmnt.execute();
+            }
+            catch (SQLException e){
+                e.getMessage();
+            }
+            tvCustomer.setItems(buildCustList());
         });
 
-        //Add Customer
-        Button btnAddCity = new Button("Add city");
-        btnAddCity.setOnAction(e->{
-            new AddCity().display();
+        btnRefreshList.setOnAction(event -> {
+            tvCustomer.setItems(buildCustList());
+            tvCustomer.refresh();
         });
-
-        //add address
-        Button btnAddAddress = new Button("Add address");
-        btnAddAddress.setOnAction(e->{
-            new AddAddress().display();
-        });
-        
-        
-
-        VBox vbox1 = new VBox();
-        vbox1.setSpacing(8);
-        VBox vbox2 = new VBox();
-        vbox2.setSpacing(8);
-        vbox1.getChildren().add(btnConfirm);
-        vbox1.getChildren().add(btnLogin);
-        vbox1.getChildren().add(btnAddCity);
-        vbox2.getChildren().add(btnUserList);
-        vbox2.getChildren().add(btnAddCountry);
-        vbox2.getChildren().addAll(btnAddAddress);
-
-        layout.add(vbox1,0,1);
-        layout.add(vbox2,1,1);
-        layout.add(lblAuthUserLabel, 4, 0);
-        Scene scene = new Scene(layout,300,250);
+        Scene scene = new Scene(layout,700,600);
         
         
         window.setScene(scene);
         window.show();
         
     }
-    
-    //making it immutable
-//    public static Map<String,String> getCredentials(){
-//        Map<String,String> temp = new TreeMap<>();
-//        temp = credentials;
-//        return temp;
-//    }
+
+    private static ObservableList<CompleteCustomer> buildCustList(){
+        ObservableList<CompleteCustomer> custList = FXCollections.observableArrayList();
+        try {
+            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+            String sql = "select customerId,customerName,active,addr.addressId,address,address2,postalCode,phone,ci.cityId,city,co.countryId,country from customer cou inner join\n" +
+                    "address addr on cou.addressId = addr.addressId inner join city ci on addr.cityId = ci.cityId inner join\n" +
+                    "country co on ci.countryId = co.countryId";
+            ResultSet rs = stmnt.executeQuery(sql);
+            while(rs.next()){
+                CompleteCustomer c = new CompleteCustomer();
+                c.setCustomerId(rs.getInt("customerId"));
+                c.setCustomerName(rs.getString("customerName"));
+                c.setActive(rs.getBoolean("active"));
+                c.setFkAddressId(rs.getInt("addressId"));
+                c.setAddress(rs.getString("address"));
+                c.setAddress2(rs.getString("address2"));
+                c.setPostalCode(rs.getString("postalCode"));
+                c.setPhone(rs.getString("phone"));
+                c.setFkCityId(rs.getInt("cityId"));
+                c.setCity(rs.getString("city"));
+                c.setFkCountryId(rs.getInt("countryId"));
+                c.setCountry(rs.getString("country"));
+
+                custList.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return custList;
+    }
 
     /**
      * @param args the command line arguments

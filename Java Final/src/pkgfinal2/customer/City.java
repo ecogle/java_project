@@ -11,27 +11,29 @@ public class City extends Audit {
     private SimpleStringProperty cityName = new SimpleStringProperty();
     private SimpleIntegerProperty countryId = new SimpleIntegerProperty();
 
-    private void setCityId(int id){
+    public void setCityId(int id){
         this.cityId.set(id);
     }
-    private Integer getCityId(){
+    public Integer getCityId(){
         return this.cityId.get();
     }
 
-    private void setCityName(String name){
+    public void setCityName(String name){
         this.cityName.set(name);
     }
 
-    private String getCityName(){
+    public String getCityName(){
         return this.cityName.get();
     }
 
-    private void setCountryId(int id){
+    public void setCountryId(int id){
         this.countryId.set(id);
     }
 
-    private Integer getCountryId(){
+    public Integer getCountryId(){
         return this.countryId.get();
     }
+
+
 
 }
