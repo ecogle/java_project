@@ -1,5 +1,8 @@
 package pkgfinal2.login;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -11,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pkgfinal2.MainScreen;
+import pkgfinal2.MySQLDatabase;
 
 
 public class LoginWindow {
@@ -90,15 +94,20 @@ public class LoginWindow {
     }
     
     public static boolean checkValidLogin(String username, String passwd){
-        // access the database and verify username and password...
-        if(username.equals("ecogle")){
+        String sql = "Select * from user where userName = '" + username.trim() + "' and password = '" + passwd.trim()+"';";
+        
+        try{
+            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+            ResultSet rs = stmnt.executeQuery(sql);
+            if(rs.next()){
                 LogFile.write(username,LogEvents.LOGIN);
                 return true;
             }
-            else
-            {
-                LogFile.write(username,LogEvents.LOGINFAIL);
-                return false;
-            }            
+        }
+        catch(SQLException s){
+            s.getMessage();
+        }
+        LogFile.write(username,LogEvents.LOGINFAIL);
+        return false;
     }
 }
