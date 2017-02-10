@@ -30,7 +30,9 @@ public class AddCustomer extends Audit implements Displayable {
 
         Stage window = new Stage();
         window.setTitle("Add Customer");
-
+        window.setOnCloseRequest(event -> {
+            event.consume();
+        });
         Label lblCustomerName = new Label("Customer Name: ");
         Label lblAddress1 = new Label("Address: ");
         Label lblAddress2 = new Label("Address2: ");
@@ -135,6 +137,7 @@ public class AddCustomer extends Audit implements Displayable {
             AddCustomerControl.cityWork(txtCity.getText());
             AddCustomerControl.addressWork(map);
             AddCustomerControl.customerWork(map);
+            window.close();
         });
         
         

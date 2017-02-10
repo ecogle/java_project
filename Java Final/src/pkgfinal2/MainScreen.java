@@ -21,6 +21,8 @@ import pkgfinal2.login.LoginWindow;
 import pkgfinal2.user.UserList;
 import sun.util.resources.cldr.om.CurrencyNames_om;
 
+import javax.swing.plaf.nimbus.State;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,7 +46,7 @@ public class MainScreen extends Application {
     private static String authUserString=null;
     boolean loginSuccedded = false;
     Button btnLogin = new Button("Show login");
-    private static ObservableList<CompleteCustomer> custList = FXCollections.observableArrayList();
+
 
 
 
@@ -55,6 +57,9 @@ public class MainScreen extends Application {
         //window.setMaximized(true);
         Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
         Button btnAddCustomer = new Button("Add Customer");
+        Button btnEditCustomer = new Button("Edit Customer");
+        Button btnDeleteCustomer = new Button("Delete Customer");
+        Button btnRefreshList = new Button("Refresh list");
 
         BorderPane layout = new BorderPane();
         layout.setPrefSize(700,600);
@@ -77,26 +82,26 @@ public class MainScreen extends Application {
         VBox vbxLeft = new VBox();
         vbxLeft.setPadding(new Insets(30,10,10,15));
         vbxLeft.setSpacing(10);
-        vbxLeft.getChildren().addAll(btnLogin,btnAddCustomer);
+        vbxLeft.getChildren().addAll(btnLogin,btnAddCustomer,btnEditCustomer,btnDeleteCustomer,btnRefreshList);
         layout.setLeft(vbxLeft);
         layout.setCenter(tvCustomer);
 
-        buildCustList();
 
-        tvCustomer.setItems(custList);
+
+        tvCustomer.setItems(buildCustList());
 
 
 
         //add Customer
 
         btnAddCustomer.setVisible(false);
+        btnEditCustomer.setVisible(false);
+        btnDeleteCustomer.setVisible(false);
         btnAddCustomer.setOnAction(event -> {
             AddCustomer a = new AddCustomer();
             a.display();
 
-            buildCustList();
-
-            tvCustomer.refresh();
+            tvCustomer.setItems(buildCustList());
         });
 
         btnLogin.setOnAction(e-> {
@@ -106,13 +111,35 @@ public class MainScreen extends Application {
                 //displays the username if authenticated properly
                 lblAuthUserLabel.setText(MainScreen.getAuthUser());
                 btnAddCustomer.setVisible(true);
+                btnEditCustomer.setVisible(true);
+                btnDeleteCustomer.setVisible(true);
             }
 
         });
 
+        btnEditCustomer.setOnAction(event -> {
+            //gets the selected object for editing
+            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+        });
 
+        btnDeleteCustomer.setOnAction(event -> {
+            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+            try{
+                String sql = "delete from customer where customerId = ?";
+                PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
+                pstmnt.setInt(1,compCust.getCustomerId());
+                pstmnt.execute();
+            }
+            catch (SQLException e){
+                e.getMessage();
+            }
+            tvCustomer.setItems(buildCustList());
+        });
 
-
+        btnRefreshList.setOnAction(event -> {
+            tvCustomer.setItems(buildCustList());
+            tvCustomer.refresh();
+        });
         Scene scene = new Scene(layout,700,600);
         
         
@@ -121,7 +148,8 @@ public class MainScreen extends Application {
         
     }
 
-    private static void buildCustList(){
+    private static ObservableList<CompleteCustomer> buildCustList(){
+        ObservableList<CompleteCustomer> custList = FXCollections.observableArrayList();
         try {
             Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
             String sql = "select customerId,customerName,active,addr.addressId,address,address2,postalCode,phone,ci.cityId,city,co.countryId,country from customer cou inner join\n" +
@@ -148,6 +176,7 @@ public class MainScreen extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return custList;
     }
 
     /**
