@@ -7,6 +7,7 @@ package pkgfinal2;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -43,6 +44,7 @@ public class MainScreen extends Application {
     private static String authUserString=null;
     boolean loginSuccedded = false;
     Button btnLogin = new Button("Show login");
+    private static ObservableList<CompleteCustomer> custList = FXCollections.observableArrayList();
 
 
 
@@ -52,51 +54,49 @@ public class MainScreen extends Application {
         window.setTitle("TESTING MAIN PAGE");
         //window.setMaximized(true);
         Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
-
-        // todo Need to create a new class for properties of the ENTIRE customer in order to display it in the list.
-
+        Button btnAddCustomer = new Button("Add Customer");
 
         BorderPane layout = new BorderPane();
         layout.setPrefSize(700,600);
         TableView tvCustomer = new TableView();
         TableColumn colCustName = new TableColumn("Name");
         TableColumn colAddress = new TableColumn("Address");
+        TableColumn colAddress2 = new TableColumn("Address2");
         TableColumn colCity = new TableColumn("City");
         TableColumn colCountry = new TableColumn("Country");
         TableColumn colActive = new TableColumn("Active");
-        tvCustomer.getColumns().addAll(colCustName,colAddress,colCity,colCountry,colActive);
+        tvCustomer.getColumns().addAll(colCustName,colAddress,colAddress2,colCity,colCountry,colActive);
 
         colCustName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-
-        ObservableList<Customer> custList = FXCollections.observableArrayList();
-
-        try {
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
-            ResultSet rs = stmnt.executeQuery("Select * from customer");
-            while(rs.next()){
-                Customer c = new Customer();
-                c.setCustomerName(rs.getString("customerName"));
-                custList.add(c);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colAddress2.setCellValueFactory(new PropertyValueFactory<>("address2"));
+        colCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        colCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        colActive.setCellValueFactory(new PropertyValueFactory<>("active"));
 
         VBox vbxLeft = new VBox();
-        vbxLeft.getChildren().addAll(btnLogin);
+        vbxLeft.setPadding(new Insets(30,10,10,15));
+        vbxLeft.setSpacing(10);
+        vbxLeft.getChildren().addAll(btnLogin,btnAddCustomer);
         layout.setLeft(vbxLeft);
         layout.setCenter(tvCustomer);
 
+        buildCustList();
+
         tvCustomer.setItems(custList);
 
-        window.setOnShown(event -> {
 
-        });
+
         //add Customer
-        Button btnAddCustomer = new Button("Add Customer");
+
         btnAddCustomer.setVisible(false);
         btnAddCustomer.setOnAction(event -> {
-            new AddCustomer().display();
+            AddCustomer a = new AddCustomer();
+            a.display();
+
+            buildCustList();
+
+            tvCustomer.refresh();
         });
 
         btnLogin.setOnAction(e-> {
@@ -120,13 +120,35 @@ public class MainScreen extends Application {
         window.show();
         
     }
-    
-    //making it immutable
-//    public static Map<String,String> getCredentials(){
-//        Map<String,String> temp = new TreeMap<>();
-//        temp = credentials;
-//        return temp;
-//    }
+
+    private static void buildCustList(){
+        try {
+            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+            String sql = "select customerId,customerName,active,addr.addressId,address,address2,postalCode,phone,ci.cityId,city,co.countryId,country from customer cou inner join\n" +
+                    "address addr on cou.addressId = addr.addressId inner join city ci on addr.cityId = ci.cityId inner join\n" +
+                    "country co on ci.countryId = co.countryId";
+            ResultSet rs = stmnt.executeQuery(sql);
+            while(rs.next()){
+                CompleteCustomer c = new CompleteCustomer();
+                c.setCustomerId(rs.getInt("customerId"));
+                c.setCustomerName(rs.getString("customerName"));
+                c.setActive(rs.getBoolean("active"));
+                c.setFkAddressId(rs.getInt("addressId"));
+                c.setAddress(rs.getString("address"));
+                c.setAddress2(rs.getString("address2"));
+                c.setPostalCode(rs.getString("postalCode"));
+                c.setPhone(rs.getString("phone"));
+                c.setFkCityId(rs.getInt("cityId"));
+                c.setCity(rs.getString("city"));
+                c.setFkCountryId(rs.getInt("countryId"));
+                c.setCountry(rs.getString("country"));
+
+                custList.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param args the command line arguments
