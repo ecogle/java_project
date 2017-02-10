@@ -100,10 +100,10 @@ public class CustomerController {
             ps.setString(7, this.myCustomer.getLastUpdate());
             ps.setString(8, this.myCustomer.getLastUpdateBy());
             
-            System.out.println(ps);
+
             ps.execute();
-            Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New customer Added to database");
-            alrt.showAndWait();
+            /*Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New customer Added to database");
+            alrt.showAndWait();*/
             this.newCustomerAdded=true;
         } catch (SQLException e) {
             e.printStackTrace();

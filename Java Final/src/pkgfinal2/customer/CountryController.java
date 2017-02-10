@@ -93,10 +93,9 @@ public class CountryController {
             ps.setString(4, this.myCountry.getCreatedBy());
             ps.setString(5, this.myCountry.getLastUpdate());
             ps.setString(6, this.myCountry.getLastUpdateBy());
-            System.out.println(ps);
             ps.execute();
-            Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New country Added to database");
-            alrt.showAndWait();
+            /*Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New country Added to database");
+            alrt.showAndWait();*/
             this.newCountryAdded=true;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -92,7 +92,7 @@ public class AddCustomerControl {
      */
     public static void countryWork(String str) {
         c = new CountryController(str);
-        System.out.println(c.getMyCountry().getCountryId());
+        //System.out.println(c.getMyCountry().getCountryId());
     }
 
     //city work

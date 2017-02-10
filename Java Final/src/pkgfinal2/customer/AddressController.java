@@ -101,10 +101,10 @@ public class AddressController {
             ps.setString(8, this.myAddress.getLastUpdateBy());
             ps.setString(9,this.myAddress.getPhoneNumber());
             ps.setString(10,this.myAddress.getPostalCode());
-            System.out.println(ps);
+
             ps.execute();
-            Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New address Added to database");
-            alrt.showAndWait();
+            /*Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New address Added to database");
+            alrt.showAndWait();*/
             this.newAddressAdded=true;
         } catch (SQLException e) {
             e.printStackTrace();

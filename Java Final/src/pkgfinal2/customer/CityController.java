@@ -92,10 +92,10 @@ public class CityController {
             ps.setString(5, this.myCity.getCreatedBy());
             ps.setString(6, this.myCity.getLastUpdate());
             ps.setString(7, this.myCity.getLastUpdateBy());
-            System.out.println(ps);
+
             ps.execute();
-            Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New city Added to database");
-            alrt.showAndWait();
+            /*Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New city Added to database");
+            alrt.showAndWait();*/
             this.newCityAdded=true;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.audit.Audit;
@@ -33,6 +34,8 @@ public class AddCustomer extends Audit implements Displayable {
         window.setOnCloseRequest(event -> {
             event.consume();
         });
+
+        window.initModality(Modality.APPLICATION_MODAL);
         Label lblCustomerName = new Label("Customer Name: ");
         Label lblAddress1 = new Label("Address: ");
         Label lblAddress2 = new Label("Address2: ");
@@ -132,7 +135,7 @@ public class AddCustomer extends Audit implements Displayable {
             map.put("customerName",txtCustomerName.getText());
             map.put("city",txtCity.getText());
             map.put("country",txtCountry.getText());
-            map.put("active",chkActive.getText());
+            map.put("active",booleanToString(chkActive.isSelected()));
             AddCustomerControl.countryWork(txtCountry.getText());
             AddCustomerControl.cityWork(txtCity.getText());
             AddCustomerControl.addressWork(map);
@@ -146,8 +149,15 @@ public class AddCustomer extends Audit implements Displayable {
         Scene scene = new Scene(layout,450,400);
 
         window.setScene(scene);
-        window.show();
+        window.showAndWait();
 
+    }
+
+    public String booleanToString(boolean val){
+        if(val)
+            return "true";
+        else
+            return "false";
     }
 
 

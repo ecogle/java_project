@@ -52,6 +52,7 @@ public class MainScreen extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        int intButtonWidth = 120;
         window = primaryStage;
         window.setTitle("TESTING MAIN PAGE");
         //window.setMaximized(true);
@@ -60,6 +61,12 @@ public class MainScreen extends Application {
         Button btnEditCustomer = new Button("Edit Customer");
         Button btnDeleteCustomer = new Button("Delete Customer");
         Button btnRefreshList = new Button("Refresh list");
+        btnLogin.setPrefWidth(intButtonWidth);
+        btnAddCustomer.setPrefWidth(intButtonWidth);
+        btnDeleteCustomer.setPrefWidth(intButtonWidth);
+        btnEditCustomer.setPrefWidth(intButtonWidth);
+
+
 
         BorderPane layout = new BorderPane();
         layout.setPrefSize(700,600);
@@ -82,7 +89,7 @@ public class MainScreen extends Application {
         VBox vbxLeft = new VBox();
         vbxLeft.setPadding(new Insets(30,10,10,15));
         vbxLeft.setSpacing(10);
-        vbxLeft.getChildren().addAll(btnLogin,btnAddCustomer,btnEditCustomer,btnDeleteCustomer,btnRefreshList);
+        vbxLeft.getChildren().addAll(btnLogin,btnAddCustomer,btnEditCustomer,btnDeleteCustomer);
         layout.setLeft(vbxLeft);
         layout.setCenter(tvCustomer);
 
@@ -97,6 +104,7 @@ public class MainScreen extends Application {
         btnAddCustomer.setVisible(false);
         btnEditCustomer.setVisible(false);
         btnDeleteCustomer.setVisible(false);
+
         btnAddCustomer.setOnAction(event -> {
             AddCustomer a = new AddCustomer();
             a.display();
