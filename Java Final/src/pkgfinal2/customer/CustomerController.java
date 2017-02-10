@@ -8,9 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 
