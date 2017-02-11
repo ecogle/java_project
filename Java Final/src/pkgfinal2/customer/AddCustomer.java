@@ -83,10 +83,12 @@ public class AddCustomer extends Audit implements Displayable {
         MenuItem fileNew = new MenuItem("New");
         MenuItem fileSave = new MenuItem("Save");
         MenuItem fileSaveAs = new MenuItem("Save As...");
+        MenuItem fileExit = new MenuItem("Exit");
+        
         Menu mnuEdit = new Menu("Edit");
         Menu mnuView = new Menu("View");
 
-        mnuFile.getItems().addAll(fileNew,fileSave,fileSaveAs);
+        mnuFile.getItems().addAll(fileNew,fileSave,fileSaveAs,fileExit);
         custMenu.getMenus().addAll(mnuFile,mnuEdit,mnuView);
         HBox hbxMenu = new HBox();
         hbxMenu.getChildren().add(custMenu);

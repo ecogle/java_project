@@ -25,6 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javafx.scene.layout.HBox;
 
 
 /**
@@ -88,8 +89,30 @@ public class MainScreen extends Application {
         vbxLeft.getChildren().addAll(btnLogin,btnAddCustomer,btnEditCustomer,btnDeleteCustomer);
         layout.setLeft(vbxLeft);
         layout.setCenter(tvCustomer);
-
-
+        
+        MenuBar mnuMenuBar = new MenuBar();
+        mnuMenuBar.prefWidthProperty().bind(window.widthProperty());
+        Menu fileMenu = new Menu("File");
+        MenuItem mnuFile = new MenuItem("Open record");
+        Menu editMenu = new Menu("Edit");
+        Menu logMenu = new Menu("Users");
+        
+        // add functionality to disable login logoff based on login status
+        // try to add functionality to display the username in the menu area.
+        MenuItem mnuLogin = new MenuItem("Login");
+        MenuItem mnuLogoff = new MenuItem("Logoff");
+        
+        MenuItem mnuEditCity = new MenuItem("Edit City...");
+        MenuItem mnuEditCounty = new MenuItem("Edit Country...");
+        HBox mnuHbox = new HBox();
+        
+        editMenu.getItems().addAll(mnuEditCity,mnuEditCounty);
+        fileMenu.getItems().add(mnuFile);
+        logMenu.getItems().addAll(mnuLogin,mnuLogoff);
+        mnuMenuBar.getMenus().addAll(fileMenu,editMenu,logMenu);
+        mnuHbox.getChildren().add(mnuMenuBar);
+        
+        layout.setTop(mnuHbox);
 
         tvCustomer.setItems(buildCustList());
 
