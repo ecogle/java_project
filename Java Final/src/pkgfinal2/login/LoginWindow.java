@@ -3,6 +3,8 @@ package pkgfinal2.login;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -10,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,8 +22,9 @@ import pkgfinal2.MySQLDatabase;
 
 public class LoginWindow {
     private boolean success=false;
-    
-    
+    private String location;
+    private String language;
+    private Locale locale;
     public void display(){
         
         Stage window = new Stage();
@@ -38,9 +42,20 @@ public class LoginWindow {
         layout.add(message, 0, 0,2,1);
 
 
-        ChoiceBox cb = new ChoiceBox();
-        cb.setItems(FXCollections.observableArrayList("Spanish","French","English"));
-
+        HBox hbxLang = new HBox();
+        
+        ChoiceBox cbLanguage = new ChoiceBox();
+        ChoiceBox cbLocation = new ChoiceBox();
+        
+        Label lblLanguage = new Label("Language");
+        lblLanguage.setFont(Font.font("Arial",10));
+        Label lblLocation = new Label("Location");
+        lblLocation.setFont(Font.font("Arial",10));
+        hbxLang.getChildren().addAll(lblLanguage,cbLanguage,lblLocation,cbLocation);
+        cbLanguage.setItems(FXCollections.observableArrayList("Spanish","French","English"));
+        cbLanguage.setStyle("-fx-font:8pt \"san-serif\"");
+        cbLocation.setItems(FXCollections.observableArrayList("New York","Phoenix","London"));
+        cbLocation.setStyle("-fx-font:8pt \"san-serif\"");
         //sets up the controls
         Label lblUsername = new Label("Username: ");
         layout.add(lblUsername, 0, 1);
@@ -55,36 +70,51 @@ public class LoginWindow {
         PasswordField passPassword = new PasswordField();
         passPassword.setPromptText("password");
         layout.add(passPassword, 1, 2);
-        
+        hbxLang.setSpacing(10);
+        hbxLang.setPadding(new Insets(10,3,3,3));
+        layout.add(hbxLang, 0, 4,2,1);
         //functionality of the login button
         Button btnLogin = new Button("Login");
         btnLogin.setOnAction(e->{
+            ResourceBundle rb = null;
             try{
                 //validates the login
                 success = checkValidLogin(txtUsername.getText(), passPassword.getText());
+                
                 //if login is successful, do stuff
                 // need to add the localization stuff for the alert box.
                 // throws exception if the login fails.
+                language = (String) cbLanguage.getValue();
+                location = (String) cbLocation.getValue();
                 if(success){
+                    
                     MainScreen.setAuthUser(txtUsername.getText());
+                    
+                    if(language != null){                         
+                        rb = ResourceBundle.getBundle("login",getLanguage(language));
+                        Alert alrt = new Alert(Alert.AlertType.INFORMATION,rb.getString("loginSuccess"));
+                        alrt.showAndWait();
+                    }
                     window.close();
                 }
                 else{
+                    
                     throw new LoginException();
                 }
             }
             catch(LoginException h){
-                Alert alt = new Alert(Alert.AlertType.ERROR);
-                alt.setHeaderText("LOGIN FAILURE");
-                alt.setContentText("Username and/or password are incorrect.\nPlease try again");
-                alt.showAndWait();
+                rb = ResourceBundle.getBundle("login",getLanguage(language));
+                Alert alrt = new Alert(Alert.AlertType.INFORMATION,rb.getString("loginFailed"));
+                alrt.showAndWait();
                 txtUsername.setText("");
                 txtUsername.requestFocus();
                 passPassword.setText("");                
             }            
         });
+        
+     
         layout.add(btnLogin, 1, 3);
-        layout.add(cb,1,4);
+        
         Scene scene = new Scene(layout,300,250);
         Platform.runLater(() ->{
             btnLogin.requestFocus();
@@ -110,4 +140,22 @@ public class LoginWindow {
         LogFile.write(username,LogEvents.LOGINFAIL);
         return false;
     }
+    
+    private static Locale getLanguage(String s){
+        Locale loc=null;
+        switch (s){
+            case "Spanish":
+                loc = new Locale("es","US");
+                break;
+            case "English":
+                loc = new Locale("en","US");
+                break;
+            case "French":
+                loc = new Locale("fr","FR");
+                break;
+        }
+        return loc;
+    }
+    
+    
 }
