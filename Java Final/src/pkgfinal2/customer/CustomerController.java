@@ -50,8 +50,7 @@ public class CustomerController {
         -- could probably return void and just set the private property
     */
     private int getHighestCustomerId(){
-        try{
-            Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement();
+        try(Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement()){            
             ResultSet rs = stmnt.executeQuery("select max(customerId) as maxId from customer");
             if(rs.next()){
                 return rs.getInt("maxId");
@@ -70,15 +69,12 @@ public class CustomerController {
      * @param addressId
      */
     public void addCustomerToBase(Map<String,String> customerFields, int addressId){
-
-        try {
-            String sql = "insert into customer (customerId,customerName, addressId, active,createDate, createdBy,lastUpdate,lastUpdateBy) values "
+        String sql = "insert into customer (customerId,customerName, addressId, active,createDate, createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?,?,?)";
-            PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
+        try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){ 
             String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
             String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
             this.myCustomer = new Customer();
-
             this.myCustomer.setCustomerId(this.highestCustomerId+1);
             this.myCustomer.setCustomerName(customerFields.get("customerName").trim());
             this.myCustomer.setActive(new Boolean(customerFields.get("active")));
@@ -113,15 +109,11 @@ public class CustomerController {
      * @return
      */
     private boolean customerExists(Map<String,String> customerFields){
-
-        try {
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
-            String sql = "Select * from U03PfE.customer where customerName = '" + customerFields.get("customerName") + "'";
+        String sql = "Select * from U03PfE.customer where customerName = '" + customerFields.get("customerName") + "'";
+        try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){
             ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){
-
-                this.myCustomer = new Customer();
-                
+                this.myCustomer = new Customer();                
                 this.myCustomer.setCustomerId(rs.getInt("customerId"));
                 this.myCustomer.setCustomerName(rs.getString("customerName"));
                 this.myCustomer.setAddressId(rs.getInt("addressId"));
@@ -129,11 +121,7 @@ public class CustomerController {
                 this.myCustomer.setCreateDate(rs.getString("createDate"));
                 this.myCustomer.setCreatedBy(rs.getString("createdBy"));
                 this.myCustomer.setLastUpdate(rs.getString("lastUpdate"));
-                this.myCustomer.setLastUpdateBy(rs.getString("lastUpdateBy"));
-                
-                stmnt.close();
-                MySQLDatabase.closeConnection();
-
+                this.myCustomer.setLastUpdateBy(rs.getString("lastUpdateBy"));                
                 this.existingCustomerId = this.myCustomer.getCustomerId();
                 return true;
             }
