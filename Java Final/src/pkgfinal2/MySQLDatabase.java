@@ -26,7 +26,7 @@ public class MySQLDatabase implements AutoCloseable{
         MysqlDataSource mds = null;
 
         try{
-            fis = new FileInputStream(System.getProperty("user.dir") + "/src/db.properties");
+            fis = new FileInputStream(System.getProperty("user.dir") + "Java Final/src/db.properties");
             mySQL.load(fis);
             mds = new MysqlDataSource();
             mds.setURL(mySQL.getProperty("MYSQL_DB_URL"));
@@ -50,15 +50,7 @@ public class MySQLDatabase implements AutoCloseable{
         return conn;
     }
 
-    public static void closeConnection(){
 
-        try {
-            conn.close();
-            System.out.println("Connection CLOSED");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void close()  {
