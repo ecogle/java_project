@@ -118,7 +118,6 @@ public class CityController {
                 this.myCity.setCreatedBy(rs.getString("createdBy"));
                 this.myCity.setLastUpdate(rs.getString("lastUpdate"));
                 this.myCity.setLastUpdateBy(rs.getString("lastUpdateBy"));
-                MySQLDatabase.closeConnection();
                 this.existingCityId = this.myCity.getCityId();
                 return true;
             }
