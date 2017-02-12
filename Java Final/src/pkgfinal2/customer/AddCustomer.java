@@ -1,18 +1,15 @@
 package pkgfinal2.customer;
 
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.audit.Audit;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -137,14 +134,13 @@ public class AddCustomer extends Audit implements Displayable {
             map.put("customerName",txtCustomerName.getText());
             map.put("city",txtCity.getText());
             map.put("country",txtCountry.getText());
-            map.put("active",booleanToString(chkActive.isSelected()));
+            map.put("active",((Boolean)chkActive.isSelected()).toString());
             AddCustomerControl.countryWork(txtCountry.getText());
             AddCustomerControl.cityWork(txtCity.getText());
             AddCustomerControl.addressWork(map);
             AddCustomerControl.customerWork(map);
             window.close();
-        });
-        
+        });       
         
         layout.setCenter(gpControls);
 
@@ -154,17 +150,4 @@ public class AddCustomer extends Audit implements Displayable {
         window.showAndWait();
 
     }
-
-    public String booleanToString(boolean val){
-        if(val)
-            return "true";
-        else
-            return "false";
-    }
-
-
-
-
-
-
 }

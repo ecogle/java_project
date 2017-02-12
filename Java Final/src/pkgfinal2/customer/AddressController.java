@@ -52,8 +52,7 @@ public class AddressController {
         -- could probably return void and just set the private property
     */
     private int getHighestAddressId(){
-        try{
-            Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement();
+        try(Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement()){            
             ResultSet rs = stmnt.executeQuery("select max(addressId) as maxId from address");
             if(rs.next()){
                 return rs.getInt("maxId");
@@ -71,15 +70,12 @@ public class AddressController {
      * @param cityId
      */
     public void addAddressToBase(Map<String,String> addressFields, int cityId){
-
-        try {
-            String sql = "insert into address (addressId,address,address2, cityId,createDate,createdBy,lastUpdate,lastUpdateBy,phone,postalCode) values "
+        String sql = "insert into address (addressId,address,address2, cityId,createDate,createdBy,lastUpdate,lastUpdateBy,phone,postalCode) values "
                     + " (?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
+        try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){
             String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
             String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
             this.myAddress = new Address();
-
             this.myAddress.setAddressId(this.highestAddressId+1);
             this.myAddress.setAddress(addressFields.get("address").trim());
             this.myAddress.setAddress2(addressFields.get("address2").trim());
@@ -107,7 +103,7 @@ public class AddressController {
             alrt.showAndWait();*/
             this.newAddressAdded=true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -118,14 +114,11 @@ public class AddressController {
      */
     private boolean addressExists(Map<String,String> addressFields){
 
-        try {
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+        try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){            
             String sql = "Select * from U03PfE.address where address = '" + addressFields.get("address") + "'";
             ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){
-
                 this.myAddress = new Address();
-
                 this.myAddress.setAddressId(rs.getInt("addressId"));
                 this.myAddress.setAddress(rs.getString("address"));
                 this.myAddress.setAddress2(rs.getString("address2"));

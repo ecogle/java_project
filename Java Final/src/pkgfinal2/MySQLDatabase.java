@@ -8,13 +8,15 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 
 /**
  * Created by ecogle on 2/4/2017.
  */
 
-public class MySQLDatabase {
+public class MySQLDatabase implements AutoCloseable{
 
     private static Connection conn;
 
@@ -55,6 +57,15 @@ public class MySQLDatabase {
             System.out.println("Connection CLOSED");
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void close()  {
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(MySQLDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

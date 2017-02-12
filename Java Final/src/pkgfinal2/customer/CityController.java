@@ -51,8 +51,7 @@ public class CityController {
         -- could probably return void and just set the private property
     */
     private int getHighestCityId(){
-        try{
-            Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement();
+        try(Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement()){            
             ResultSet rs = stmnt.executeQuery("select max(cityId) as maxId from city");
             if(rs.next()){
                 return rs.getInt("maxId");
@@ -71,10 +70,10 @@ public class CityController {
      */
     public void addCityToBase(String cityName, int countryId){
 
-        try {
-            String sql = "insert into city (cityId,city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy) values "
+        //todo fix the functionality of the add customer interface
+        String sql = "insert into city (cityId,city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?,?)";
-            PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
+        try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
             String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
             String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
             this.myCity = new City();
@@ -94,8 +93,7 @@ public class CityController {
             ps.setString(7, this.myCity.getLastUpdateBy());
 
             ps.execute();
-            /*Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New city Added to database");
-            alrt.showAndWait();*/
+            
             this.newCityAdded=true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,11 +108,9 @@ public class CityController {
      */
     private boolean cityExists(String str){
 
-        try {
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+        try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){            
             ResultSet rs = stmnt.executeQuery("Select * from U03PfE.city where city = '" + str.trim() + "'");
             if(rs.next()){
-
                 this.myCity = new City();
                 this.myCity.setCityId(rs.getInt("cityId"));
                 this.myCity.setCityName(rs.getString("city"));
@@ -122,13 +118,12 @@ public class CityController {
                 this.myCity.setCreatedBy(rs.getString("createdBy"));
                 this.myCity.setLastUpdate(rs.getString("lastUpdate"));
                 this.myCity.setLastUpdateBy(rs.getString("lastUpdateBy"));
-                stmnt.close();
                 MySQLDatabase.closeConnection();
                 this.existingCityId = this.myCity.getCityId();
                 return true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return false;
     }

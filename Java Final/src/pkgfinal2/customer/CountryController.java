@@ -54,8 +54,7 @@ public class CountryController {
         -- could probably return void and just set the private property
     */
     private int getHighestCountryId(){
-        try{
-            Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement();
+        try(Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement()){            
             ResultSet rs = stmnt.executeQuery("select max(countryId) as maxId from country");
             if(rs.next()){
                 return rs.getInt("maxId");
@@ -73,11 +72,9 @@ public class CountryController {
      * @param countryName the text from the textField
      */
     public void addCountryToBase(String countryName){
-
-        try {
-            String sql = "insert into country (countryId,country,createDate,createdBy,lastUpdate,lastUpdateBy) values "
+        String sql = "insert into country (countryId,country,createDate,createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?)";
-            PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
+        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)) {
             String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
             String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
             this.myCountry = new Country();
@@ -110,11 +107,9 @@ public class CountryController {
      */
     private boolean countryExists(String str){
 
-        try {
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+        try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){            
             ResultSet rs = stmnt.executeQuery("Select * from U03PfE.country where country = '" + str.trim() + "'");
             if(rs.next()){
-
                 this.myCountry = new Country();
                 this.myCountry.setCountryId(rs.getInt("countryId"));
                 this.myCountry.setCountryName(rs.getString("country"));
@@ -122,8 +117,6 @@ public class CountryController {
                 this.myCountry.setCreatedBy(rs.getString("createdBy"));
                 this.myCountry.setLastUpdate(rs.getString("lastUpdate"));
                 this.myCountry.setLastUpdateBy(rs.getString("lastUpdateBy"));
-                stmnt.close();
-                MySQLDatabase.closeConnection();
                 this.existingCountryId= this.myCountry.getCountryId();
                 return true;
             }
