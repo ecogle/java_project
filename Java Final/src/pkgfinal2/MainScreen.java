@@ -1,7 +1,3 @@
-/*
- * Login interface for the program.
- * Functionality not completed.
- */
 package pkgfinal2;
 
 import javafx.application.Application;
@@ -11,11 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pkgfinal2.customer.*;
 import pkgfinal2.login.LoginWindow;
 import javafx.scene.layout.HBox;
+import sun.applet.Main;
 
 /**
  * Main entry-point for the application. Login screen will pop-up as soon as main
@@ -31,27 +29,37 @@ public class MainScreen extends Application {
     Stage window;
     private static String authUserString=null;
     boolean loginSuccedded = false;
-    Button btnLogin = new Button("Show login");
+    Button btnLogin = new Button("Login");
+    Button btnLogoff = new Button("Logoff");
+
+    //sets the selected customer in the TableView
+    private static CompleteCustomer selectedCustomer;
 
     @Override
     public void start(Stage primaryStage) {
-        int intButtonWidth = 120;
-        window = primaryStage;
-        window.setTitle("TESTING MAIN PAGE");
+        int intButtonWidth = 110; //width of the buttons
+        window = primaryStage; //primary stage
+        window.setTitle("Customer Main");
         
-        //window.setMaximized(true);
+        // Labels and Buttons
         Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
         Button btnAddCustomer = new Button("Add Customer");
         Button btnEditCustomer = new Button("Edit Customer");
         Button btnDeleteCustomer = new Button("Delete Customer");
         Button btnRefreshList = new Button("Refresh list");
+
+        //set width of the buttons to be the same
         btnLogin.setPrefWidth(intButtonWidth);
         btnAddCustomer.setPrefWidth(intButtonWidth);
         btnDeleteCustomer.setPrefWidth(intButtonWidth);
         btnEditCustomer.setPrefWidth(intButtonWidth);
-        
+        btnLogoff.setPrefWidth(intButtonWidth);
+
+        // using BorderPane for the generalized layout
         BorderPane layout = new BorderPane();
         layout.setPrefSize(700,600);
+
+        // TableView to list the customer information
         TableView tvCustomer = new TableView();
         TableColumn colCustName = new TableColumn("Name");
         TableColumn colAddress = new TableColumn("Address");
@@ -61,6 +69,7 @@ public class MainScreen extends Application {
         TableColumn colActive = new TableColumn("Active");
         tvCustomer.getColumns().addAll(colCustName,colAddress,colAddress2,colCity,colCountry,colActive);
 
+        // Links the columns to the properties of the object
         colCustName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colAddress2.setCellValueFactory(new PropertyValueFactory<>("address2"));
@@ -68,51 +77,55 @@ public class MainScreen extends Application {
         colCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
         colActive.setCellValueFactory(new PropertyValueFactory<>("active"));
 
+        // nested GridPane to keep the buttons organized
+        GridPane gpButtons = new GridPane();
+        gpButtons.setVgap(5);
+        gpButtons.add(btnLogin,0,0); // stacked the Login/Logoff button and toggleing the Visible property
+        gpButtons.add(btnLogoff,0,0);
+        gpButtons.add(btnAddCustomer,0,1);
+        gpButtons.add(btnEditCustomer,0,2);
+        gpButtons.add(btnDeleteCustomer,0,3);
+
+        // VBox nested inside the GridPane for vertical layout... probably not necessary
         VBox vbxLeft = new VBox();
         vbxLeft.setPadding(new Insets(30,10,10,15));
         vbxLeft.setSpacing(10);
-        vbxLeft.getChildren().addAll(btnLogin,btnAddCustomer,btnEditCustomer,btnDeleteCustomer);
+        vbxLeft.getChildren().addAll(gpButtons);
         layout.setLeft(vbxLeft);
         layout.setCenter(tvCustomer);
-        
+
+        // Menu bar across the top of the window
         MenuBar mnuMenuBar = new MenuBar();
-        mnuMenuBar.prefWidthProperty().bind(window.widthProperty());
+        mnuMenuBar.prefWidthProperty().bind(window.widthProperty()); // binds the menu width to the window width
+
+        // Creates the menu items
         Menu fileMenu = new Menu("File");
         MenuItem mnuFile = new MenuItem("Open record");
         Menu editMenu = new Menu("Edit");
         Menu logMenu = new Menu("Users");
-        
-        EventHandler editMe = e -> {
-            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-            //display the addcustomer window and populate it with the data from the selected customer.
-            //MainClassController.editCustomer(compCust);
-            new EditCustomer(compCust).display();
-        };
-        // add functionality to disable login logoff based on login status
-        // try to add functionality to display the username in the menu area.
         MenuItem mnuLogin = new MenuItem("Login");
         MenuItem mnuLogoff = new MenuItem("Logoff");
-        
         MenuItem mnuEditCity = new MenuItem("Edit City...");
         MenuItem mnuEditCounty = new MenuItem("Edit Country...");
         MenuItem mnuEditCustomer = new MenuItem("Edit Customer...");
-        mnuEditCustomer.setOnAction(editMe);
         HBox mnuHbox = new HBox();
-        
         editMenu.getItems().addAll(mnuEditCity,mnuEditCounty,mnuEditCustomer);
         fileMenu.getItems().add(mnuFile);
         logMenu.getItems().addAll(mnuLogin,mnuLogoff);
         mnuMenuBar.getMenus().addAll(fileMenu,editMenu,logMenu);
         mnuHbox.getChildren().add(mnuMenuBar);
-        
-        layout.setTop(mnuHbox);
+        layout.setTop(mnuHbox); // ADDS THE HBOX TO THE BORDERPANE TOP
 
-        tvCustomer.setItems(MainClassController.buildCustList());
-        //add Customer
+        //**************************************************
+        //                  EVENT HANDLERS                 *
+        //**************************************************
 
-        btnAddCustomer.setVisible(false);
-        btnEditCustomer.setVisible(false);
-        btnDeleteCustomer.setVisible(false);
+        EventHandler editMe = e -> {
+            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+            new EditCustomer(compCust).display();
+        };
+
+        mnuEditCustomer.setOnAction(editMe);
 
         btnAddCustomer.setOnAction(event -> {
             AddCustomer a = new AddCustomer();
@@ -130,14 +143,28 @@ public class MainScreen extends Application {
                 btnAddCustomer.setVisible(true);
                 btnEditCustomer.setVisible(true);
                 btnDeleteCustomer.setVisible(true);
+                tvCustomer.setVisible(true);
+                btnLogin.setVisible(false);
+                btnLogoff.setVisible(true);
             }
+        });
+
+        btnLogoff.setOnAction(event -> {
+            MainScreen.setAuthUser(null);
+            btnAddCustomer.setVisible(false);
+            btnEditCustomer.setVisible(false);
+            btnDeleteCustomer.setVisible(false);
+            tvCustomer.setVisible(false);
+            btnLogin.setVisible(true);
+            btnLogoff.setVisible(false);
         });
 
         //double-click event
         tvCustomer.setOnMouseClicked(event -> {
             if(event.getClickCount() ==2){
                 CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-                new ShowCustomer(compCust).display();
+                setSelectedCustomer(compCust);
+                new ShowCustomer().display();
             }
         });
 
@@ -154,6 +181,23 @@ public class MainScreen extends Application {
             tvCustomer.setItems(MainClassController.buildCustList());
             tvCustomer.refresh();
         });
+
+        //**************************************************
+        //              END EVENT HANDLERS                 *
+        //**************************************************
+
+
+        // Calls the static method "buildCustList" to set the items of the list
+        tvCustomer.setItems(MainClassController.buildCustList());
+
+        // hides all of the buttons until successful login
+        btnAddCustomer.setVisible(false);
+        btnEditCustomer.setVisible(false);
+        btnDeleteCustomer.setVisible(false);
+        btnLogoff.setVisible(false);
+        tvCustomer.setVisible(false);
+
+
         Scene scene = new Scene(layout,700,600);        
         
         window.setScene(scene);
@@ -175,6 +219,15 @@ public class MainScreen extends Application {
     
     public static String getAuthUser(){
         return authUserString;
+    }
+
+    private static void setSelectedCustomer(CompleteCustomer c){
+        selectedCustomer = c;
+    }
+
+    public static CompleteCustomer getSelectedCustomer(){
+
+        return selectedCustomer;
     }
     
 }
