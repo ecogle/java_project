@@ -54,7 +54,9 @@ public class LoginWindow {
         hbxLang.getChildren().addAll(lblLanguage,cbLanguage,lblLocation,cbLocation);
         cbLanguage.setItems(FXCollections.observableArrayList("Spanish","French","English"));
         cbLanguage.setStyle("-fx-font:8pt \"san-serif\"");
-        System.out.println(Locale.getDefault());
+        cbLanguage.getSelectionModel().select(2); //sets the default value
+        //System.out.println(Locale.getDefault()); //prints default Locale
+
         
         cbLocation.setItems(FXCollections.observableArrayList("New York","Phoenix","London"));
         cbLocation.setStyle("-fx-font:8pt \"san-serif\"");
