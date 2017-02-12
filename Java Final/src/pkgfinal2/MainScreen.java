@@ -5,28 +5,17 @@
 package pkgfinal2;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pkgfinal2.customer.*;
 import pkgfinal2.login.LoginWindow;
-
-
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import javafx.scene.layout.HBox;
-
 
 /**
  * Main entry-point for the application. Login screen will pop-up as soon as main
@@ -44,14 +33,12 @@ public class MainScreen extends Application {
     boolean loginSuccedded = false;
     Button btnLogin = new Button("Show login");
 
-
-
-
     @Override
     public void start(Stage primaryStage) {
         int intButtonWidth = 120;
         window = primaryStage;
         window.setTitle("TESTING MAIN PAGE");
+        
         //window.setMaximized(true);
         Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
         Button btnAddCustomer = new Button("Add Customer");
@@ -62,9 +49,7 @@ public class MainScreen extends Application {
         btnAddCustomer.setPrefWidth(intButtonWidth);
         btnDeleteCustomer.setPrefWidth(intButtonWidth);
         btnEditCustomer.setPrefWidth(intButtonWidth);
-
-
-
+        
         BorderPane layout = new BorderPane();
         layout.setPrefSize(700,600);
         TableView tvCustomer = new TableView();
@@ -97,6 +82,11 @@ public class MainScreen extends Application {
         Menu editMenu = new Menu("Edit");
         Menu logMenu = new Menu("Users");
         
+        EventHandler editMe = e -> {
+            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+            //display the addcustomer window and populate it with the data from the selected customer.
+            MainClassController.editCustomer(compCust);
+        };
         // add functionality to disable login logoff based on login status
         // try to add functionality to display the username in the menu area.
         MenuItem mnuLogin = new MenuItem("Login");
@@ -104,6 +94,8 @@ public class MainScreen extends Application {
         
         MenuItem mnuEditCity = new MenuItem("Edit City...");
         MenuItem mnuEditCounty = new MenuItem("Edit Country...");
+        MenuItem mnuEditCustomer = new MenuItem("Edit Customer...");
+        mnuEditCustomer.setOnAction(editMe);
         HBox mnuHbox = new HBox();
         
         editMenu.getItems().addAll(mnuEditCity,mnuEditCounty);
@@ -114,10 +106,7 @@ public class MainScreen extends Application {
         
         layout.setTop(mnuHbox);
 
-        tvCustomer.setItems(buildCustList());
-
-
-
+        tvCustomer.setItems(MainClassController.buildCustList());
         //add Customer
 
         btnAddCustomer.setVisible(false);
@@ -127,8 +116,8 @@ public class MainScreen extends Application {
         btnAddCustomer.setOnAction(event -> {
             AddCustomer a = new AddCustomer();
             a.display();
-
-            tvCustomer.setItems(buildCustList());
+            tvCustomer.setItems(MainClassController.buildCustList());
+            tvCustomer.refresh();
         });
 
         btnLogin.setOnAction(e-> {
@@ -141,70 +130,30 @@ public class MainScreen extends Application {
                 btnEditCustomer.setVisible(true);
                 btnDeleteCustomer.setVisible(true);
             }
-
         });
 
-        btnEditCustomer.setOnAction(event -> {
-            //gets the selected object for editing
-            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-        });
+        
+        btnEditCustomer.setOnAction(editMe);
 
         btnDeleteCustomer.setOnAction(event -> {
             CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-            try{
-                String sql = "delete from customer where customerId = ?";
-                PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sql);
-                pstmnt.setInt(1,compCust.getCustomerId());
-                pstmnt.execute();
-            }
-            catch (SQLException e){
-                e.getMessage();
-            }
-            tvCustomer.setItems(buildCustList());
+            MainClassController.deleteCustomer(compCust);
+            tvCustomer.setItems(MainClassController.buildCustList());
+            tvCustomer.refresh();
         });
 
         btnRefreshList.setOnAction(event -> {
-            tvCustomer.setItems(buildCustList());
+            tvCustomer.setItems(MainClassController.buildCustList());
             tvCustomer.refresh();
         });
-        Scene scene = new Scene(layout,700,600);
-        
+        Scene scene = new Scene(layout,700,600);        
         
         window.setScene(scene);
         window.show();
         
     }
 
-    private static ObservableList<CompleteCustomer> buildCustList(){
-        ObservableList<CompleteCustomer> custList = FXCollections.observableArrayList();
-        try {
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
-            String sql = "select customerId,customerName,active,addr.addressId,address,address2,postalCode,phone,ci.cityId,city,co.countryId,country from customer cou inner join\n" +
-                    "address addr on cou.addressId = addr.addressId inner join city ci on addr.cityId = ci.cityId inner join\n" +
-                    "country co on ci.countryId = co.countryId";
-            ResultSet rs = stmnt.executeQuery(sql);
-            while(rs.next()){
-                CompleteCustomer c = new CompleteCustomer();
-                c.setCustomerId(rs.getInt("customerId"));
-                c.setCustomerName(rs.getString("customerName"));
-                c.setActive(rs.getBoolean("active"));
-                c.setFkAddressId(rs.getInt("addressId"));
-                c.setAddress(rs.getString("address"));
-                c.setAddress2(rs.getString("address2"));
-                c.setPostalCode(rs.getString("postalCode"));
-                c.setPhone(rs.getString("phone"));
-                c.setFkCityId(rs.getInt("cityId"));
-                c.setCity(rs.getString("city"));
-                c.setFkCountryId(rs.getInt("countryId"));
-                c.setCountry(rs.getString("country"));
-
-                custList.add(c);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return custList;
-    }
+    
 
     /**
      * @param args the command line arguments

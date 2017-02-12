@@ -80,16 +80,10 @@ public class LoginWindow {
             try{
                 //validates the login
                 success = checkValidLogin(txtUsername.getText(), passPassword.getText());
-                
-                //if login is successful, do stuff
-                // need to add the localization stuff for the alert box.
-                // throws exception if the login fails.
                 language = (String) cbLanguage.getValue();
                 location = (String) cbLocation.getValue();
-                if(success){
-                    
-                    MainScreen.setAuthUser(txtUsername.getText());
-                    
+                if(success){                    
+                    MainScreen.setAuthUser(txtUsername.getText());                    
                     if(language != null){                         
                         rb = ResourceBundle.getBundle("login",getLanguage(language));
                         Alert alrt = new Alert(Alert.AlertType.INFORMATION,rb.getString("loginSuccess"));
@@ -97,8 +91,7 @@ public class LoginWindow {
                     }
                     window.close();
                 }
-                else{
-                    
+                else{                    
                     throw new LoginException();
                 }
             }
@@ -124,10 +117,8 @@ public class LoginWindow {
     }
     
     public static boolean checkValidLogin(String username, String passwd){
-        String sql = "Select * from user where userName = '" + username.trim() + "' and password = '" + passwd.trim()+"';";
-        
-        try{
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+        String sql = "Select * from user where userName = '" + username.trim() + "' and password = '" + passwd.trim()+"';";        
+        try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();){            
             ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){
                 LogFile.write(username,LogEvents.LOGIN);

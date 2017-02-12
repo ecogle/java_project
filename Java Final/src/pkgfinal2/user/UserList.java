@@ -38,11 +38,11 @@ public class UserList implements Displayable {
         TableColumn colCreatedBy = new TableColumn("Created By");
         TableColumn colLastUpdate = new TableColumn("Last Update");
         TableColumn colUserId = new TableColumn("User Id");
-        colUserId.setCellValueFactory(new PropertyValueFactory<User,String>("userId"));
-        colUsername.setCellValueFactory(new PropertyValueFactory<User,String>("userName"));
-        colActive.setCellValueFactory(new PropertyValueFactory<User,Boolean>("active"));
-        colCreatedBy.setCellValueFactory(new PropertyValueFactory<User,String>("createdBy"));
-        colLastUpdate.setCellValueFactory(new PropertyValueFactory<User,String>("lastUpdate"));
+        colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
+        colUsername.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        colActive.setCellValueFactory(new PropertyValueFactory<>("active"));
+        colCreatedBy.setCellValueFactory(new PropertyValueFactory<>("createdBy"));
+        colLastUpdate.setCellValueFactory(new PropertyValueFactory<>("lastUpdate"));
         tblView.getColumns().addAll(colUserId,colUsername,colActive,colCreatedBy,colLastUpdate);
 
         buildUsers();
