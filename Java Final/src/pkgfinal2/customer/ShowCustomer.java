@@ -84,7 +84,7 @@ public class ShowCustomer {
         MenuItem editCustomer = new MenuItem("Edit Customer Name");
         MenuItem editAddress = new MenuItem("Edit Customer Address (change address)");
         SeparatorMenuItem s = new SeparatorMenuItem();
-        s.setStyle("-fx-color:red");
+        s.setStyle("-fx-border-color:red");
         Menu editAddressForAll =new Menu("Modify for ALL customers");
         MenuItem subMnuAddress = new MenuItem("Modify Address");
         MenuItem subMnuCountry = new MenuItem("Modify Country");
