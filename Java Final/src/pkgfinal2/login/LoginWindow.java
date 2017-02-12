@@ -26,7 +26,7 @@ public class LoginWindow {
     private String language;
     private Locale locale;
     public void display(){
-        
+        //todo fix the login to set defaults for the location and language
         Stage window = new Stage();
         window.setTitle("Login...");
         window.initModality(Modality.APPLICATION_MODAL);
@@ -54,6 +54,8 @@ public class LoginWindow {
         hbxLang.getChildren().addAll(lblLanguage,cbLanguage,lblLocation,cbLocation);
         cbLanguage.setItems(FXCollections.observableArrayList("Spanish","French","English"));
         cbLanguage.setStyle("-fx-font:8pt \"san-serif\"");
+        System.out.println(Locale.getDefault());
+        
         cbLocation.setItems(FXCollections.observableArrayList("New York","Phoenix","London"));
         cbLocation.setStyle("-fx-font:8pt \"san-serif\"");
         //sets up the controls

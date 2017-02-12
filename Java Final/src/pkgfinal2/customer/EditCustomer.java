@@ -9,9 +9,11 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -114,6 +116,9 @@ public class EditCustomer {
         gpControls.add(chkActive, 1, 7);
 
 
+        //* Try to integreate the STREAMS into this somehow. There has
+        //* to be a way to use collect to write the values for the txtControls
+        //* to a new ArrayList
         btnEdit.setOnAction(event -> {
             map.put("txtAddress",txtControls.get("txtAddress").getText());
             map.put("txtAddress2",txtControls.get("txtAddress2").getText());
