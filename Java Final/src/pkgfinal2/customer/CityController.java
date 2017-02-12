@@ -69,6 +69,7 @@ public class CityController {
      * @param cityName the text from the textField
      */
     public void addCityToBase(String cityName, int countryId){
+
         //todo fix the functionality of the add customer interface
         String sql = "insert into city (cityId,city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?,?)";
