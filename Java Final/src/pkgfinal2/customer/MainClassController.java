@@ -24,19 +24,20 @@ public class MainClassController {
         return c;
     }
 
-    public static void editCustomer(CompleteCustomer c){
+    public static void editCustomer(CompleteCustomer originalCust, CompleteCustomer modifiedCust){
         
         // edit the customer information
-        updateCountry(c);
-        updateCity(c);
-        updateAddress(c);
-        updateCustomer(c);       
+        //updateCountry(originalCust,modifiedCust);
+        //updateCity(originalCust,modifiedCust);
+        //updateAddress(originalCust,modifiedCust);
+        // updateCustomer(originalCust,modifiedCust);
     }
     
     public static void deleteCustomer(CompleteCustomer compCust){
         String sql = "delete from customer where customerId = ?";
         try(PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){
             pstmnt.setInt(1,compCust.getCustomerId());
+
             pstmnt.execute();
         }
         catch (SQLException e){
@@ -45,10 +46,11 @@ public class MainClassController {
     }
     
     private static boolean updateCountry(CompleteCustomer c){
-        String sql = "UDATE country set countryId= ?,countryName = ?";
+        String sql = "UDATE country set countryId= ?,countryName = ?" + " where customerId = ?";
         try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){            
             ps.setInt(1,c.getFkCountryId());
             ps.setString(2, c.getCountry());
+            ps.setInt(3,c.getCustomerId());
             boolean flag = ps.execute();
             if(flag){
                 return true;
@@ -61,11 +63,12 @@ public class MainClassController {
     }
 
     private static boolean updateCity(CompleteCustomer c){
-        String sql = "UPDATE city set cityId=?,city=?,countryId=?";
+        String sql = "UPDATE city set cityId=?,city=?,countryId=?" + " where cityId = ?";
         try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){            
             ps.setInt(1, c.getFkCityId());
             ps.setString(2, c.getCity());
             ps.setInt(3, c.getFkCountryId());
+            ps.setInt(4,c.getFkCityId());
             boolean flag = ps.execute();
             if(flag){
                 return true;

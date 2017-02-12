@@ -129,8 +129,6 @@ public class AddressController {
                 this.myAddress.setLastUpdateBy(rs.getString("lastUpdateBy"));
                 this.myAddress.setPhoneNumber(rs.getString("phone"));
                 this.myAddress.setPostalCode(rs.getString("postalCode"));
-                stmnt.close();
-                MySQLDatabase.closeConnection();
 
                 this.existingAddressId = this.myAddress.getAddressId();
                 return true;

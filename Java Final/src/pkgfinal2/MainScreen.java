@@ -85,7 +85,8 @@ public class MainScreen extends Application {
         EventHandler editMe = e -> {
             CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
             //display the addcustomer window and populate it with the data from the selected customer.
-            MainClassController.editCustomer(compCust);
+            //MainClassController.editCustomer(compCust);
+            new EditCustomer(compCust).display();
         };
         // add functionality to disable login logoff based on login status
         // try to add functionality to display the username in the menu area.
@@ -98,7 +99,7 @@ public class MainScreen extends Application {
         mnuEditCustomer.setOnAction(editMe);
         HBox mnuHbox = new HBox();
         
-        editMenu.getItems().addAll(mnuEditCity,mnuEditCounty);
+        editMenu.getItems().addAll(mnuEditCity,mnuEditCounty,mnuEditCustomer);
         fileMenu.getItems().add(mnuFile);
         logMenu.getItems().addAll(mnuLogin,mnuLogoff);
         mnuMenuBar.getMenus().addAll(fileMenu,editMenu,logMenu);

@@ -1,11 +1,5 @@
 package pkgfinal2.customer;
 
-import com.mysql.jdbc.MySQLConnection;
-import pkgfinal2.MySQLDatabase;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
