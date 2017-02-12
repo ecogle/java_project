@@ -3,9 +3,8 @@ package pkgfinal2.customer;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -86,9 +85,13 @@ public class EditCustomer {
             }
         });
         Menu mnuEdit = new Menu("Edit");
+        MenuItem editCustomer = new MenuItem("Edit Customer");
+        MenuItem editAddress = new MenuItem("Edit Address");
+
         Menu mnuView = new Menu("View");
 
         mnuFile.getItems().addAll(fileNew, fileSave, fileSaveAs, fileExit);
+        mnuEdit.getItems().addAll(editCustomer,editAddress);
         custMenu.getMenus().addAll(mnuFile, mnuEdit, mnuView);
         HBox hbxMenu = new HBox();
         hbxMenu.getChildren().add(custMenu);
@@ -130,6 +133,14 @@ public class EditCustomer {
         btnGridPane.add(btnEdit, 1, 0);
         btnGridPane.setHgap(8);
         populateExistingFields();
+
+        //using a stream to touch all of the textfield controls
+        this.txtControls.forEach((e,f) ->{
+            f.setEditable(false);
+            f.setStyle("-fx-background-color: #dedfe0");
+        });
+        chkActive.setDisable(true);
+
         gpControls.add(btnGridPane, 1, 9);
 
         layout.setCenter(gpControls);

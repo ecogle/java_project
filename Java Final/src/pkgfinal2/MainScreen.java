@@ -133,7 +133,14 @@ public class MainScreen extends Application {
             }
         });
 
-        
+        //double-click event
+        tvCustomer.setOnMouseClicked(event -> {
+            if(event.getClickCount() ==2){
+                CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+                new ShowCustomer(compCust).display();
+            }
+        });
+
         btnEditCustomer.setOnAction(editMe);
 
         btnDeleteCustomer.setOnAction(event -> {
