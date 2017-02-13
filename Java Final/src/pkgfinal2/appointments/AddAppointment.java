@@ -1,7 +1,7 @@
 package pkgfinal2.appointments;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+//import javafx.collections.FXCollections;
+//import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,13 +13,12 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.MainScreen;
-import pkgfinal2.customer.CompleteCustomer;
-
+//import pkgfinal2.customer.CompleteCustomer;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
+//import java.util.stream.Stream;
 
 /**
  * Created by ecogle on 2/12/2017.
