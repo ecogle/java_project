@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import pkgfinal2.appointments.AddAppointment;
 import pkgfinal2.customer.*;
 import pkgfinal2.login.LoginWindow;
 import javafx.scene.layout.HBox;
@@ -47,6 +48,7 @@ public class MainScreen extends Application {
         Button btnEditCustomer = new Button("Edit Customer");
         Button btnDeleteCustomer = new Button("Delete Customer");
         Button btnRefreshList = new Button("Refresh list");
+        Button btnAddAppointment = new Button("Schedule Appt.");
 
         //set width of the buttons to be the same
         btnLogin.setPrefWidth(intButtonWidth);
@@ -54,6 +56,7 @@ public class MainScreen extends Application {
         btnDeleteCustomer.setPrefWidth(intButtonWidth);
         btnEditCustomer.setPrefWidth(intButtonWidth);
         btnLogoff.setPrefWidth(intButtonWidth);
+        btnAddAppointment.setPrefWidth(intButtonWidth);
 
         // using BorderPane for the generalized layout
         BorderPane layout = new BorderPane();
@@ -85,6 +88,7 @@ public class MainScreen extends Application {
         gpButtons.add(btnAddCustomer,0,1);
         gpButtons.add(btnEditCustomer,0,2);
         gpButtons.add(btnDeleteCustomer,0,3);
+        gpButtons.add(btnAddAppointment,0,4);
 
         // VBox nested inside the GridPane for vertical layout... probably not necessary
         VBox vbxLeft = new VBox();
@@ -123,6 +127,8 @@ public class MainScreen extends Application {
         EventHandler editMe = e -> {
             CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
             new EditCustomer(compCust).display();
+            tvCustomer.setItems(MainClassController.buildCustList());
+            tvCustomer.refresh();
         };
 
         mnuEditCustomer.setOnAction(editMe);
@@ -146,6 +152,9 @@ public class MainScreen extends Application {
                 tvCustomer.setVisible(true);
                 btnLogin.setVisible(false);
                 btnLogoff.setVisible(true);
+                btnAddAppointment.setVisible(true);
+                // Calls the static method "buildCustList" to set the items of the list
+                tvCustomer.setItems(MainClassController.buildCustList());
             }
         });
 
@@ -157,6 +166,7 @@ public class MainScreen extends Application {
             tvCustomer.setVisible(false);
             btnLogin.setVisible(true);
             btnLogoff.setVisible(false);
+            btnAddAppointment.setVisible(false);
         });
 
         //double-click event
@@ -165,6 +175,8 @@ public class MainScreen extends Application {
                 CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
                 setSelectedCustomer(compCust);
                 new ShowCustomer().display();
+                tvCustomer.setItems(MainClassController.buildCustList());
+                tvCustomer.refresh();
             }
         });
 
@@ -182,6 +194,9 @@ public class MainScreen extends Application {
             tvCustomer.refresh();
         });
 
+        btnAddAppointment.setOnAction(event -> {
+            new AddAppointment().display();
+        });
         //**************************************************
         //              END EVENT HANDLERS                 *
         //**************************************************
@@ -196,6 +211,7 @@ public class MainScreen extends Application {
         btnDeleteCustomer.setVisible(false);
         btnLogoff.setVisible(false);
         tvCustomer.setVisible(false);
+        btnAddAppointment.setVisible(false);
 
 
         Scene scene = new Scene(layout,700,600);        
