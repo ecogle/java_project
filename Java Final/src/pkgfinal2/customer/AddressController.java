@@ -16,24 +16,26 @@ import java.util.Map;
  * Created by ecogle on 2/8/2017.
  */
 public class AddressController {
-    private Address myAddress;
-    private int highestAddressId;
-    public int existingAddressId;
-    public boolean newAddressAdded;
+    private Address myAddress; // Address property
+    private int highestAddressId; // Highest address id (for generating the PK)
+    public int existingAddressId; // current Address id
+    public boolean newAddressAdded; // flag for address if added or not
+
+    private CompleteCustomer completeCustomer;
 
     /**
-     *
+     * Adds the Address to the database with the city ID
      * @param addressFields
      * @param cityId
      */
     public AddressController(Map<String,String> addressFields,int cityId){
 
         /*
-            if the city does not exist, get the max value of the existing
+            if the address does not exist, get the max value of the existing
             primary keys then add the new value to the database. A new myCounty
             object is created with the values.
 
-            if the city does exist, a new myCity object is created with
+            if the address does exist, a new myAddress object is created with
             the existing values.
         
         */
@@ -44,6 +46,14 @@ public class AddressController {
         else{
             myAddress.setAddressId(existingAddressId);
         }
+    }
+
+    /**
+     * Constructor that instantiates the CompleteCustomer selected from the MainScreen
+     * @param c CompleteCustomer from the MainScreen
+     */
+    public AddressController(CompleteCustomer c){
+        this.completeCustomer = c;
     }
 
     /*
@@ -65,7 +75,7 @@ public class AddressController {
     }
 
     /**
-     *
+     * Adds address to the database
      * @param addressFields
      * @param cityId
      */
@@ -108,7 +118,8 @@ public class AddressController {
     }
 
     /**
-     * 
+     * Determines if the address exists (only tests on the address1 value
+     *
      * @param addressFields
      * @return
      */
@@ -118,6 +129,7 @@ public class AddressController {
             String sql = "Select * from U03PfE.address where address = '" + addressFields.get("address") + "'";
             ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){
+                // todo not sure if I need to assign all of these values...
                 this.myAddress = new Address();
                 this.myAddress.setAddressId(rs.getInt("addressId"));
                 this.myAddress.setAddress(rs.getString("address"));
@@ -137,6 +149,10 @@ public class AddressController {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void changeAddress(CompleteCustomer modifiedFields){
+
     }
 
     /**
