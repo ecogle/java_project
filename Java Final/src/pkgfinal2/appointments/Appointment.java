@@ -3,8 +3,6 @@ package pkgfinal2.appointments;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import pkgfinal2.audit.Audit;
-
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 
 /**
@@ -58,5 +56,44 @@ public class Appointment extends Audit {
     public void setEnd(ZonedDateTime s){
         this.end = s;
     }
+
+    public int getAppointmentId(){
+        return this.appointmentId.get();
+    }
+
+    public int getFkCustomerId(){
+        return this.fkCustomerId.get();
+    }
+
+    public String getTitle(){
+        return this.title.get();
+    }
+
+    public String getDescription(){
+        return this.description.get();
+    }
+
+    public String getLocation(){
+        return this.location.get();
+    }
+
+    public String getContact(){
+        return this.contact.get();
+    }
+
+    public String getUrl(){
+        return this.url.get();
+    }
+
+    public ZonedDateTime getStart(){
+        return this.start;
+    }
+
+    public ZonedDateTime getEnd(){
+        return this.end;
+    }
+
+
+
 
 }

@@ -16,6 +16,8 @@ import pkgfinal2.login.LoginWindow;
 import javafx.scene.layout.HBox;
 import sun.applet.Main;
 
+import java.time.ZoneId;
+
 /**
  * Main entry-point for the application. Login screen will pop-up as soon as main
  * screen loads. Nothing will be visible until the user authenticates. Once the
@@ -32,6 +34,7 @@ public class MainScreen extends Application {
     boolean loginSuccedded = false;
     Button btnLogin = new Button("Login");
     Button btnLogoff = new Button("Logoff");
+    private static ZoneId zoneId = ZoneId.systemDefault(); // gets the default timezone
 
     //sets the selected customer in the TableView
     private static CompleteCustomer selectedCustomer;
@@ -195,6 +198,8 @@ public class MainScreen extends Application {
         });
 
         btnAddAppointment.setOnAction(event -> {
+            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+            setSelectedCustomer(compCust);
             new AddAppointment().display();
         });
         //**************************************************
@@ -210,8 +215,10 @@ public class MainScreen extends Application {
         btnEditCustomer.setVisible(false);
         btnDeleteCustomer.setVisible(false);
         btnLogoff.setVisible(false);
-        tvCustomer.setVisible(false);
-        btnAddAppointment.setVisible(false);
+
+        //change for actual program
+        tvCustomer.setVisible(true);
+        btnAddAppointment.setVisible(true);
 
 
         Scene scene = new Scene(layout,700,600);        
@@ -244,6 +251,15 @@ public class MainScreen extends Application {
     public static CompleteCustomer getSelectedCustomer(){
 
         return selectedCustomer;
+    }
+
+    public static void setZoneId(ZoneId zone){
+        zoneId = zone;
+    }
+
+    public static ZoneId getZoneId(){
+        ZoneId d = zoneId;
+        return d;
     }
     
 }
