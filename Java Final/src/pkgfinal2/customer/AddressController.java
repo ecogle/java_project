@@ -151,9 +151,9 @@ public class AddressController {
         return false;
     }
 
-    public void changeAddress(CompleteCustomer modifiedFields){
-
-    }
+//    public void changeAddress(CompleteCustomer modifiedFields){
+//
+//    }
 
     /**
      * Returns an instance of the myCountry object
