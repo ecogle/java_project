@@ -12,7 +12,29 @@ public class Reminder {
     private SimpleIntegerProperty fkAppointmentId = new SimpleIntegerProperty();
     private SimpleStringProperty reminderCol = new SimpleStringProperty();
     
+    public int getReminderId(){
+        return this.reminderID.get();
+    }
+    public String gerReminderDate(){
+        return this.reminderDate.get();
+    }
     
+    public int getSnoozeIncrement(){
+        return this.snoozeIncrement.get();
+        
+    }
+    
+    public int getSnoozeIncrementId(){
+        return this.snoozeIncrementTypeId.get();
+    }
+    
+    public int getFkAppointmentId(){
+        return this.fkAppointmentId.get();
+    }
+    
+    public String getReminderCol(){
+        return this.reminderCol.get();
+    }
     
     
 }
