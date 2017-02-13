@@ -15,15 +15,16 @@ import pkgfinal2.MySQLDatabase;
  * Created by ecogle on 2/8/2017.
  */
 public class CustomerController {
-    private Customer myCustomer;
-    private int highestCustomerId;
-    public int existingCustomerId;
-    public boolean newCustomerAdded;
+    private Customer myCustomer; // customer object
+    private int highestCustomerId; // highest customer id
+    public int existingCustomerId; // current customer id
+    public boolean newCustomerAdded; // if the customer was added successfully
+    private CompleteCustomer completeCustomer; // Complete customer object
 
     /**
-     *
-     * @param customerFields
-     * @param addressId
+     * Constructor that takes two arguments.
+     * @param customerFields A MAP of the customer fields
+     * @param addressId the ID of the address that was created previously
      */
     public CustomerController(Map<String,String> customerFields,int addressId){
 
@@ -42,6 +43,16 @@ public class CustomerController {
         else{
             myCustomer.setCustomerId(existingCustomerId);
         }
+    }
+
+    /**
+     * Constructor that takes a CompleteCustomer as an argument and assigns it to the
+     * completeCustomer property
+     * @param c A CompleteCustomer
+     */
+    public CustomerController(CompleteCustomer c){
+        this.completeCustomer = c;
+
     }
 
     /*
@@ -63,10 +74,9 @@ public class CustomerController {
     }
 
     /**
-     *
-     *
-     * @param customerFields
-     * @param addressId
+     * Adds the customer to the database and links the address id to the customer
+     * @param customerFields A MAP of the customer fields
+     * @param addressId An id of the Address that was added
      */
     public void addCustomerToBase(Map<String,String> customerFields, int addressId){
         String sql = "insert into customer (customerId,customerName, addressId, active,createDate, createdBy,lastUpdate,lastUpdateBy) values "
@@ -84,6 +94,7 @@ public class CustomerController {
             this.myCustomer.setLastUpdate(nowDate + " " + nowTime);
             this.myCustomer.setLastUpdateBy(MainScreen.getAuthUser());           
 
+            // sets the PreparedStatement variables
             ps.setInt(1,this.myCustomer.getCustomerId());
             ps.setString(2,this.myCustomer.getCustomerName());            
             ps.setInt(3,this.myCustomer.getAddressId());
@@ -92,20 +103,18 @@ public class CustomerController {
             ps.setString(6, this.myCustomer.getCreatedBy());
             ps.setString(7, this.myCustomer.getLastUpdate());
             ps.setString(8, this.myCustomer.getLastUpdateBy());
-            
 
+            // executes the PreparedStatement
             ps.execute();
-            /*Alert alrt = new Alert(Alert.AlertType.INFORMATION,"New customer Added to database");
-            alrt.showAndWait();*/
-            this.newCustomerAdded=true;
+            this.newCustomerAdded=true; // sets the flag to true
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 
-     * @param customerFields
+     * Determines if the Customer is already in the database
+     * @param customerFields A MAP of the customer fields
      * @return
      */
     private boolean customerExists(Map<String,String> customerFields){
@@ -113,7 +122,8 @@ public class CustomerController {
         try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){
             ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){
-                this.myCustomer = new Customer();                
+                // sets up a new Customer object
+                this.myCustomer = new Customer();
                 this.myCustomer.setCustomerId(rs.getInt("customerId"));
                 this.myCustomer.setCustomerName(rs.getString("customerName"));
                 this.myCustomer.setAddressId(rs.getInt("addressId"));
@@ -139,5 +149,19 @@ public class CustomerController {
         Customer c = new Customer();
         c = this.myCustomer;
         return c;
+    }
+
+    // todo determine if this needs to be static or not
+    // updates the Customer name ONLY
+    public static void updateCustomerName(int index, String newName){
+        String sql = "UPDATE customer set customerName = ? where customerId = ?;";
+        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+            ps.setInt(2,index);
+            ps.setString(1,newName);
+            ps.execute();
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 }
