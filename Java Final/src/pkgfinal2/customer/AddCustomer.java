@@ -29,7 +29,7 @@ public class AddCustomer extends Audit implements Displayable {
         Stage window = new Stage();
         window.setTitle("Add Customer");
         window.setOnCloseRequest(event -> {
-            event.consume();
+           // event.consume();
         });
 
         window.initModality(Modality.APPLICATION_MODAL);

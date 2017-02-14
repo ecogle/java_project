@@ -3,7 +3,9 @@ package pkgfinal2.login;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZoneId;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -25,8 +27,11 @@ public class LoginWindow {
     private String location;
     private String language;
     private Locale locale;
+
+    private Map<String,ZoneId> zoneIdMap;
+
     public void display(){
-        
+        //todo fix the login to set defaults for the location and language
         Stage window = new Stage();
         window.setTitle("Login...");
         window.initModality(Modality.APPLICATION_MODAL);
@@ -41,7 +46,6 @@ public class LoginWindow {
         message.setFont(fMessage);
         layout.add(message, 0, 0,2,1);
 
-
         HBox hbxLang = new HBox();
         
         ChoiceBox cbLanguage = new ChoiceBox();
@@ -54,6 +58,10 @@ public class LoginWindow {
         hbxLang.getChildren().addAll(lblLanguage,cbLanguage,lblLocation,cbLocation);
         cbLanguage.setItems(FXCollections.observableArrayList("Spanish","French","English"));
         cbLanguage.setStyle("-fx-font:8pt \"san-serif\"");
+        cbLanguage.getSelectionModel().select(2); //sets the default value
+
+
+        
         cbLocation.setItems(FXCollections.observableArrayList("New York","Phoenix","London"));
         cbLocation.setStyle("-fx-font:8pt \"san-serif\"");
         //sets up the controls
@@ -110,7 +118,7 @@ public class LoginWindow {
         
         Scene scene = new Scene(layout,300,250);
         Platform.runLater(() ->{
-            btnLogin.requestFocus();
+            txtUsername.requestFocus();
         });
         window.setScene(scene);
         window.showAndWait();
