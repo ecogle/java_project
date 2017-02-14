@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 public class TimeTester {
 
     public static void main(String[] args) {
-        //ZoneId.getAvailableZoneIds().stream().sorted().forEach(System.out::println);
+        ZoneId.getAvailableZoneIds().stream().sorted().forEach(System.out::println);
 
         ZoneId utc = ZoneId.of("UTC");
 

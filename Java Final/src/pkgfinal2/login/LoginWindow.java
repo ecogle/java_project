@@ -20,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
+import pkgfinal2.appointments.AppointmentController;
 
 
 public class LoginWindow {
@@ -63,7 +64,15 @@ public class LoginWindow {
 
         
         cbLocation.setItems(FXCollections.observableArrayList("New York","Phoenix","London"));
+        cbLocation.getSelectionModel().select(0);
         cbLocation.setStyle("-fx-font:8pt \"san-serif\"");
+        cbLocation.setOnAction(event -> {
+            Alert alt = new Alert(Alert.AlertType.INFORMATION);
+            String s = cbLocation.getSelectionModel().getSelectedItem().toString();
+            alt.setContentText(s + " " + getTimeZone(s));
+            alt.showAndWait();
+        });
+
         //sets up the controls
         Label lblUsername = new Label("Username: ");
         layout.add(lblUsername, 0, 1);
@@ -123,7 +132,9 @@ public class LoginWindow {
         window.setScene(scene);
         window.showAndWait();
     }
-    
+
+    // todo break out into a controller
+
     public static boolean checkValidLogin(String username, String passwd){
         String sql = "Select * from user where userName = '" + username.trim() + "' and password = '" + passwd.trim()+"';";        
         try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();){            
@@ -154,6 +165,21 @@ public class LoginWindow {
                 break;
         }
         return loc;
+    }
+
+    private static ZoneId getTimeZone(String location){
+        ZoneId zoneId;
+        switch (location){
+            case "Phoenix":  zoneId = ZoneId.of("US/Mountain");
+                break;
+            case "New York": zoneId = ZoneId.of("US/Eastern");
+                break;
+            case "London": zoneId = ZoneId.of("GMT");
+                break;
+            default: zoneId=ZoneId.systemDefault();
+                break;
+        }
+        return zoneId;
     }
     
     

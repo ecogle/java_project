@@ -126,7 +126,7 @@ public class AppointmentController {
         return d;
     }
 
-    private static ZonedDateTime getZonedDateTime(String str){
+    public static ZonedDateTime getZonedDateTime(String str){
         ZonedDateTime zdt = ZonedDateTime
                 .of(LocalDateTime
                         .parse(hackTheDot(str),DateTimeFormatter
