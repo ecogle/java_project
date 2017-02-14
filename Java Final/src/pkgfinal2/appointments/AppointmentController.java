@@ -95,13 +95,8 @@ public class AppointmentController {
 
     public ObservableList<Appointment> getAppointmentList(){
         ObservableList<Appointment> apptList = FXCollections.observableArrayList();
-        //String sql = "select * from appointment where customerId = ?";
-        //try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
         String sql = "Select * from appointment where customerId = " + MainScreen.getSelectedCustomer().getCustomerId();
         try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){
-            //ps.setInt(1, MainScreen.getSelectedCustomer().getCustomerId());
-            //System.out.println(ps);
-            //ResultSet rs = ps.executeQuery(sql);
             ResultSet rs = stmnt.executeQuery(sql);
             while(rs.next()){
                 Appointment apt = new AppointmentBuilder()
@@ -110,10 +105,8 @@ public class AppointmentController {
                         .setStart(getZonedDateTime(rs.getString("start")))
                         .setEnd(getZonedDateTime(rs.getString("end")))
                         .build();
-
                 apptList.add(apt);
             }
-
         }
         catch (SQLException e){
             e.printStackTrace();
