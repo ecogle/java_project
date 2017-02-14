@@ -41,6 +41,7 @@ public class ShowAppointment {
         ComboBox cboEndTime = new ComboBox();
         Button btnEdit = new Button("Edit");
         Button btnDelete = new Button("Delete");
+        CheckBox chkEdit = new CheckBox("Edit");
 
         window.setTitle("Add Appointment for " + MainScreen.getSelectedCustomer().getCustomerName());
         layout.setPadding(new Insets(8));
@@ -81,18 +82,51 @@ public class ShowAppointment {
         hbButtons.getChildren().addAll(btnEdit,btnDelete);
 
         gp.setPadding(new Insets(8));
+
         gp.setHgap(8);
-        gp.setVgap(5);
+        gp.setVgap(10);
         StackPane sp = new StackPane();
 
-        gp.add(lblCustomerName,0,0,3,1);    ;       ;
+        gp.add(chkEdit,0,0,3,1);
+        gp.add(lblCustomerName,0,1,3,1);    ;       ;
+        gp.add(lblTitle,0,5); gp.add(txtControls.get("title"),1,5);
+        gp.add(lblDescription,0,6); gp.add(txtControls.get("description"),1,6);
+        gp.add(lblLocation,0,7); gp.add(txtControls.get("location"),1,7);
+        gp.add(lblContact,0,8); gp.add(txtControls.get("contact"),1,8);
+        gp.add(lblUrl,0,9); gp.add(txtControls.get("url"),1,9);
+        gp.add(hbButtons,0,10,3,1);
 
-        gp.add(lblTitle,0,3); gp.add(txtControls.get("title"),1,3);
-        gp.add(lblDescription,0,4); gp.add(txtControls.get("description"),1,4);
-        gp.add(lblLocation,0,5); gp.add(txtControls.get("location"),1,5);
-        gp.add(lblContact,0,6); gp.add(txtControls.get("contact"),1,6);
-        gp.add(lblUrl,0,7); gp.add(txtControls.get("url"),1,7);
-        gp.add(hbButtons,0,9,3,1);
+        // disable the text controls for editing
+        txtControls.forEach((x,y)-> {
+            y.setEditable(false);
+            y.setStyle("-fx-background-color:lightgray");
+        });
+        btnDelete.setVisible(false);
+        btnEdit.setVisible(false);
+
+
+        //************************************************
+        //                EVENT HANDLERS                **
+        //************************************************
+
+        chkEdit.setOnAction(event -> {
+            if(chkEdit.isSelected()){
+                txtControls.forEach((x,y)-> {
+                    y.setEditable(true);
+                    y.setStyle("-fx-background-color:white; -fx-border-width:1; -fx-border-style:solid; -fx-border-color:gray; -fx-border-radius:3");
+                });
+                btnDelete.setVisible(true);
+                btnEdit.setVisible(true);
+            }
+            else {
+                txtControls.forEach((x,y)-> {
+                    y.setEditable(false);
+                    y.setStyle("-fx-background-color:lightgray");
+                });
+                btnDelete.setVisible(false);
+                btnEdit.setVisible(false);
+            }
+        });
 
         layout.setCenter(gp);
         Scene scene = new Scene(layout,450,350);
