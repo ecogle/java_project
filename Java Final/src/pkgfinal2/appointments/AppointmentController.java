@@ -102,6 +102,11 @@ public class AppointmentController {
                 Appointment apt = new AppointmentBuilder()
                         .setAppointmentId(rs.getInt("appointmentId"))
                         .setFkCustomerId(rs.getInt("customerId"))
+                        .setContact(rs.getString("contact"))
+                        .setDescription(rs.getString("description"))
+                        .setLocation(rs.getString("location"))
+                        .setTitle(rs.getString("title"))
+                        .setUrl(rs.getString("url"))
                         .setStart(getZonedDateTime(rs.getString("start")))
                         .setEnd(getZonedDateTime(rs.getString("end")))
                         .build();

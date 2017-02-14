@@ -194,7 +194,8 @@ public class ShowCustomer {
 
         tvAppointments.setOnMouseClicked(event -> {
             if(event.getClickCount()==2){
-                new ShowAppointment().display();
+                Appointment apt = (Appointment) tvAppointments.getSelectionModel().getSelectedItem();
+                new ShowAppointment(apt).display();
             }
         });
 
