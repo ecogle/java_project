@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import pkgfinal2.MainScreen;
 import pkgfinal2.appointments.Appointment;
 import pkgfinal2.appointments.AppointmentController;
+import pkgfinal2.appointments.ShowAppointment;
 import sun.applet.Main;
 
 import java.util.HashMap;
@@ -189,6 +190,12 @@ public class ShowCustomer {
         editCustomer.setOnAction(event -> {
             new EditCustomerName().display();
             txtControls.get("txtCustomer").setText(MainScreen.getSelectedCustomer().getCustomerName());
+        });
+
+        tvAppointments.setOnMouseClicked(event -> {
+            if(event.getClickCount()==2){
+                new ShowAppointment().display();
+            }
         });
 
         // sets up the scene

@@ -187,8 +187,6 @@ public class AddAppointment implements Displayable {
             }
         });
 
-        Scene scene = new Scene(layout,700,350);
-        window.setScene(scene);
-        window.showAndWait();
+
     }
 }
