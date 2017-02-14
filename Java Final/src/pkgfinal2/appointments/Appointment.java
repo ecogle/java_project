@@ -21,13 +21,13 @@ public class Appointment extends Audit {
     private SimpleStringProperty location = new SimpleStringProperty();
     private SimpleStringProperty contact = new SimpleStringProperty();
     private SimpleStringProperty url = new SimpleStringProperty();
-    private ZonedDateTime start;
     private SimpleStringProperty startDate = new SimpleStringProperty();
     private SimpleStringProperty startTime = new SimpleStringProperty();
     private SimpleStringProperty endDate = new SimpleStringProperty();
     private SimpleStringProperty endTime = new SimpleStringProperty();
-
+    private ZonedDateTime start;
     private ZonedDateTime end;
+
 
 
 

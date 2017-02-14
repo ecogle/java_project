@@ -7,6 +7,7 @@ import pkgfinal2.login.LoginWindow;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -62,13 +63,14 @@ public class AppointmentBuilder {
         return this;
     }
 
+    // set DateTime as UTC
     public AppointmentBuilder setStart(ZonedDateTime z){
-        this.start = z;
+        this.start = convertToUTC(z);
         return this;
     }
 
     public AppointmentBuilder setEnd(ZonedDateTime s){
-        this.end = s;
+        this.end = convertToUTC(s);
         return this;
     }
 
@@ -88,6 +90,11 @@ public class AppointmentBuilder {
         this.appt.setLastUpdateBy(MainScreen.getAuthUser());
 
         return appt;
+    }
+
+    private static ZonedDateTime convertToUTC(ZonedDateTime z){
+        ZonedDateTime utc = z.withZoneSameInstant(ZoneId.of("UTC"));
+        return utc;
     }
 
 }

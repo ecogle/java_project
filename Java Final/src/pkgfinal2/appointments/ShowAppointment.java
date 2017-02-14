@@ -43,7 +43,7 @@ public class ShowAppointment {
         Button btnDelete = new Button("Delete");
         CheckBox chkEdit = new CheckBox("Edit");
 
-        window.setTitle("Add Appointment for " + MainScreen.getSelectedCustomer().getCustomerName());
+        window.setTitle("Display Appointment for " + MainScreen.getSelectedCustomer().getCustomerName());
         layout.setPadding(new Insets(8));
         //Labels and TextFields
         Label lblTitle = new Label("Title");
