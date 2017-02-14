@@ -50,6 +50,12 @@ public class AddAppointment implements Displayable {
         DatePicker dtpReminderDate = new DatePicker();
         Label lblReminderDate = new Label("Reminder date");
         Label lblSnoozeIncrement = new Label("Snooze inc.");
+        Label lblIncrementTypeDescription = new Label("Inc. Description");
+        TextArea txtaDescription = new TextArea();
+        txtaDescription.setPrefColumnCount(5);
+        txtaDescription.setPrefWidth(100d);
+        txtaDescription.setWrapText(true);
+
         ComboBox cboSnoozeIncrement = new ComboBox();
         cboSnoozeIncrement.setPromptText("Snooze Increment");
         cboSnoozeIncrement.setItems(FXCollections.observableArrayList(Stream.iterate(5, e -> e + 5).limit(4).collect(Collectors.toList())));
@@ -142,6 +148,10 @@ public class AddAppointment implements Displayable {
         layout.setLeft(sp);
         layout.setRight(gp2);
 
+        //*************************************************
+        //**              EVENT HANDLERS                 **
+        //*************************************************
+
         // todo check for valid date
         cboStartTime.setOnAction(event -> {
             //todo check for valid times
@@ -164,8 +174,13 @@ public class AddAppointment implements Displayable {
                     .build();
 
             AppointmentController ac = new AppointmentController(apt);
-
             ac.addToDatabase();
+
+            // add functionality to add reminder to database if chkReminder is checked.
+
+            if(chkReminder.isSelected()){
+                // add reminder to database
+            }
 
         });
 
@@ -186,6 +201,10 @@ public class AddAppointment implements Displayable {
                 cboSnoozeIncrement.setVisible(false);
             }
         });
+
+        //*************************************************
+        //**            END EVENT HANDLERS               **
+        //*************************************************
 
         layout.setCenter(gp);
         Scene scene = new Scene(layout,700,350);

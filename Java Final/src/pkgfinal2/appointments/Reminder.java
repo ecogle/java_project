@@ -8,7 +8,7 @@ public class Reminder {
     private SimpleIntegerProperty reminderID = new SimpleIntegerProperty();
     private SimpleStringProperty reminderDate = new SimpleStringProperty(); // DATETIME
     private SimpleIntegerProperty snoozeIncrement = new SimpleIntegerProperty(); // ? number of minutes to snooze ?
-    private SimpleIntegerProperty snoozeIncrementTypeId = new SimpleIntegerProperty();// ? foreign key from increment type?
+    private SimpleIntegerProperty fkSnoozeIncrementTypeId = new SimpleIntegerProperty();// ? foreign key from increment type?
     private SimpleIntegerProperty fkAppointmentId = new SimpleIntegerProperty();
     private SimpleStringProperty reminderCol = new SimpleStringProperty();
     
@@ -23,7 +23,7 @@ public class Reminder {
         
     }
     public int getSnoozeIncrementId(){
-        return this.snoozeIncrementTypeId.get();
+        return this.fkSnoozeIncrementTypeId.get();
     }
     public int getFkAppointmentId(){
         return this.fkAppointmentId.get();
@@ -44,8 +44,8 @@ public class Reminder {
         this.snoozeIncrement.set(increment);
     }
 
-    public void setSnoozeIncrementTypeId(int id){
-        this.snoozeIncrementTypeId.set(id);
+    public void setFkSnoozeIncrementTypeId(int id){
+        this.fkSnoozeIncrementTypeId.set(id);
     }
 
     public void setFkAppointmentId(int id){
