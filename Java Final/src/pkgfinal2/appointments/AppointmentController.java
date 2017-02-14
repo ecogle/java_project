@@ -17,6 +17,8 @@ import java.util.List;
 /**
  * Created by ecogle on 2/12/2017.
  */
+
+    // todo store all times as UTC, then adjust the offset based on timezone.
 public class AppointmentController {
 
     private Appointment appointment;
