@@ -128,10 +128,12 @@ public class MainScreen extends Application {
         //**************************************************
 
         EventHandler editMe = e -> {
-            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-            new EditCustomer(compCust).display();
-            tvCustomer.setItems(MainClassController.buildCustList());
-            tvCustomer.refresh();
+            if(tvCustomer.getSelectionModel().isEmpty() == false){
+                CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+                new EditCustomer(compCust).display();
+                tvCustomer.setItems(MainClassController.buildCustList());
+                tvCustomer.refresh();
+            }
         };
 
         mnuEditCustomer.setOnAction(editMe);
@@ -186,10 +188,12 @@ public class MainScreen extends Application {
         btnEditCustomer.setOnAction(editMe);
 
         btnDeleteCustomer.setOnAction(event -> {
-            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-            MainClassController.deleteCustomer(compCust);
-            tvCustomer.setItems(MainClassController.buildCustList());
-            tvCustomer.refresh();
+            if(tvCustomer.getSelectionModel().isEmpty() == false){
+                CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+                MainClassController.deleteCustomer(compCust);
+                tvCustomer.setItems(MainClassController.buildCustList());
+                tvCustomer.refresh();
+            }
         });
 
         btnRefreshList.setOnAction(event -> {
@@ -198,9 +202,12 @@ public class MainScreen extends Application {
         });
 
         btnAddAppointment.setOnAction(event -> {
-            CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-            setSelectedCustomer(compCust);
-            new AddAppointment().display();
+            if(tvCustomer.getSelectionModel().isEmpty()==false){
+                CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+                setSelectedCustomer(compCust);
+                new AddAppointment().display();
+            }
+
         });
         //**************************************************
         //              END EVENT HANDLERS                 *
@@ -217,8 +224,8 @@ public class MainScreen extends Application {
         btnLogoff.setVisible(false);
 
         //change for actual program
-        tvCustomer.setVisible(true);
-        btnAddAppointment.setVisible(true);
+        tvCustomer.setVisible(false);
+        btnAddAppointment.setVisible(false);
 
 
         Scene scene = new Scene(layout,700,600);        

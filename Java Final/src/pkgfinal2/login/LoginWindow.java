@@ -25,15 +25,16 @@ import pkgfinal2.appointments.AppointmentController;
 
 public class LoginWindow {
     private boolean success=false;
-    private String location;
     private String language;
     private Locale locale;
-
+    //private static ZoneId zoneId;
+    private String s;
     private Map<String,ZoneId> zoneIdMap;
 
     public void display(){
         //todo fix the login to set defaults for the location and language
         Stage window = new Stage();
+
         window.setTitle("Login...");
         window.initModality(Modality.APPLICATION_MODAL);
         
@@ -62,17 +63,17 @@ public class LoginWindow {
         cbLanguage.getSelectionModel().select(2); //sets the default value
 
 
-        
+
         cbLocation.setItems(FXCollections.observableArrayList("New York","Phoenix","London"));
         cbLocation.getSelectionModel().select(0);
+
         cbLocation.setStyle("-fx-font:8pt \"san-serif\"");
         cbLocation.setOnAction(event -> {
-            Alert alt = new Alert(Alert.AlertType.INFORMATION);
-            String s = cbLocation.getSelectionModel().getSelectedItem().toString();
-            alt.setContentText(s + " " + getTimeZone(s));
-            alt.showAndWait();
+            s = cbLocation.getSelectionModel().getSelectedItem().toString();
         });
 
+
+        //zoneId=getTimeZone(s);
         //sets up the controls
         Label lblUsername = new Label("Username: ");
         layout.add(lblUsername, 0, 1);
@@ -98,11 +99,13 @@ public class LoginWindow {
                 //validates the login
                 success = checkValidLogin(txtUsername.getText(), passPassword.getText());
                 language = (String) cbLanguage.getValue();
-                location = (String) cbLocation.getValue();
+                //location = (String) cbLocation.getValue();
                 if(success){                    
                     MainScreen.setAuthUser(txtUsername.getText());                    
                     if(language != null){                         
                         rb = ResourceBundle.getBundle("login",getLanguage(language));
+                        s = cbLocation.getSelectionModel().getSelectedItem().toString();
+                        MainScreen.setZoneId(getTimeZone(s));
                         Alert alrt = new Alert(Alert.AlertType.INFORMATION,rb.getString("loginSuccess"));
                         alrt.showAndWait();
                     }
@@ -181,6 +184,7 @@ public class LoginWindow {
         }
         return zoneId;
     }
+
     
     
 }

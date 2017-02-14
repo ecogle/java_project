@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
+import pkgfinal2.login.LoginWindow;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -130,7 +131,7 @@ public class AppointmentController {
         ZonedDateTime zdt = ZonedDateTime
                 .of(LocalDateTime
                         .parse(hackTheDot(str),DateTimeFormatter
-                                .ofPattern("yyyy-MM-dd HH:mm:ss")),ZoneId.systemDefault());
+                                .ofPattern("yyyy-MM-dd HH:mm:ss")), MainScreen.getZoneId());
 
         return zdt;
 
