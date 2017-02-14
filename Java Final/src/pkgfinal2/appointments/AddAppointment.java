@@ -2,6 +2,7 @@ package pkgfinal2.appointments;
 
 //import javafx.collections.FXCollections;
 //import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,6 +19,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 //import java.util.stream.Stream;
 
 /**
@@ -30,6 +33,8 @@ public class AddAppointment implements Displayable {
 
     @Override
     public void display(){
+
+        //appointment gui
         Stage window = new Stage();
         DateTimeFormatter f = DateTimeFormatter.ofPattern("h:mma");
         BorderPane layout = new BorderPane();
@@ -39,6 +44,16 @@ public class AddAppointment implements Displayable {
         ComboBox cboEndTime = new ComboBox();
         Button btnClear = new Button("Clear");
         Button btnSubmit = new Button("Submit");
+
+        //reminder gui
+        CheckBox chkReminder = new CheckBox("Add Reminder");
+        DatePicker dtpReminderDate = new DatePicker();
+        Label lblReminderDate = new Label("Reminder date");
+        Label lblSnoozeIncrement = new Label("Snooze inc.");
+        ComboBox cboSnoozeIncrement = new ComboBox();
+        cboSnoozeIncrement.setPromptText("Snooze Increment");
+        cboSnoozeIncrement.setItems(FXCollections.observableArrayList(Stream.iterate(5, e -> e + 5).limit(4).collect(Collectors.toList())));
+
 
         window.setTitle("Add Appointment for " + MainScreen.getSelectedCustomer().getCustomerName());
         layout.setPadding(new Insets(8));
@@ -65,9 +80,6 @@ public class AddAppointment implements Displayable {
         txtControls.put("contact",new TextField());
         txtControls.put("url",new TextField());
 
-
-
-
         // populate the time boxes
         cboStartTime.setItems(AppointmentController.populateTimeSelection());
         cboEndTime.setItems(AppointmentController.populateTimeSelection());
@@ -79,10 +91,25 @@ public class AddAppointment implements Displayable {
         dtpEnd.setMaxWidth(100);
 
         GridPane gp = new GridPane();
+
         gp.setPadding(new Insets(8));
         gp.setHgap(8);
         gp.setVgap(5);
         StackPane sp = new StackPane();
+
+        GridPane gp2 = new GridPane();
+        gp2.setMinWidth(245);
+        gp2.setPadding(new Insets(8));
+        gp2.setHgap(8);
+        gp2.setVgap(5);
+        gp2.add(chkReminder,0,0,2,1);
+        gp2.add(lblReminderDate,0,1);  gp2.add(dtpReminderDate,1,1);
+        gp2.add(lblSnoozeIncrement,0,2); gp2.add(cboSnoozeIncrement,1,2);
+        lblReminderDate.setVisible(false);
+        dtpReminderDate.setVisible(false);
+        lblSnoozeIncrement.setVisible(false);
+        cboSnoozeIncrement.setVisible(false);
+
 
         sp.setPrefWidth(50);
 
@@ -111,10 +138,9 @@ public class AddAppointment implements Displayable {
         gp.add(lblUrl,0,7); gp.add(txtControls.get("url"),1,7);
         gp.add(hbButtons,0,9,3,1);
 
-
-
         layout.setCenter(gp);
         layout.setLeft(sp);
+        layout.setRight(gp2);
 
         // todo check for valid date
         cboStartTime.setOnAction(event -> {
@@ -143,18 +169,26 @@ public class AddAppointment implements Displayable {
 
         });
 
+        chkReminder.setOnAction(event -> {
+            if(chkReminder.isSelected()){
+                lblReminderDate.setVisible(true);
+                dtpReminderDate.setVisible(true);
+                lblSnoozeIncrement.setVisible(true);
+                cboSnoozeIncrement.setVisible(true);
+            }
+            else{
+                dtpReminderDate.getEditor().clear();
+                cboSnoozeIncrement.getSelectionModel().clearSelection();
 
-        Scene scene = new Scene(layout,600,475);
+                lblReminderDate.setVisible(false);
+                dtpReminderDate.setVisible(false);
+                lblSnoozeIncrement.setVisible(false);
+                cboSnoozeIncrement.setVisible(false);
+            }
+        });
+
+        Scene scene = new Scene(layout,700,350);
         window.setScene(scene);
         window.showAndWait();
-    }
-
-    public static void main(String[] args){
-        //ZoneId.getAvailableZoneIds().stream().filter(e-> e.contains("America")).sorted().forEach(System.out::println);
-
-        String time = "10:45:32AM CST";
-        System.out.println(AppointmentController.parseTime(time).format(DateTimeFormatter.ofPattern("h:mma")));
-
-
     }
 }

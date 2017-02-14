@@ -3,12 +3,15 @@ package pkgfinal2.customer;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pkgfinal2.MainScreen;
+import pkgfinal2.appointments.Appointment;
+import pkgfinal2.appointments.AppointmentController;
 import sun.applet.Main;
 
 import java.util.HashMap;
@@ -155,6 +158,21 @@ public class ShowCustomer {
         // nested GridPane for the buttons
         GridPane btnGridPane = new GridPane();
 
+        //Table for appointments
+        TableView tvAppointments = new TableView();
+        TableColumn colApptStartDate = new TableColumn("Start Date");
+        TableColumn colApptEndDate = new TableColumn("End Date");
+        TableColumn colApptStartTime = new TableColumn("Start Time");
+        TableColumn colApptEndTime = new TableColumn("End Time");
+        tvAppointments.getColumns().addAll(colApptStartDate,colApptStartTime,colApptEndDate,colApptEndTime);
+        tvAppointments.setMinWidth(200);
+        tvAppointments.setItems(new AppointmentController().getAppointmentList());
+
+        colApptEndDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        colApptEndTime.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        colApptStartDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        colApptStartTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+
         // populate the TextFields with the selected customer information
         populateExistingFields();
 
@@ -176,7 +194,8 @@ public class ShowCustomer {
         // sets up the scene
         gpControls.add(btnGridPane, 1, 9);
         layout.setCenter(gpControls);
-        Scene scene = new Scene(layout, 450, 400);
+        layout.setRight(tvAppointments);
+        Scene scene = new Scene(layout, 700, 400);
         window.setScene(scene);
         window.showAndWait();
     }

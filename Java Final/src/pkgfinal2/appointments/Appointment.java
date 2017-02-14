@@ -3,7 +3,11 @@ package pkgfinal2.appointments;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import pkgfinal2.audit.Audit;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by ecogle on 2/12/2017.
@@ -18,7 +22,13 @@ public class Appointment extends Audit {
     private SimpleStringProperty contact = new SimpleStringProperty();
     private SimpleStringProperty url = new SimpleStringProperty();
     private ZonedDateTime start;
+    private SimpleStringProperty startDate = new SimpleStringProperty();
+    private SimpleStringProperty startTime = new SimpleStringProperty();
+    private SimpleStringProperty endDate = new SimpleStringProperty();
+    private SimpleStringProperty endTime = new SimpleStringProperty();
+
     private ZonedDateTime end;
+
 
 
     public void setAppointmentId(int id){
@@ -51,10 +61,14 @@ public class Appointment extends Audit {
 
     public void setStart(ZonedDateTime z){
         this.start = z;
+        this.startDate.set(z.format(DateTimeFormatter.ofPattern("MM/dd/YYYY")));
+        this.startTime.set(z.format(DateTimeFormatter.ofPattern("h:mm a")));
     }
 
     public void setEnd(ZonedDateTime s){
         this.end = s;
+        this.endDate.set(s.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+        this.endTime.set(s.format(DateTimeFormatter.ofPattern("h:mm a")));
     }
 
     public int getAppointmentId(){
@@ -91,6 +105,21 @@ public class Appointment extends Audit {
 
     public ZonedDateTime getEnd(){
         return this.end;
+    }
+
+    public String getStartTime(){
+        return this.startTime.get();
+    }
+    public String getStartDate(){
+        return this.startDate.get();
+    }
+
+    public String getEndDate(){
+        return this.endDate.get();
+    }
+
+    public String getEndTime(){
+        return this.endTime.get();
     }
 
 

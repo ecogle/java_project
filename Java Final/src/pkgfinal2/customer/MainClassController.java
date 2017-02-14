@@ -117,8 +117,7 @@ public class MainClassController {
     }
     public static ObservableList<CompleteCustomer> buildCustList(){
         ObservableList<CompleteCustomer> custList = FXCollections.observableArrayList();
-        try {
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+        try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()) {
             String sql = "select customerId,customerName,active,addr.addressId,address,address2,postalCode,phone,ci.cityId,city,co.countryId,country from customer cou inner join\n" +
                     "address addr on cou.addressId = addr.addressId inner join city ci on addr.cityId = ci.cityId inner join\n" +
                     "country co on ci.countryId = co.countryId";

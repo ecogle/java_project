@@ -2,13 +2,17 @@ package pkgfinal2.appointments;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ecogle on 2/12/2017.
@@ -17,6 +21,10 @@ public class AppointmentController {
 
     private Appointment appointment;
 
+
+    public AppointmentController(){
+        super();
+    }
 
     public AppointmentController(Appointment a){
         this.appointment = a;
@@ -83,5 +91,48 @@ public class AppointmentController {
         catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public ObservableList<Appointment> getAppointmentList(){
+        ObservableList<Appointment> apptList = FXCollections.observableArrayList();
+        //String sql = "select * from appointment where customerId = ?";
+        //try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+        String sql = "Select * from appointment where customerId = " + MainScreen.getSelectedCustomer().getCustomerId();
+        try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){
+            //ps.setInt(1, MainScreen.getSelectedCustomer().getCustomerId());
+            //System.out.println(ps);
+            //ResultSet rs = ps.executeQuery(sql);
+            ResultSet rs = stmnt.executeQuery(sql);
+            while(rs.next()){
+                Appointment apt = new AppointmentBuilder()
+                        .setAppointmentId(rs.getInt("appointmentId"))
+                        .setFkCustomerId(rs.getInt("customerId"))
+                        .setStart(getZonedDateTime(rs.getString("start")))
+                        .setEnd(getZonedDateTime(rs.getString("end")))
+                        .build();
+
+                apptList.add(apt);
+            }
+
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return apptList;
+    }
+
+    private static String hackTheDot(String s){
+        String d = s.substring(0,s.indexOf("."));
+        return d;
+    }
+
+    private static ZonedDateTime getZonedDateTime(String str){
+        ZonedDateTime zdt = ZonedDateTime
+                .of(LocalDateTime
+                        .parse(hackTheDot(str),DateTimeFormatter
+                                .ofPattern("yyyy-MM-dd HH:mm:ss")),ZoneId.systemDefault());
+
+        return zdt;
+
     }
 }
