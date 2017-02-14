@@ -1,4 +1,4 @@
-package pkgfinal2.appointments;
+package pkgfinal2.appointments.reminder;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
