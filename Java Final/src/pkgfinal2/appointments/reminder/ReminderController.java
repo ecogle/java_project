@@ -17,12 +17,13 @@ public class ReminderController {
 
     public ReminderController(Reminder r){
         this.reminder = r;
+        this.reminder.setReminderID(getHighestReminderId()+1);
     }
 
     public boolean addReminderToDatabase(int incrementTypeId,int appointmentId){
         String sql = "insert into reminder (reminderId) values (?)";
         try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
-            ps.setInt(1,(getHighestReminderId()+1));
+            ps.setInt(1,this.reminder.getReminderId());
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -36,6 +37,7 @@ public class ReminderController {
         return new Reminder();
     }
 
+    // todo have this go ahead and return the NEXT Primary Key
     private int getHighestReminderId(){
         String str = "select max(reminderId) from reminder";
         try(Statement stmnt = MySQLDatabase.getMySQLDataSource().getConnection().createStatement()){

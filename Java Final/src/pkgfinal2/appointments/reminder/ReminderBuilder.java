@@ -9,6 +9,7 @@ public class ReminderBuilder {
 
     public ReminderBuilder(){
         reminder = new Reminder();
+
     }
     public ReminderBuilder setReminderDate(String date){
         this.reminder.setReminderDate(date);
