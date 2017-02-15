@@ -56,6 +56,16 @@ public class AddCustomerControl {
         }
     }
 
+
+    public static boolean checkForEmpty(String s) {
+        if(s == null || s.trim().equals("")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     /**
      * checks if value is empty string or null
      *
