@@ -24,7 +24,7 @@ public class ShowCustomer {
     //todo can probably delete this
     //private static int countryId; // can probably delete this.
     private Map<String,String> map = new HashMap<>();  // map that contains all of the TextFields on the page
-    private static CompleteCustomer origin;  // the selected customer from the MainScreen
+    private static CompleteCustomer completeCustomer;  // the selected customer from the MainScreen
     private CompleteCustomer modified;
     CheckBox chkActive;
 
@@ -33,8 +33,8 @@ public class ShowCustomer {
     //todo See if you can pass the variables around as arguments rather than having static variables
     // constuctor that assigns the STATIC selected customer from mainscreen to the local
     // static variable
-    public ShowCustomer(){
-        origin = MainScreen.getSelectedCustomer();
+    public ShowCustomer(CompleteCustomer c){
+        completeCustomer = c;
         this.initTextFields();  // initializes the text fields
     }
 
@@ -106,7 +106,7 @@ public class ShowCustomer {
         // Edit menu
         Menu mnuEdit = new Menu("Edit");
         MenuItem editCustomer = new MenuItem("Edit Customer Name");
-        MenuItem editAddress = new MenuItem("Edit Customer Address (change address)");
+        MenuItem editAddress = new MenuItem("Edit Customer Address");
         SeparatorMenuItem s = new SeparatorMenuItem(); // line separator
         s.setStyle("-fx-border-color:red");
         Menu editAddressForAll =new Menu("Modify for ALL customers");
@@ -187,6 +187,12 @@ public class ShowCustomer {
         //*********************************************
         //*             EVENT HANDLER                **
         //*********************************************
+
+        editAddress.setOnAction(event ->{
+            new EditCustomerAddress(MainScreen.getSelectedCustomer()).display();
+            populateExistingFields();
+        });
+
         editCustomer.setOnAction(event -> {
             new EditCustomerName().display();
             txtControls.get("txtCustomer").setText(MainScreen.getSelectedCustomer().getCustomerName());
@@ -212,14 +218,14 @@ public class ShowCustomer {
      *  Populates the TextField with the selected customer data
      */
     private void populateExistingFields(){
-        this.txtControls.get("txtCustomer").setText(origin.getCustomerName());
-        this.txtControls.get("txtAddress").setText(origin.getAddress());
-        this.txtControls.get("txtAddress2").setText(origin.getAddress2());
-        this.txtControls.get("txtCity").setText(origin.getCity());
-        this.txtControls.get("txtZip").setText(origin.getPostalCode());
-        this.txtControls.get("txtPhoneNumber").setText(origin.getPhone());
-        this.txtControls.get("txtCountry").setText(origin.getCountry());
-        chkActive.setSelected(origin.getActive());
+        this.txtControls.get("txtCustomer").setText(completeCustomer.getCustomerName());
+        this.txtControls.get("txtAddress").setText(completeCustomer.getAddress());
+        this.txtControls.get("txtAddress2").setText(completeCustomer.getAddress2());
+        this.txtControls.get("txtCity").setText(completeCustomer.getCity());
+        this.txtControls.get("txtZip").setText(completeCustomer.getPostalCode());
+        this.txtControls.get("txtPhoneNumber").setText(completeCustomer.getPhone());
+        this.txtControls.get("txtCountry").setText(completeCustomer.getCountry());
+        chkActive.setSelected(completeCustomer.getActive());
     }
 
     /**
@@ -239,7 +245,7 @@ public class ShowCustomer {
 
     //todo can probably delete this
 //    private void assignNewFields(){
-//        modified.setCustomerId(origin.getCustomerId());
+//        modified.setCustomerId(completeCustomer.getCustomerId());
 //    }
 
     /**
@@ -248,7 +254,7 @@ public class ShowCustomer {
      */
     public static CompleteCustomer getSelectedCustomer(){
         CompleteCustomer c = new CompleteCustomer();
-        c = origin;
+        c = completeCustomer;
         return c;
     }
 }
