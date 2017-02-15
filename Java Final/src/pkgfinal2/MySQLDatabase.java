@@ -24,7 +24,7 @@ public class MySQLDatabase implements AutoCloseable{
         Properties mySQL = new Properties();
         FileInputStream fis = null;
         MysqlDataSource mds = null;
-
+        System.out.println(System.getProperty("user.dir"));
         try{
             fis = new FileInputStream(System.getProperty("user.dir") + "Java Final/src/db.properties");
             mySQL.load(fis);

@@ -14,6 +14,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.MainScreen;
+import pkgfinal2.appointments.reminder.Reminder;
+import pkgfinal2.appointments.reminder.ReminderBuilder;
 //import pkgfinal2.customer.CompleteCustomer;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -51,6 +53,7 @@ public class AddAppointment implements Displayable {
         Label lblReminderDate = new Label("Reminder date");
         Label lblSnoozeIncrement = new Label("Snooze inc.");
         Label lblIncrementTypeDescription = new Label("Inc. Description");
+        lblIncrementTypeDescription.setAlignment(Pos.TOP_LEFT);
         TextArea txtaDescription = new TextArea();
         txtaDescription.setPrefColumnCount(5);
         txtaDescription.setPrefWidth(100d);
@@ -103,6 +106,7 @@ public class AddAppointment implements Displayable {
         gp.setVgap(5);
         StackPane sp = new StackPane();
 
+        // reminder GUI
         GridPane gp2 = new GridPane();
         gp2.setMinWidth(245);
         gp2.setPadding(new Insets(8));
@@ -111,10 +115,13 @@ public class AddAppointment implements Displayable {
         gp2.add(chkReminder,0,0,2,1);
         gp2.add(lblReminderDate,0,1);  gp2.add(dtpReminderDate,1,1);
         gp2.add(lblSnoozeIncrement,0,2); gp2.add(cboSnoozeIncrement,1,2);
+        gp2.add(lblIncrementTypeDescription,0,3);  gp2.add(txtaDescription,1,3);
         lblReminderDate.setVisible(false);
         dtpReminderDate.setVisible(false);
         lblSnoozeIncrement.setVisible(false);
         cboSnoozeIncrement.setVisible(false);
+        lblIncrementTypeDescription.setVisible(false);
+        txtaDescription.setVisible(false);
 
 
         sp.setPrefWidth(50);
@@ -180,6 +187,8 @@ public class AddAppointment implements Displayable {
 
             if(chkReminder.isSelected()){
                 // add reminder to database
+                //Reminder reminder = new ReminderBuilder()
+
             }
 
         });
@@ -190,6 +199,8 @@ public class AddAppointment implements Displayable {
                 dtpReminderDate.setVisible(true);
                 lblSnoozeIncrement.setVisible(true);
                 cboSnoozeIncrement.setVisible(true);
+                lblIncrementTypeDescription.setVisible(true);
+                txtaDescription.setVisible(true);
             }
             else{
                 dtpReminderDate.getEditor().clear();
@@ -199,6 +210,8 @@ public class AddAppointment implements Displayable {
                 dtpReminderDate.setVisible(false);
                 lblSnoozeIncrement.setVisible(false);
                 cboSnoozeIncrement.setVisible(false);
+                lblIncrementTypeDescription.setVisible(false);
+                txtaDescription.setVisible(false);
             }
         });
 

@@ -112,11 +112,9 @@ public class MainScreen extends Application {
         Menu logMenu = new Menu("Users");
         MenuItem mnuLogin = new MenuItem("Login");
         MenuItem mnuLogoff = new MenuItem("Logoff");
-        MenuItem mnuEditCity = new MenuItem("Edit City...");
-        MenuItem mnuEditCounty = new MenuItem("Edit Country...");
         MenuItem mnuEditCustomer = new MenuItem("Edit Customer...");
         HBox mnuHbox = new HBox();
-        editMenu.getItems().addAll(mnuEditCity,mnuEditCounty,mnuEditCustomer);
+        editMenu.getItems().addAll(mnuEditCustomer);
         fileMenu.getItems().add(mnuFile);
         logMenu.getItems().addAll(mnuLogin,mnuLogoff);
         mnuMenuBar.getMenus().addAll(fileMenu,editMenu,logMenu);
@@ -130,7 +128,8 @@ public class MainScreen extends Application {
         EventHandler editMe = e -> {
             if(tvCustomer.getSelectionModel().isEmpty() == false){
                 CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-                new EditCustomer(compCust).display();
+                setSelectedCustomer(compCust);
+                new ShowCustomer(compCust).display();
                 tvCustomer.setItems(MainClassController.buildCustList());
                 tvCustomer.refresh();
             }
@@ -179,7 +178,7 @@ public class MainScreen extends Application {
             if(event.getClickCount() ==2){
                 CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
                 setSelectedCustomer(compCust);
-                new ShowCustomer().display();
+                new ShowCustomer(compCust).display();
                 tvCustomer.setItems(MainClassController.buildCustList());
                 tvCustomer.refresh();
             }
@@ -268,5 +267,10 @@ public class MainScreen extends Application {
         ZoneId d = zoneId;
         return d;
     }
-    
+
+    // function for querying the database and check for reminders every 15 minutes
+    // using the ScheduledExecutorService
+    private void pingTheReminders(){
+
+    }
 }
