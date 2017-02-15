@@ -168,5 +168,19 @@ public class AddressController {
     }
 
 
+    public void updateCustomerAddress(){
+        String sql = "update address set address = ?,address2 = ?,phone=?,postalCode = ? where addressId = ?";
 
+        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+            ps.setString(1,this.completeCustomer.getAddress());
+            ps.setString(2,this.completeCustomer.getAddress2());
+            ps.setString(3,this.completeCustomer.getPhone());
+            ps.setString(4,this.completeCustomer.getPostalCode());
+            ps.setInt(5,this.completeCustomer.getFkAddressId());
+            ps.execute();
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
 }
