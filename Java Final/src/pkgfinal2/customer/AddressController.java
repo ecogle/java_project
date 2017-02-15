@@ -167,7 +167,6 @@ public class AddressController {
         return c;
     }
 
-
     public void updateCustomerAddress(){
         String sql = "update address set address = ?,address2 = ?,phone=?,postalCode = ? where addressId = ?";
 
