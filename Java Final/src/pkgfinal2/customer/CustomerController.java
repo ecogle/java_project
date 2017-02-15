@@ -7,7 +7,10 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 
@@ -36,6 +39,11 @@ public class CustomerController {
             if the customer does exist, a new myCity object is created with
             the existing values.
         */
+
+
+
+
+
         if(!customerExists(customerFields)){
             this.highestCustomerId = getHighestCustomerId();
             addCustomerToBase(customerFields,addressId);

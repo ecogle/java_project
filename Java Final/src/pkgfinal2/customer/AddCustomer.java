@@ -10,8 +10,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.audit.Audit;
-import java.util.HashMap;
-import java.util.Map;
+import static pkgfinal2.customer.AddCustomerControl.*;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -120,26 +123,109 @@ public class AddCustomer extends Audit implements Displayable {
         
         gpControls.add(btnGridPane, 1, 9);
 
-        // todo error check and trim the tet input
+        // todo error check and trim the test input
 
 
 
         //provide functionality for the ADD button
-        int x;
+
+        //todo create a CompleteCustomer object and use the Customer controller to \n manipulate the database
+
+
+
+
         btnAdd.setOnAction(event -> {
-            map.put("address",txtAddress1.getText());
-            map.put("address2",txtAddress2.getText());
-            map.put("phone",txtPhoneNumber.getText());
-            map.put("postalCode",txtZip.getText());
-            map.put("customerName",txtCustomerName.getText());
-            map.put("city",txtCity.getText());
-            map.put("country",txtCountry.getText());
-            map.put("active",((Boolean)chkActive.isSelected()).toString());
-            AddCustomerControl.countryWork(txtCountry.getText());
-            AddCustomerControl.cityWork(txtCity.getText());
-            AddCustomerControl.addressWork(map);
-            AddCustomerControl.customerWork(map);
-            window.close();
+            String k = "hi";
+            try {
+                //**************************************************
+                if(checkForEmpty(txtAddress1.getText())){
+                    txtAddress1.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputEmptyException();
+                }else if(textContainsNumbers(txtAddress1.getText())){
+                    txtAddress1.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputTypeException();
+                }
+                else{
+                    map.put("address",txtAddress1.getText());
+                }
+                //**************************************************
+                if(checkForEmpty(txtAddress2.getText())){
+                    txtAddress2.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputEmptyException();
+                }else if(textContainsNumbers(txtAddress2.getText())){
+                    txtAddress2.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputTypeException();
+                }else{
+                    map.put("address2",txtAddress2.getText());
+                }
+                //**************************************************
+                if(checkForEmpty(txtPhoneNumber.getText())){
+                    txtPhoneNumber.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputEmptyException();
+                }else if(numbersContainText(txtPhoneNumber.getText())){
+                    txtPhoneNumber.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputTypeException();
+                }else{
+                    map.put("phone",txtPhoneNumber.getText());
+                }
+
+                //**************************************************
+                if(checkForEmpty(txtZip.getText())){
+                    txtZip.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputEmptyException();
+                }else if(numbersContainText(txtZip.getText())){
+                    txtZip.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputTypeException();
+                }else{
+                    map.put("postalCode",txtZip.getText());
+                }
+
+                //**************************************************
+                if(checkForEmpty(txtCustomerName.getText())){
+                    txtCustomerName.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputEmptyException();
+                }else if(textContainsNumbers(txtCustomerName.getText())){
+                    txtCustomerName.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputTypeException();
+                }else{
+                    map.put("customerName",txtCustomerName.getText());
+                }
+
+                //**************************************************
+                if(checkForEmpty(txtCity.getText())){
+                    txtCity.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputEmptyException();
+                }else if(textContainsNumbers(txtCity.getText())){
+                    txtCity.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputTypeException();
+                }else{
+                    map.put("city",txtCity.getText());
+                }
+
+                //**************************************************
+                if(checkForEmpty(txtCountry.getText())){
+                    txtCountry.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputEmptyException();
+                }else if(textContainsNumbers(txtCountry.getText())){
+                    txtCountry.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
+                    throw new InputTypeException();
+                }else{
+                    map.put("country",txtCountry.getText());
+                }
+
+                map.put("active",((Boolean)chkActive.isSelected()).toString());
+    
+                AddCustomerControl.countryWork(txtCountry.getText());
+                AddCustomerControl.cityWork(txtCity.getText());
+                AddCustomerControl.addressWork(map);
+                AddCustomerControl.customerWork(map);
+                window.close();           
+                
+            } catch (InputEmptyException | InputTypeException e) {
+                //System.out.println(e.getMessage());
+            }
+
+
         });       
         
         layout.setCenter(gpControls);
@@ -150,4 +236,6 @@ public class AddCustomer extends Audit implements Displayable {
         window.showAndWait();
 
     }
+
+
 }
