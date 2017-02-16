@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by ecogle on 2/13/2017.
@@ -21,9 +23,22 @@ public class ReminderController {
     }
 
     public boolean addReminderToDatabase(int incrementTypeId,int appointmentId){
-        String sql = "insert into reminder (reminderId) values (?)";
+        String sql = "insert into reminder (reminderId,reminderDate,snoozeIncrement,snoozeIncrementTypeId,appointmentId,createdBy,createdDate,reminderCol) values" +
+                " (?,?,?,?,?,?,?,?)";
         try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
             ps.setInt(1,this.reminder.getReminderId());
+            ps.setString(2,this.reminder.getReminderDate());
+            ps.setInt(3,this.reminder.getSnoozeIncrement());
+            ps.setInt(4,this.reminder.getSnoozeIncrementId());
+            ps.setInt(5,this.reminder.getFkAppointmentId());
+            ps.setString(6,"Heathen");
+            ps.setString(7, ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            ps.setString(8,this.reminder.getReminderCol());
+
+            System.out.println(ps);
+
+            ps.execute();
+
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -39,11 +54,11 @@ public class ReminderController {
 
     // todo have this go ahead and return the NEXT Primary Key
     private int getHighestReminderId(){
-        String str = "select max(reminderId) from reminder";
-        try(Statement stmnt = MySQLDatabase.getMySQLDataSource().getConnection().createStatement()){
+        String str = "select max(reminderId) as maxId from reminder";
+        try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){
             ResultSet rs = stmnt.executeQuery(str);
             if(rs.next()){
-                return rs.getInt(0);
+                return rs.getInt("maxId");
             }
         }
         catch (SQLException e){

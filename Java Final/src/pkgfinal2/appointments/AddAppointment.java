@@ -16,6 +16,7 @@ import pkgfinal2.Displayable;
 import pkgfinal2.MainScreen;
 import pkgfinal2.appointments.reminder.Reminder;
 import pkgfinal2.appointments.reminder.ReminderBuilder;
+import pkgfinal2.appointments.reminder.ReminderController;
 //import pkgfinal2.customer.CompleteCustomer;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -153,7 +154,7 @@ public class AddAppointment implements Displayable {
 
         layout.setCenter(gp);
         layout.setLeft(sp);
-        layout.setRight(gp2);
+        //layout.setRight(gp2);
 
         //*************************************************
         //**              EVENT HANDLERS                 **
@@ -174,6 +175,7 @@ public class AddAppointment implements Displayable {
                     .setDescription(txtControls.get("description").getText())
                     .setLocation(txtControls.get("location").getText())
                     .setUrl(txtControls.get("url").getText())
+                    // todo add createdBy / createDate
                     //ZonedDateTime
                     .setStart(ZonedDateTime.of(dtpStart.getValue(),AppointmentController.parseTime(cboStartTime.getSelectionModel().getSelectedItem().toString()),ZoneId.systemDefault()))
                     .setEnd(ZonedDateTime.of(dtpEnd.getValue(),AppointmentController.parseTime(cboEndTime.getSelectionModel().getSelectedItem().toString()),ZoneId.systemDefault()))
@@ -181,15 +183,26 @@ public class AddAppointment implements Displayable {
                     .build();
 
             AppointmentController ac = new AppointmentController(apt);
+            Reminder reminder = new ReminderBuilder()
+                    .setFkAppointmentId(apt.getAppointmentId())
+                    .setReminderDate(apt.getStart().format(DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm")))
+                    .setFkSnoozeIncrementTypeId(0)
+                    .setReminderCol(" ")
+                    .setReminderSnoozeIncrement(0)
+                    .build();
+            ReminderController reminderController = new ReminderController(reminder);
+
+            // todo add reminder to database
             ac.addToDatabase();
+            reminderController.addReminderToDatabase(1,apt.getAppointmentId());
+            // todo check for date conflicts
 
-            // add functionality to add reminder to database if chkReminder is checked.
+            // todo check for appointments outside of office hours
 
-            if(chkReminder.isSelected()){
-                // add reminder to database
-                //Reminder reminder = new ReminderBuilder()
 
-            }
+            window.close();
+
+
 
         });
 

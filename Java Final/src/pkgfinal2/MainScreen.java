@@ -224,8 +224,8 @@ public class MainScreen extends Application {
         btnLogoff.setVisible(false);
 
         //change for actual program
-        tvCustomer.setVisible(false);
-        btnAddAppointment.setVisible(false);
+        tvCustomer.setVisible(true);
+        btnAddAppointment.setVisible(true);
 
 
         Scene scene = new Scene(layout,700,600);        

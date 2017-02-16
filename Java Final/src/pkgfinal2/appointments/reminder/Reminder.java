@@ -15,7 +15,7 @@ public class Reminder {
     public int getReminderId(){
         return this.reminderID.get();
     }
-    public String gerReminderDate(){
+    public String getReminderDate(){
         return this.reminderDate.get();
     }
     public int getSnoozeIncrement(){
