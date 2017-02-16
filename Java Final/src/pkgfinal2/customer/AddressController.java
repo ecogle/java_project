@@ -10,7 +10,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by ecogle on 2/8/2017.
@@ -163,5 +165,21 @@ public class AddressController {
         Address c = new Address();
         c = this.myAddress;
         return c;
+    }
+
+    public void updateCustomerAddress(){
+        String sql = "update address set address = ?,address2 = ?,phone=?,postalCode = ? where addressId = ?";
+
+        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+            ps.setString(1,this.completeCustomer.getAddress());
+            ps.setString(2,this.completeCustomer.getAddress2());
+            ps.setString(3,this.completeCustomer.getPhone());
+            ps.setString(4,this.completeCustomer.getPostalCode());
+            ps.setInt(5,this.completeCustomer.getFkAddressId());
+            ps.execute();
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 }
