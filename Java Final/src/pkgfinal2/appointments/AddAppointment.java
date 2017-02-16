@@ -33,6 +33,8 @@ public class AddAppointment implements Displayable {
 
     // MAP of controls
     private Map<String,TextField> txtControls = new HashMap<>();
+    private Appointment apt;
+    private Reminder reminder;
 
     @Override
     public void display(){
@@ -52,7 +54,7 @@ public class AddAppointment implements Displayable {
         CheckBox chkReminder = new CheckBox("Add Reminder");
         DatePicker dtpReminderDate = new DatePicker();
         Label lblReminderDate = new Label("Reminder date");
-        Label lblSnoozeIncrement = new Label("Snooze inc.");
+        Label lblReminderType = new Label("Type");
         Label lblIncrementTypeDescription = new Label("Inc. Description");
         lblIncrementTypeDescription.setAlignment(Pos.TOP_LEFT);
         TextArea txtaDescription = new TextArea();
@@ -60,9 +62,9 @@ public class AddAppointment implements Displayable {
         txtaDescription.setPrefWidth(100d);
         txtaDescription.setWrapText(true);
 
-        ComboBox cboSnoozeIncrement = new ComboBox();
-        cboSnoozeIncrement.setPromptText("Snooze Increment");
-        cboSnoozeIncrement.setItems(FXCollections.observableArrayList(Stream.iterate(5, e -> e + 5).limit(4).collect(Collectors.toList())));
+        ComboBox cboReminderType = new ComboBox();
+        cboReminderType.setPromptText("Reminder Type");
+        cboReminderType.setItems(FXCollections.observableArrayList("Illness","Physical","Procedure"));
 
 
         window.setTitle("Add Appointment for " + MainScreen.getSelectedCustomer().getCustomerName());
@@ -113,16 +115,17 @@ public class AddAppointment implements Displayable {
         gp2.setPadding(new Insets(8));
         gp2.setHgap(8);
         gp2.setVgap(5);
-        gp2.add(chkReminder,0,0,2,1);
-        gp2.add(lblReminderDate,0,1);  gp2.add(dtpReminderDate,1,1);
-        gp2.add(lblSnoozeIncrement,0,2); gp2.add(cboSnoozeIncrement,1,2);
-        gp2.add(lblIncrementTypeDescription,0,3);  gp2.add(txtaDescription,1,3);
-        lblReminderDate.setVisible(false);
-        dtpReminderDate.setVisible(false);
-        lblSnoozeIncrement.setVisible(false);
-        cboSnoozeIncrement.setVisible(false);
-        lblIncrementTypeDescription.setVisible(false);
-        txtaDescription.setVisible(false);
+
+        lblReminderType.setVisible(true);
+        cboReminderType.setVisible(true);
+        gp2.add(lblReminderType,0,0);gp2.add(cboReminderType,1,0);
+
+//        lblReminderDate.setVisible(false);
+//        dtpReminderDate.setVisible(false);
+//        lblReminderType.setVisible(false);
+//        cboReminderType.setVisible(false);
+//        lblIncrementTypeDescription.setVisible(false);
+//        txtaDescription.setVisible(false);
 
 
         sp.setPrefWidth(50);
@@ -154,7 +157,7 @@ public class AddAppointment implements Displayable {
 
         layout.setCenter(gp);
         layout.setLeft(sp);
-        //layout.setRight(gp2);
+        layout.setRight(gp2);
 
         //*************************************************
         //**              EVENT HANDLERS                 **
@@ -169,7 +172,7 @@ public class AddAppointment implements Displayable {
         });
 
         btnSubmit.setOnAction(event -> {
-            Appointment apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId())
+            apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId())
                     .setContact(txtControls.get("contact").getText())
                     .setTitle(txtControls.get("title").getText())
                     .setDescription(txtControls.get("description").getText())
@@ -182,19 +185,24 @@ public class AddAppointment implements Displayable {
                     .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
                     .build();
 
-            AppointmentController ac = new AppointmentController(apt);
-            Reminder reminder = new ReminderBuilder()
+
+
+            reminder = new ReminderBuilder()
                     .setFkAppointmentId(apt.getAppointmentId())
                     .setReminderDate(apt.getStart().format(DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm")))
                     .setFkSnoozeIncrementTypeId(0)
                     .setReminderCol(" ")
                     .setReminderSnoozeIncrement(0)
                     .build();
-            ReminderController reminderController = new ReminderController(reminder);
+
 
             // todo add reminder to database
-            ac.addToDatabase();
-            reminderController.addReminderToDatabase(1,apt.getAppointmentId());
+
+            // lambda to schedule appointment
+            addToDatabase((a,b) -> {
+                new AppointmentController(a).addToDatabase();
+                new ReminderController(b).addReminderToDatabase(2,a.getAppointmentId());
+            });
             // todo check for date conflicts
 
             // todo check for appointments outside of office hours
@@ -210,19 +218,18 @@ public class AddAppointment implements Displayable {
             if(chkReminder.isSelected()){
                 lblReminderDate.setVisible(true);
                 dtpReminderDate.setVisible(true);
-                lblSnoozeIncrement.setVisible(true);
-                cboSnoozeIncrement.setVisible(true);
+
                 lblIncrementTypeDescription.setVisible(true);
                 txtaDescription.setVisible(true);
             }
             else{
                 dtpReminderDate.getEditor().clear();
-                cboSnoozeIncrement.getSelectionModel().clearSelection();
+                cboReminderType.getSelectionModel().clearSelection();
 
                 lblReminderDate.setVisible(false);
                 dtpReminderDate.setVisible(false);
-                lblSnoozeIncrement.setVisible(false);
-                cboSnoozeIncrement.setVisible(false);
+                lblReminderType.setVisible(false);
+                cboReminderType.setVisible(false);
                 lblIncrementTypeDescription.setVisible(false);
                 txtaDescription.setVisible(false);
             }
@@ -237,5 +244,9 @@ public class AddAppointment implements Displayable {
         window.setScene(scene);
         window.showAndWait();
 
+    }
+
+    private void addToDatabase(Schedulable d){
+        d.scheduleMe(apt,reminder);
     }
 }
