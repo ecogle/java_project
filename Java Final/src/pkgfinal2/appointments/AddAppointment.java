@@ -171,10 +171,10 @@ public class AddAppointment implements Displayable {
             LocalTime t = AppointmentController.parseTime(s);
             lblOutputTime.setText(t.format(f));
         });
-
+        TimeZoneController tzc = new TimeZoneController();
         btnSubmit.setOnAction(event -> {
-            apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId())
-            TimeZoneController tzc = new TimeZoneController();
+            
+
             Appointment apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId())
                     .setContact(txtControls.get("contact").getText())
                     .setTitle(txtControls.get("title").getText())
