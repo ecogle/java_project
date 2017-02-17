@@ -1,7 +1,6 @@
 package pkgfinal2.appointments;
 
 import pkgfinal2.MainScreen;
-
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -12,7 +11,7 @@ public class TimeZoneController {
 
     private ZoneId currentTimeZone;
     private ZoneId UTCTimeZone = ZoneId.of("UTC");
-    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
 
@@ -41,9 +40,8 @@ public class TimeZoneController {
     public String stringToLocalTime(String str){
         ZonedDateTime zdt = ZonedDateTime
                 .of(LocalDateTime
-                        .parse(str,DateTimeFormatter
-                                .ofPattern("yyyy-MM-dd HH:mm:ss")), UTCTimeZone);
-        return zdt.withZoneSameInstant(ZoneId.of("US/Central")).format(getDtf());
+                        .parse(str,dtf), UTCTimeZone);
+        return zdt.withZoneSameInstant(currentTimeZone).format(getDtf());
     }
 
     public ZonedDateTime zonedDateTimeToLocal(ZonedDateTime zdt){
@@ -59,6 +57,12 @@ public class TimeZoneController {
 
         String d = str.substring(0,str.indexOf("M")+1);
         LocalTime lt = LocalTime.from(DateTimeFormatter.ofPattern("h:mma").parse(d));
+        ZonedDateTime zdt = ZonedDateTime.of(ld,lt,this.currentTimeZone);
+        return zdt.withZoneSameInstant(UTCTimeZone).format(dtf);
+
+    }
+
+    public String dateTimePickersToUtc(LocalDate ld, LocalTime lt){
         ZonedDateTime zdt = ZonedDateTime.of(ld,lt,this.currentTimeZone);
         return zdt.withZoneSameInstant(UTCTimeZone).format(dtf);
 

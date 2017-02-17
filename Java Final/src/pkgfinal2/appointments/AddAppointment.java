@@ -45,8 +45,8 @@ public class AddAppointment implements Displayable {
         BorderPane layout = new BorderPane();
         DatePicker dtpStart = new DatePicker();
         DatePicker dtpEnd = new DatePicker();
-        ComboBox cboStartTime = new ComboBox();
-        ComboBox cboEndTime = new ComboBox();
+        ComboBox<LocalTime> cboStartTime = new ComboBox();
+        ComboBox<LocalTime> cboEndTime = new ComboBox();
         Button btnClear = new Button("Clear");
         Button btnSubmit = new Button("Submit");
 
@@ -165,15 +165,16 @@ public class AddAppointment implements Displayable {
 
 
         // todo check for valid date
-        cboStartTime.setOnAction(event -> {
-            //todo check for valid times
-            String s = cboStartTime.getSelectionModel().getSelectedItem().toString();
-            LocalTime t = AppointmentController.parseTime(s);
-            lblOutputTime.setText(t.format(f));
-        });
+//        cboStartTime.setOnAction(event -> {
+//            //todo check for valid times
+//            String s = cboStartTime.getSelectionModel().getSelectedItem().toString();
+//            LocalTime t = AppointmentController.parseTime(s);
+//            lblOutputTime.setText(t.format(f));
+//        });
         TimeZoneController tzc = new TimeZoneController();
         btnSubmit.setOnAction(event -> {
-            
+
+
 
             Appointment apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId())
                     .setContact(txtControls.get("contact").getText())
@@ -183,10 +184,8 @@ public class AddAppointment implements Displayable {
                     .setUrl(txtControls.get("url").getText())
                     // todo add createdBy / createDate
                     //ZonedDateTime
-                    .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem().toString()))
-                    .setEnd(tzc.dateTimePickersToUtc(dtpEnd.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
-                    //.setStart(ZonedDateTime.of(dtpStart.getValue(),AppointmentController.parseTime(cboStartTime.getSelectionModel().getSelectedItem().toString()),ZoneId.of("UTC")))
-                   // .setEnd(ZonedDateTime.of(dtpEnd.getValue(),AppointmentController.parseTime(cboEndTime.getSelectionModel().getSelectedItem().toString()),ZoneId.of("UTC")))
+                    .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem()))
+                    .setEnd(tzc.dateTimePickersToUtc(dtpEnd.getValue(),cboEndTime.getSelectionModel().getSelectedItem()))
                     .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
                     .build();
 

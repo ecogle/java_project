@@ -3,6 +3,7 @@ package pkgfinal2.appointments.reminder;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 import pkgfinal2.appointments.AppointmentController;
+import pkgfinal2.appointments.TimeZoneController;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,11 +45,12 @@ public class PollingForReminders {
 
 
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(6);
-
+        TimeZoneController tzc = new TimeZoneController();
 
         ScheduledFuture every15Minutes = pool.scheduleAtFixedRate(()-> {
             today=getTodaysAppointmentReminders();
-            today.stream().map(e-> AppointmentController.getZonedDateTime(e.getReminderDate())).forEach(System.out::println);
+            //today.stream().map(e-> AppointmentController.getZonedDateTime(e.getReminderDate())).forEach(System.out::println);
+            //today.stream().map(e-> tzc.stringToLocalTime(e.getReminderDate())).forEach(System.out::println);
         },0,5,TimeUnit.SECONDS);
 
     }
@@ -77,12 +79,4 @@ public class PollingForReminders {
         }
         return todaysAppts;
     }
-
-//    private ZonedDateTime getTime(String s){
-//        //ZonedDateTime time = ZonedDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//        //time = time.withZoneSameInstant(MainScreen.getZoneId());
-//        return time;
-//    }
-
-
 }

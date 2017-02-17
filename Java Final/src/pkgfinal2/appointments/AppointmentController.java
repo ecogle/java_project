@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 import pkgfinal2.login.LoginWindow;
+import sun.applet.Main;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -29,15 +30,16 @@ public class AppointmentController {
         super();
     }
 
-    public AppointmentController(Appointment a){
-        this.appointment = a;
+    public AppointmentController(Appointment a){this.appointment = a;
         this.appointment.setAppointmentId(getHighestAppointmentId()+1);
     }
 
 
     public static ObservableList populateTimeSelection(){
+        TimeZoneController tzc = new TimeZoneController();
         ObservableList<String> filler = FXCollections.observableArrayList();
-        ZonedDateTime zdtTimes = ZonedDateTime.of(2016,01,01,06,00,00,00, ZoneId.systemDefault());
+        ZonedDateTime zdtTimes = ZonedDateTime.of(2016,01,01,06,00,00,00, MainScreen.getZoneId());
+
         ZonedDateTime zdtTimesEnd = zdtTimes.plusMinutes(750);
 
         while (zdtTimes.isBefore(zdtTimesEnd)){

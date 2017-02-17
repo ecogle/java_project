@@ -77,4 +77,8 @@ public class TimeTester {
 
         System.out.println("Now to UTC String: "+ tc.zonedDateTimeToUTCString(ZonedDateTime.now()));
     }
+
+    public static void testMe2(){
+
+    }
 }

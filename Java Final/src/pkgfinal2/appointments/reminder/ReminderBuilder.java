@@ -45,10 +45,5 @@ public class ReminderBuilder {
         return this.reminder;
     }
 
-    public static void main(String[] args) {
-        ReminderBuilder rb = new ReminderBuilder();
 
-        Reminder r = new ReminderBuilder().setReminderDate("date")
-                .setReminderSnoozeIncrement(10).build();
-    }
 }
