@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
+import pkgfinal2.appointments.TimeZoneController;
 
 /**
  * Created by ecogle on 2/8/2017.
@@ -89,17 +91,17 @@ public class CustomerController {
     public void addCustomerToBase(Map<String,String> customerFields, int addressId){
         String sql = "insert into customer (customerId,customerName, addressId, active,createDate, createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?,?,?)";
-        try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){ 
-            String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-            String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+
+            TimeZoneController tzc = new TimeZoneController();
             this.myCustomer = new Customer();
             this.myCustomer.setCustomerId(this.highestCustomerId+1);
             this.myCustomer.setCustomerName(customerFields.get("customerName").trim());
             this.myCustomer.setActive(new Boolean(customerFields.get("active")));
             this.myCustomer.setAddressId(addressId);
-            this.myCustomer.setCreateDate(nowDate + " " + nowTime);
+            this.myCustomer.setCreateDate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myCustomer.setCreatedBy(MainScreen.getAuthUser());
-            this.myCustomer.setLastUpdate(nowDate + " " + nowTime);
+            this.myCustomer.setLastUpdate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myCustomer.setLastUpdateBy(MainScreen.getAuthUser());           
 
             // sets the PreparedStatement variables

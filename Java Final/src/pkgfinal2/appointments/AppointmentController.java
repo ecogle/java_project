@@ -82,8 +82,8 @@ public class AppointmentController {
             ps.setString(5,this.appointment.getLocation());
             ps.setString(6,this.appointment.getContact());
             ps.setString(7,this.appointment.getUrl());
-            ps.setString(8,this.appointment.getStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-            ps.setString(9,this.appointment.getEnd().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            ps.setString(8,this.appointment.getStart());
+            ps.setString(9,this.appointment.getEnd());
             ps.setString(10,this.appointment.getCreateDate());
             ps.setString(11,this.appointment.getCreatedBy());
             ps.setString(12,this.appointment.getLastUpdate());
@@ -110,8 +110,8 @@ public class AppointmentController {
                         .setLocation(rs.getString("location"))
                         .setTitle(rs.getString("title"))
                         .setUrl(rs.getString("url"))
-                        .setStart(getZonedDateTime(rs.getString("start")))
-                        .setEnd(getZonedDateTime(rs.getString("end")))
+                        .setStart(rs.getString("start"))
+                        .setEnd(rs.getString("end"))
                         .build();
                 apptList.add(apt);
             }
@@ -136,4 +136,6 @@ public class AppointmentController {
         return zdt;
 
     }
+
+
 }

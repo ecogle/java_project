@@ -160,6 +160,7 @@ public class AddAppointment implements Displayable {
         //**              EVENT HANDLERS                 **
         //*************************************************
 
+
         // todo check for valid date
         cboStartTime.setOnAction(event -> {
             //todo check for valid times
@@ -169,6 +170,7 @@ public class AddAppointment implements Displayable {
         });
 
         btnSubmit.setOnAction(event -> {
+            TimeZoneController tzc = new TimeZoneController();
             Appointment apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId())
                     .setContact(txtControls.get("contact").getText())
                     .setTitle(txtControls.get("title").getText())
@@ -177,15 +179,17 @@ public class AddAppointment implements Displayable {
                     .setUrl(txtControls.get("url").getText())
                     // todo add createdBy / createDate
                     //ZonedDateTime
-                    .setStart(ZonedDateTime.of(dtpStart.getValue(),AppointmentController.parseTime(cboStartTime.getSelectionModel().getSelectedItem().toString()),ZoneId.systemDefault()))
-                    .setEnd(ZonedDateTime.of(dtpEnd.getValue(),AppointmentController.parseTime(cboEndTime.getSelectionModel().getSelectedItem().toString()),ZoneId.systemDefault()))
+                    .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem().toString()))
+                    .setEnd(tzc.dateTimePickersToUtc(dtpEnd.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
+                    //.setStart(ZonedDateTime.of(dtpStart.getValue(),AppointmentController.parseTime(cboStartTime.getSelectionModel().getSelectedItem().toString()),ZoneId.of("UTC")))
+                   // .setEnd(ZonedDateTime.of(dtpEnd.getValue(),AppointmentController.parseTime(cboEndTime.getSelectionModel().getSelectedItem().toString()),ZoneId.of("UTC")))
                     .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
                     .build();
 
             AppointmentController ac = new AppointmentController(apt);
             Reminder reminder = new ReminderBuilder()
                     .setFkAppointmentId(apt.getAppointmentId())
-                    .setReminderDate(apt.getStart().format(DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm")))
+                    .setReminderDate(apt.getStart())
                     .setFkSnoozeIncrementTypeId(0)
                     .setReminderCol(" ")
                     .setReminderSnoozeIncrement(0)

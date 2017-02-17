@@ -1,5 +1,6 @@
 package pkgfinal2.appointments.reminder;
 
+import com.mysql.jdbc.ResultSetRow;
 import pkgfinal2.MySQLDatabase;
 import pkgfinal2.appointments.reminder.Reminder;
 
@@ -7,8 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.*;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ecogle on 2/13/2017.
@@ -16,6 +22,10 @@ import java.time.format.DateTimeFormatter;
 public class ReminderController {
 
     private Reminder reminder;
+
+    public ReminderController(){
+        super();
+    }
 
     public ReminderController(Reminder r){
         this.reminder = r;
@@ -49,8 +59,12 @@ public class ReminderController {
 
     public Reminder selectReminder(){
 
+
+
         return new Reminder();
     }
+
+
 
     // todo have this go ahead and return the NEXT Primary Key
     private int getHighestReminderId(){
@@ -66,6 +80,11 @@ public class ReminderController {
         }
         return 0;
     }
+
+
+
+
+
 
 
 }

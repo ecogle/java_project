@@ -3,12 +3,15 @@ package pkgfinal2.customer;
 import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
+import pkgfinal2.appointments.TimeZoneController;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -85,16 +88,16 @@ public class AddressController {
         String sql = "insert into address (addressId,address,address2, cityId,createDate,createdBy,lastUpdate,lastUpdateBy,phone,postalCode) values "
                     + " (?,?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){
-            String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-            String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+            TimeZoneController tzc = new TimeZoneController();
             this.myAddress = new Address();
             this.myAddress.setAddressId(this.highestAddressId+1);
             this.myAddress.setAddress(addressFields.get("address").trim());
             this.myAddress.setAddress2(addressFields.get("address2").trim());
             this.myAddress.setCityId(cityId);
-            this.myAddress.setCreateDate(nowDate + " " + nowTime);
+            this.myAddress.setCreateDate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myAddress.setCreatedBy(MainScreen.getAuthUser());
-            this.myAddress.setLastUpdate(nowDate + " " + nowTime);
+            this.myAddress.setLastUpdate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myAddress.setLastUpdateBy(MainScreen.getAuthUser());
             this.myAddress.setPhoneNumber(addressFields.get("phone").trim());
             this.myAddress.setPostalCode(addressFields.get("postalCode").trim());

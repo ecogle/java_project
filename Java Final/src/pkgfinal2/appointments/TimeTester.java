@@ -18,7 +18,8 @@ import java.util.concurrent.*;
 public class TimeTester {
     static int w=1;
     public static void main(String[] args) {
-        ZoneId.getAvailableZoneIds().stream().sorted().forEach(System.out::println);
+        testMe();
+        /*ZoneId.getAvailableZoneIds().stream().sorted().forEach(System.out::println);
 
         ZoneId utc = ZoneId.of("UTC");
 
@@ -38,12 +39,15 @@ public class TimeTester {
         Toolkit t = Toolkit.getDefaultToolkit();
         t.beep();
 
+        System.out.println("Comparing... " + ZonedDateTime.now().compareTo(ZonedDateTime.now().plusHours(3)));
+
+
         ScheduledExecutorService scheduleMe = Executors.newScheduledThreadPool(5);
 
         //ScheduledFuture f = scheduleMe.scheduleAtFixedRate(()-> System.out.println("Hello there " + w++),1,3,TimeUnit.SECONDS);
         //ScheduledFuture x = scheduleMe.scheduleAtFixedRate(()-> System.out.println("BAMMM"),2,5,TimeUnit.SECONDS);
         ScheduledFuture y = scheduleMe.scheduleAtFixedRate(() -> pingBase(),4,5,TimeUnit.SECONDS);
-        pingBase();
+        pingBase();*/
 
 
 
@@ -52,7 +56,7 @@ public class TimeTester {
     private static void pingBase(){
         String g = "";
         String sql = "select customerName from customer where customerName like '%Chad%'";
-        try(Statement stmnt = MySQLDatabase.getMySQLDataSource().getConnection().createStatement()){
+        try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){
             ResultSet rs = stmnt.executeQuery(sql);
             while(rs.next()){
                 System.out.println(rs.getString("customerName")+ " " + LocalTime.now().format(DateTimeFormatter.ofPattern("h:mm:ssa")));;
@@ -61,5 +65,16 @@ public class TimeTester {
         catch (SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void testMe(){
+        String date = "2017-02-16 13:58:36";
+        System.out.println("Local time is: " + date);
+        TimeZoneController tc = new TimeZoneController();
+        String c = tc.stringToUTCTime(date);
+        System.out.println("Stored in database as UTC time: " +c);
+        System.out.println("Back to local time"+tc.stringToLocalTime(c));
+
+        System.out.println("Now to UTC String: "+ tc.zonedDateTimeToUTCString(ZonedDateTime.now()));
     }
 }

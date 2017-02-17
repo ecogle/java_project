@@ -2,8 +2,9 @@ package pkgfinal2.appointments.reminder;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import pkgfinal2.audit.Audit;
 
-public class Reminder {
+public class Reminder extends Audit{
 
     private SimpleIntegerProperty reminderID = new SimpleIntegerProperty();
     private SimpleStringProperty reminderDate = new SimpleStringProperty(); // DATETIME

@@ -11,6 +11,11 @@ public class ReminderBuilder {
         reminder = new Reminder();
 
     }
+
+    public ReminderBuilder setReminderId(int id){
+        this.reminder.setReminderID(id);
+        return this;
+    }
     public ReminderBuilder setReminderDate(String date){
         this.reminder.setReminderDate(date);
         return this;

@@ -25,8 +25,8 @@ public class Appointment extends Audit {
     private SimpleStringProperty startTime = new SimpleStringProperty();
     private SimpleStringProperty endDate = new SimpleStringProperty();
     private SimpleStringProperty endTime = new SimpleStringProperty();
-    private ZonedDateTime start;
-    private ZonedDateTime end;
+    private SimpleStringProperty start= new SimpleStringProperty();;
+    private SimpleStringProperty end= new SimpleStringProperty();;
 
 
 
@@ -59,16 +59,13 @@ public class Appointment extends Audit {
         this.url.set(str);
     }
 
-    public void setStart(ZonedDateTime z){
-        this.start = z;
-        this.startDate.set(z.format(DateTimeFormatter.ofPattern("MM/dd/YYYY")));
-        this.startTime.set(z.format(DateTimeFormatter.ofPattern("h:mm a")));
+    public void setStart(String z){
+        this.start.set(z);
     }
 
-    public void setEnd(ZonedDateTime s){
-        this.end = s;
-        this.endDate.set(s.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
-        this.endTime.set(s.format(DateTimeFormatter.ofPattern("h:mm a")));
+    public void setEnd(String s){
+        this.end.set(s);
+
     }
 
     public int getAppointmentId(){
@@ -99,12 +96,12 @@ public class Appointment extends Audit {
         return this.url.get();
     }
 
-    public ZonedDateTime getStart(){
-        return this.start;
+    public String getStart(){
+        return this.start.get();
     }
 
-    public ZonedDateTime getEnd(){
-        return this.end;
+    public String getEnd(){
+        return this.end.get();
     }
 
     public String getStartTime(){

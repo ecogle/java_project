@@ -3,12 +3,15 @@ package pkgfinal2.customer;
 import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
+import pkgfinal2.appointments.TimeZoneController;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -74,15 +77,15 @@ public class CityController {
         String sql = "insert into city (cityId,city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?,?)";
         try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
-            String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-            String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+            TimeZoneController tzc = new TimeZoneController();
             this.myCity = new City();
             this.myCity.setCityName(cityName.trim());
             this.myCity.setCityId(this.highestCityId+1);
             this.myCity.setCountryId(countryId);
-            this.myCity.setCreateDate(nowDate + " " + nowTime);
+            this.myCity.setCreateDate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myCity.setCreatedBy(MainScreen.getAuthUser());
-            this.myCity.setLastUpdate(nowDate + " " + nowTime);
+            this.myCity.setLastUpdate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myCity.setLastUpdateBy(MainScreen.getAuthUser());
             ps.setInt(1,this.myCity.getCityId());
             ps.setString(2,this.myCity.getCityName());

@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pkgfinal2.appointments.AddAppointment;
+import pkgfinal2.appointments.reminder.PollingForReminders;
 import pkgfinal2.customer.*;
 import pkgfinal2.login.LoginWindow;
 import javafx.scene.layout.HBox;
@@ -39,11 +40,25 @@ public class MainScreen extends Application {
     //sets the selected customer in the TableView
     private static CompleteCustomer selectedCustomer;
 
+    private String auththenticatedUser;
+
+    private void setAuththenticatedUser(String str){
+        this.auththenticatedUser = str;
+    }
+    public String getAuththenticatedUser(){
+        return this.auththenticatedUser;
+    }
+
     @Override
     public void start(Stage primaryStage) {
+        //new PollingForReminders().startMe();
         int intButtonWidth = 110; //width of the buttons
         window = primaryStage; //primary stage
         window.setTitle("Customer Main");
+        window.setOnCloseRequest(event -> {
+            event.consume();
+            System.exit(0);
+        });
         
         // Labels and Buttons
         Label lblAuthUserLabel = new Label(MainScreen.getAuthUser());
@@ -108,6 +123,7 @@ public class MainScreen extends Application {
         // Creates the menu items
         Menu fileMenu = new Menu("File");
         MenuItem mnuFile = new MenuItem("Open record");
+        MenuItem mnuExit = new MenuItem("Exit");
         Menu editMenu = new Menu("Edit");
         Menu logMenu = new Menu("Users");
         MenuItem mnuLogin = new MenuItem("Login");
@@ -115,7 +131,7 @@ public class MainScreen extends Application {
         MenuItem mnuEditCustomer = new MenuItem("Edit Customer...");
         HBox mnuHbox = new HBox();
         editMenu.getItems().addAll(mnuEditCustomer);
-        fileMenu.getItems().add(mnuFile);
+        fileMenu.getItems().addAll(mnuFile,mnuExit);
         logMenu.getItems().addAll(mnuLogin,mnuLogoff);
         mnuMenuBar.getMenus().addAll(fileMenu,editMenu,logMenu);
         mnuHbox.getChildren().add(mnuMenuBar);
@@ -135,6 +151,9 @@ public class MainScreen extends Application {
             }
         };
 
+        mnuExit.setOnAction(event -> {
+            System.exit(0);
+        });
         mnuEditCustomer.setOnAction(editMe);
 
         btnAddCustomer.setOnAction(event -> {
@@ -148,7 +167,9 @@ public class MainScreen extends Application {
             LoginWindow liwin = new LoginWindow(); //instantiates the login window
             liwin.display(); //displays the login window
             if(MainScreen.getAuthUser()!= null){
+            //if(liwin.getAuththenticatedUser()!= null){
                 //displays the username if authenticated properly
+                this.setAuththenticatedUser(liwin.getAuththenticatedUser());
                 lblAuthUserLabel.setText(MainScreen.getAuthUser());
                 btnAddCustomer.setVisible(true);
                 btnEditCustomer.setVisible(true);
@@ -159,7 +180,9 @@ public class MainScreen extends Application {
                 btnAddAppointment.setVisible(true);
                 // Calls the static method "buildCustList" to set the items of the list
                 tvCustomer.setItems(MainClassController.buildCustList());
+                new PollingForReminders().startMe();
             }
+
         });
 
         btnLogoff.setOnAction(event -> {
@@ -248,6 +271,7 @@ public class MainScreen extends Application {
     
     public static String getAuthUser(){
         return authUserString;
+
     }
 
     private static void setSelectedCustomer(CompleteCustomer c){
@@ -268,9 +292,6 @@ public class MainScreen extends Application {
         return d;
     }
 
-    // function for querying the database and check for reminders every 15 minutes
-    // using the ScheduledExecutorService
-    private void pingTheReminders(){
 
-    }
+
 }

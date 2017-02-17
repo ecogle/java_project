@@ -3,6 +3,7 @@ package pkgfinal2.customer;
 import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
+import pkgfinal2.appointments.TimeZoneController;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -75,14 +77,13 @@ public class CountryController {
         String sql = "insert into country (countryId,country,createDate,createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?)";
         try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)) {
-            String nowDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-            String nowTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+            TimeZoneController tzc = new TimeZoneController();
             this.myCountry = new Country();
             this.myCountry.setCountryName(countryName.trim());
             this.myCountry.setCountryId(this.highestCountryId+1);
-            this.myCountry.setCreateDate(nowDate + " " + nowTime);
+            this.myCountry.setCreateDate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myCountry.setCreatedBy(MainScreen.getAuthUser());
-            this.myCountry.setLastUpdate(nowDate + " " + nowTime);
+            this.myCountry.setLastUpdate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myCountry.setLastUpdateBy(MainScreen.getAuthUser());
             ps.setInt(1,this.myCountry.getCountryId());
             ps.setString(2,this.myCountry.getCountryName());

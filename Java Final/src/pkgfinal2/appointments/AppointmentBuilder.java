@@ -25,8 +25,8 @@ public class AppointmentBuilder {
     private SimpleStringProperty location = new SimpleStringProperty();
     private SimpleStringProperty contact = new SimpleStringProperty();
     private SimpleStringProperty url = new SimpleStringProperty();
-    private ZonedDateTime start;
-    private ZonedDateTime end;
+    private SimpleStringProperty start = new SimpleStringProperty();
+    private SimpleStringProperty end = new SimpleStringProperty();
 
     public AppointmentBuilder setAppointmentId(int id){
         this.appointmentId.set(id);
@@ -64,13 +64,13 @@ public class AppointmentBuilder {
     }
 
     // set DateTime as UTC
-    public AppointmentBuilder setStart(ZonedDateTime z){
-        this.start = convertToUTC(z);
+    public AppointmentBuilder setStart(String z){
+        this.start.set(z);
         return this;
     }
 
-    public AppointmentBuilder setEnd(ZonedDateTime s){
-        this.end = convertToUTC(s);
+    public AppointmentBuilder setEnd(String s){
+        this.end.set(s);
         return this;
     }
 
@@ -82,8 +82,8 @@ public class AppointmentBuilder {
         this.appt.setLocation(this.location.get());
         this.appt.setContact(this.contact.get());
         this.appt.setUrl(this.url.get());
-        this.appt.setStart(this.start);
-        this.appt.setEnd(this.end);
+        this.appt.setStart(this.start.get());
+        this.appt.setEnd(this.end.get());
         this.appt.setCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         this.appt.setCreatedBy(MainScreen.getAuthUser());
         this.appt.setLastUpdate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
