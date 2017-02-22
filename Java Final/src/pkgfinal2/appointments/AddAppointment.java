@@ -45,8 +45,8 @@ public class AddAppointment implements Displayable {
         BorderPane layout = new BorderPane();
         DatePicker dtpStart = new DatePicker();
         DatePicker dtpEnd = new DatePicker();
-        ComboBox<LocalTime> cboStartTime = new ComboBox();
-        ComboBox<LocalTime> cboEndTime = new ComboBox();
+        ComboBox<String> cboStartTime = new ComboBox();
+        ComboBox<String> cboEndTime = new ComboBox();
         Button btnClear = new Button("Clear");
         Button btnSubmit = new Button("Submit");
 
@@ -172,11 +172,14 @@ public class AddAppointment implements Displayable {
 //            lblOutputTime.setText(t.format(f));
 //        });
         TimeZoneController tzc = new TimeZoneController();
+
         btnSubmit.setOnAction(event -> {
 
+            LocalDate l = dtpStart.getValue();
+            String t = cboStartTime.getSelectionModel().getSelectedItem().toString();
+            LocalTime localTime = AppointmentController.parseTime(cboStartTime.getSelectionModel().getSelectedItem());
 
-
-            Appointment apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId())
+            apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId()+1)
                     .setContact(txtControls.get("contact").getText())
                     .setTitle(txtControls.get("title").getText())
                     .setDescription(txtControls.get("description").getText())
@@ -184,8 +187,8 @@ public class AddAppointment implements Displayable {
                     .setUrl(txtControls.get("url").getText())
                     // todo add createdBy / createDate
                     //ZonedDateTime
-                    .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem()))
-                    .setEnd(tzc.dateTimePickersToUtc(dtpEnd.getValue(),cboEndTime.getSelectionModel().getSelectedItem()))
+                    .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem().toString()))
+                    .setEnd(tzc.dateTimePickersToUtc(dtpEnd.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
                     .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
                     .build();
 
@@ -208,6 +211,8 @@ public class AddAppointment implements Displayable {
                 new ReminderController(b).addReminderToDatabase(2,a.getAppointmentId());
             });
             // todo check for date conflicts
+
+
 
             // todo check for appointments outside of office hours
 
@@ -239,6 +244,14 @@ public class AddAppointment implements Displayable {
             }
         });
 
+        dtpStart.setOnAction(event -> {
+            dtpEnd.setValue(dtpStart.getValue());
+
+        });
+        cboStartTime.setOnAction(event -> {
+            cboEndTime.getSelectionModel().select(cboStartTime.getSelectionModel().getSelectedIndex());
+        });
+
         //*************************************************
         //**            END EVENT HANDLERS               **
         //*************************************************
@@ -252,5 +265,17 @@ public class AddAppointment implements Displayable {
 
     private void addToDatabase(Schedulable d){
         d.scheduleMe(apt,reminder);
+    }
+
+    private boolean dateIsValid(LocalDateTime start, LocalDateTime end){
+        if (!start.isBefore(end)){
+            return false;
+        }
+        else if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY) || start.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }

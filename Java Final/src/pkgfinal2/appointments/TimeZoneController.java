@@ -32,7 +32,7 @@ public class TimeZoneController {
         ZonedDateTime zdt = ZonedDateTime
                 .of(LocalDateTime
                         .parse(str, getDtf()), currentTimeZone);
-        return zdt.withZoneSameInstant(UTCTimeZone).format(getDtf());
+        return zdt.withZoneSameInstant(getUTCTimeZone()).format(getDtf());
     }
 
 
@@ -40,7 +40,7 @@ public class TimeZoneController {
     public String stringToLocalTime(String str){
         ZonedDateTime zdt = ZonedDateTime
                 .of(LocalDateTime
-                        .parse(str,dtf), UTCTimeZone);
+                        .parse(str,dtf), getUTCTimeZone());
         return zdt.withZoneSameInstant(currentTimeZone).format(getDtf());
     }
 
@@ -49,23 +49,29 @@ public class TimeZoneController {
     }
 
     public String zonedDateTimeToUTCString(ZonedDateTime zdt){
-        ZonedDateTime time = zdt.withZoneSameInstant(UTCTimeZone);
+        ZonedDateTime time = zdt.withZoneSameInstant(getUTCTimeZone());
         return time.format(dtf);
     }
 
     public String dateTimePickersToUtc(LocalDate ld, String str){
 
-        String d = str.substring(0,str.indexOf("M")+1);
-        LocalTime lt = LocalTime.from(DateTimeFormatter.ofPattern("h:mma").parse(d));
+        //String d = str.substring(0,str.indexOf("M")+1);
+        LocalTime lt = LocalTime.from(DateTimeFormatter.ofPattern("h:mma z").parse(str));
         ZonedDateTime zdt = ZonedDateTime.of(ld,lt,this.currentTimeZone);
-        return zdt.withZoneSameInstant(UTCTimeZone).format(dtf);
+        return zdt.withZoneSameInstant(getUTCTimeZone()).format(dtf);
 
     }
 
     public String dateTimePickersToUtc(LocalDate ld, LocalTime lt){
         ZonedDateTime zdt = ZonedDateTime.of(ld,lt,this.currentTimeZone);
-        return zdt.withZoneSameInstant(UTCTimeZone).format(dtf);
+        return zdt.withZoneSameInstant(getUTCTimeZone()).format(dtf);
 
+    }
+
+    public String stringZonedLocalTimeFromBase(String s){
+        LocalDateTime ldt = LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.n"));
+        ZonedDateTime zdt = ZonedDateTime.of(ldt, this.getUTCTimeZone());
+        return zdt.withZoneSameInstant(this.currentTimeZone).format(dtf);
     }
 
 
@@ -76,5 +82,9 @@ public class TimeZoneController {
 
     public DateTimeFormatter getDtf() {
         return dtf;
+    }
+
+    public ZoneId getUTCTimeZone() {
+        return UTCTimeZone;
     }
 }

@@ -221,6 +221,7 @@ public class MainScreen extends Application {
         btnRefreshList.setOnAction(event -> {
             tvCustomer.setItems(MainClassController.buildCustList());
             tvCustomer.refresh();
+
         });
 
         btnAddAppointment.setOnAction(event -> {
@@ -291,6 +292,8 @@ public class MainScreen extends Application {
         ZoneId d = zoneId;
         return d;
     }
+
+
 
 
 

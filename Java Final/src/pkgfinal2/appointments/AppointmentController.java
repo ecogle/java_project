@@ -8,10 +8,7 @@ import pkgfinal2.login.LoginWindow;
 import sun.applet.Main;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +27,13 @@ public class AppointmentController {
         super();
     }
 
-    public AppointmentController(Appointment a){this.appointment = a;
+    public AppointmentController(Appointment a){
+        this.appointment = a;
         this.appointment.setAppointmentId(getHighestAppointmentId()+1);
     }
 
 
-    public static ObservableList populateTimeSelection(){
+    public static ObservableList<String> populateTimeSelection(){
         TimeZoneController tzc = new TimeZoneController();
         ObservableList<String> filler = FXCollections.observableArrayList();
         ZonedDateTime zdtTimes = ZonedDateTime.of(2016,01,01,06,00,00,00, MainScreen.getZoneId());
@@ -47,6 +45,17 @@ public class AppointmentController {
             zdtTimes = zdtTimes.plusMinutes(30);
         }
         return filler;
+    }
+
+    public static ObservableList<LocalTime> populateLocalTimes(){
+        ObservableList<LocalTime> newList = FXCollections.observableArrayList();
+        LocalTime start = LocalTime.of(06,00);
+        LocalTime end = LocalTime.of(18,30);
+        while(start.isBefore(end)){
+            newList.add(start);
+            start = start.plusMinutes(15);
+        }
+        return newList;
     }
 
     public static LocalTime parseTime(String str){
@@ -99,6 +108,7 @@ public class AppointmentController {
     }
 
     public ObservableList<Appointment> getAppointmentList(){
+        TimeZoneController tzc = new TimeZoneController();
         ObservableList<Appointment> apptList = FXCollections.observableArrayList();
         String sql = "Select * from appointment where customerId = " + MainScreen.getSelectedCustomer().getCustomerId();
         try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){
@@ -112,8 +122,8 @@ public class AppointmentController {
                         .setLocation(rs.getString("location"))
                         .setTitle(rs.getString("title"))
                         .setUrl(rs.getString("url"))
-                        .setStart(rs.getString("start"))
-                        .setEnd(rs.getString("end"))
+                        .setStart(tzc.stringZonedLocalTimeFromBase(rs.getString("start")))
+                        .setEnd(tzc.stringZonedLocalTimeFromBase(rs.getString("end")))
                         .build();
                 apptList.add(apt);
             }

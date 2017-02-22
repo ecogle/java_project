@@ -6,10 +6,9 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalUnit;
 import java.util.concurrent.*;
 
 /**
@@ -18,7 +17,11 @@ import java.util.concurrent.*;
 public class TimeTester {
     static int w=1;
     public static void main(String[] args) {
-        testMe();
+        // testMe();
+        //testMe2();
+        //testMe3();
+        //testMe4();
+        testMe5();
         /*ZoneId.getAvailableZoneIds().stream().sorted().forEach(System.out::println);
 
         ZoneId utc = ZoneId.of("UTC");
@@ -79,6 +82,32 @@ public class TimeTester {
     }
 
     public static void testMe2(){
+        TimeZoneController tzc = new TimeZoneController();
+        LocalDate ld = LocalDate.of(2017,02,15);
+        String lt = "10:00AM EDT";
+        LocalTime lts = LocalTime.from(DateTimeFormatter.ofPattern("HH:mma z").parse(lt));
+        ZonedDateTime zdt = ZonedDateTime.of(ld,lts,ZoneId.of("US/Eastern")).withZoneSameInstant(ZoneId.of("GMT"));
+        String asdf = tzc.dateTimePickersToUtc(ld,lt);
+    }
+
+    public static void testMe3(){
+        TimeZoneController tx = new TimeZoneController();
+        String s = "2017-02-17 13:30:00.0";
+        System.out.println(tx.stringZonedLocalTimeFromBase(s));
+    }
+
+    public static void testMe4(){
+        ZonedDateTime zdt = ZonedDateTime.of(LocalDateTime.now(),ZoneId.of("GMT"));
+
+        ZonedDateTime zdt2 = zdt.withZoneSameInstant(ZoneId.of("US/Eastern"));
+    }
+
+    public static void testMe5(){
+        Instant nowTime = ZonedDateTime.now(ZoneId.of("US/Central")).toInstant();
+        ZonedDateTime apptTime = ZonedDateTime.of(2017,02,17,14,10,00,00,ZoneId.of("US/Central"));
+        Instant spppp = apptTime.toInstant();
+
+        System.out.println(nowTime.compareTo(spppp.minus(Duration.ofMinutes(15))));
 
     }
 }
