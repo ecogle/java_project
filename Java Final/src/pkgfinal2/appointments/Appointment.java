@@ -27,8 +27,10 @@ public class Appointment extends Audit {
     private SimpleStringProperty startTime = new SimpleStringProperty();
     private SimpleStringProperty endDate = new SimpleStringProperty();
     private SimpleStringProperty endTime = new SimpleStringProperty();
-    private SimpleStringProperty start= new SimpleStringProperty();;
-    private SimpleStringProperty end= new SimpleStringProperty();;
+    private SimpleStringProperty start= new SimpleStringProperty();
+    private SimpleStringProperty end= new SimpleStringProperty();
+    private ZonedDateTime apptStart;
+    private ZonedDateTime apptEnd;
 
 
 
@@ -66,12 +68,19 @@ public class Appointment extends Audit {
         this.start.set(z);
         this.startDate.set(LocalDateTime.from(LocalDateTime.parse(z,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         this.startTime.set(LocalDateTime.from(LocalDateTime.parse(z,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofPattern("h:mm a")));
+        if(this.end!=null){
+
+        }
+
     }
 
     public void setEnd(String s){
         this.end.set(s);
         this.endDate.set(LocalDateTime.from(LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         this.endTime.set(LocalDateTime.from(LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofPattern("h:mm a")));
+        if(this.start != null){
+
+        }
     }
 
     public int getAppointmentId(){
@@ -123,6 +132,15 @@ public class Appointment extends Audit {
 
     public String getEndTime(){
         return this.endTime.get();
+    }
+
+    public boolean isConflicting(Appointment p){
+        ZonedDateTime thisApptStart;
+        ZonedDateTime thisApptEnd;
+        ZonedDateTime passedApptStart;
+        ZonedDateTime passedApptEnd;
+
+        return true;
     }
 
 

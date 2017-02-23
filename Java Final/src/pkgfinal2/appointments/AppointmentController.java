@@ -149,5 +149,10 @@ public class AppointmentController {
 
     }
 
+    public static void checkforAppointmentOverlap(Appointment p){
+
+
+    }
+
 
 }

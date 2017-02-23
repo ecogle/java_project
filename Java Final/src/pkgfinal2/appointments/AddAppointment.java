@@ -190,6 +190,8 @@ public class AddAppointment implements Displayable {
             //LocalTime localTime = parseTime(cboStartTime.getSelectionModel().getSelectedItem());
 
             if(dateIsValid(startDateTime,endDateTime)){
+
+
                 new MessageFactory().showMessage(() -> {
                     Alert a = new Alert(Alert.AlertType.INFORMATION);
                     a.setHeaderText("Valid Date");
@@ -286,6 +288,7 @@ public class AddAppointment implements Displayable {
     }
 
     private boolean dateIsValid(ZonedDateTime start, ZonedDateTime end){
+
         if (!start.isBefore(end)){
             return false;
         }
