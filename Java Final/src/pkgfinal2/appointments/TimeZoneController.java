@@ -87,4 +87,15 @@ public class TimeZoneController {
     public ZoneId getUTCTimeZone() {
         return UTCTimeZone;
     }
+
+    public ZonedDateTime dateTimePickersToUTC(LocalDate ld, LocalTime lt){
+
+        ZonedDateTime zdt = ZonedDateTime.of(ld,lt,this.currentTimeZone);
+        return zdt.withZoneSameInstant(ZoneId.of("UTC"));
+
+    }
+
+    public ZoneId getCurrentTimeZone(){
+        return this.currentTimeZone;
+    }
 }
