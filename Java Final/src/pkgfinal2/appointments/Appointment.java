@@ -29,8 +29,8 @@ public class Appointment extends Audit {
     private SimpleStringProperty endTime = new SimpleStringProperty();
     private SimpleStringProperty start= new SimpleStringProperty();
     private SimpleStringProperty end= new SimpleStringProperty();
-    private ZonedDateTime apptStart;
-    private ZonedDateTime apptEnd;
+//    private ZonedDateTime apptStart;
+//    private ZonedDateTime apptEnd;
 
 
 
@@ -64,23 +64,28 @@ public class Appointment extends Audit {
     }
 
     public void setStart(String z){
-        TimeZoneController tx = new TimeZoneController();
+//        TimeZoneController tx = new TimeZoneController();
         this.start.set(z);
         this.startDate.set(LocalDateTime.from(LocalDateTime.parse(z,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         this.startTime.set(LocalDateTime.from(LocalDateTime.parse(z,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofPattern("h:mm a")));
-        if(this.end!=null){
-
-        }
+//        if(this.end!=null) {
+//            LocalDate ld = LocalDate.parse(z,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+//            LocalTime lt = LocalTime.parse(z,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+//            this.apptStart = ZonedDateTime.of(ld,lt,tx.getCurrentTimeZone());
+//        }
 
     }
 
     public void setEnd(String s){
+//        TimeZoneController tx = new TimeZoneController();
         this.end.set(s);
         this.endDate.set(LocalDateTime.from(LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         this.endTime.set(LocalDateTime.from(LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofPattern("h:mm a")));
-        if(this.start != null){
-
-        }
+//        if(this.start != null){
+//            LocalDate ld = LocalDate.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+//            LocalTime lt = LocalTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+//            this.apptStart = ZonedDateTime.of(ld,lt,tx.getCurrentTimeZone());
+//        }
     }
 
     public int getAppointmentId(){
@@ -135,10 +140,25 @@ public class Appointment extends Audit {
     }
 
     public boolean isConflicting(Appointment p){
-        ZonedDateTime thisApptStart;
-        ZonedDateTime thisApptEnd;
-        ZonedDateTime passedApptStart;
-        ZonedDateTime passedApptEnd;
+        TimeZoneController tx = new TimeZoneController();
+        LocalDate ldAppt1Date = LocalDate.parse(this.startDate.get(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalTime ltAppt1Start = LocalTime.parse(this.startTime.get(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalTime ltAppt1End = LocalTime.parse(this.endTime.get(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        ZonedDateTime zdtAppt1Start = ZonedDateTime.of(ldAppt1Date,ltAppt1Start,tx.getCurrentTimeZone());
+        ZonedDateTime zdtAppt1End = ZonedDateTime.of(ldAppt1Date,ltAppt1End,tx.getCurrentTimeZone());
+
+        LocalDate ldAppt2Date = LocalDate.parse(p.getEndDate(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalTime ltAppt2Start = LocalTime.parse(p.getStartTime(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalTime ltAppt2End = LocalTime.parse(p.getEndTime(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        ZonedDateTime zdtAppt2Start = ZonedDateTime.of(ldAppt2Date,ltAppt2Start,tx.getCurrentTimeZone());
+        ZonedDateTime zdtAppt2End = ZonedDateTime.of(ldAppt2Date,ltAppt2End,tx.getCurrentTimeZone());
+
+
+        /*
+            if appointment 2's start is before appointment 1's end
+                return conflicting appointment
+         */
+
 
         return true;
     }

@@ -295,6 +295,14 @@ public class AddAppointment implements Displayable {
         else if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY) || start.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
             return false;
         }
+        else if(end.toLocalDate().isAfter(start.toLocalDate())){
+            new MessageFactory().showMessage(()->{
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("Appointment can't span more than one day");
+                a.showAndWait();
+            });
+            return false;
+        }
         else{
             return true;
         }
