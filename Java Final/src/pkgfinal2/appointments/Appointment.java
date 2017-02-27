@@ -158,9 +158,16 @@ public class Appointment extends Audit {
             if appointment 2's start is before appointment 1's end
                 return conflicting appointment
          */
+        if(zdtAppt2Start.isBefore(zdtAppt1End)){
+            return false;
+        }
+        else
+        {
+            return true;
+        }
 
 
-        return true;
+
     }
 
 
