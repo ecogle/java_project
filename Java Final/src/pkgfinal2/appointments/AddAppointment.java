@@ -255,12 +255,13 @@ public class AddAppointment implements Displayable {
 
     private boolean dateIsValid(ZonedDateTime start, ZonedDateTime end){
 
-        if (!start.isBefore(end)){
+        if (!start.isBefore(end)){ //if end time is before start time -> false
             return false;
         }
-        else if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY) || start.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+        else if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY) || start.getDayOfWeek().equals(DayOfWeek.SUNDAY)){ // if on weekend -> 
             return false;
         }
+        //todo fix this logic as per paper
         else if(end.toLocalDate().isAfter(start.toLocalDate())){
             new MessageFactory().showMessage(()->{
                 Alert a = new Alert(Alert.AlertType.ERROR);
