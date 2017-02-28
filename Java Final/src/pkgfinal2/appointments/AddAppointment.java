@@ -46,11 +46,8 @@ public class AddAppointment implements Displayable {
         DateTimeFormatter f = DateTimeFormatter.ofPattern("h:mma");
         BorderPane layout = new BorderPane();
         DatePicker dtpStart = new DatePicker();
-        DatePicker dtpEnd = new DatePicker();
         ComboBox<String> cboStartTime = new ComboBox();
         ComboBox<String> cboEndTime = new ComboBox();
-        //ComboBox<LocalTime> cboStartTime = new ComboBox();
-        //ComboBox<LocalTime> cboEndTime = new ComboBox();
         Button btnClear = new Button("Clear");
         Button btnSubmit = new Button("Submit");
 
@@ -84,9 +81,8 @@ public class AddAppointment implements Displayable {
         Label lblCustomerName = new Label(MainScreen.getSelectedCustomer().getCustomerName());
         lblCustomerName.setStyle("-fx-font-family:'sans-serif'; -fx-font-size:14pt ");
 
-        Label lblStartDate = new Label("Start Date");
-        Label lblEndDate = new Label("End Date");
-        //Label lblTime = new Label("Time");
+        Label lblStartDate = new Label("Appt. Date");
+        lblStartDate.setPrefWidth(80);
         Label lblOutputTime = new Label();
 
         // MAP of TextFields
@@ -99,15 +95,12 @@ public class AddAppointment implements Displayable {
         // populate the time boxes
         cboStartTime.setItems(AppointmentController.populateTimeSelection());
         cboEndTime.setItems(AppointmentController.populateTimeSelection());
-        //cboStartTime.setItems(AppointmentController.populateLocalTimes());
-        //cboEndTime.setItems(AppointmentController.populateLocalTimes());
         cboStartTime.setPromptText("Start Time");
         cboEndTime.setPromptText("End Time");
         cboStartTime.setMaxWidth(130);
         cboEndTime.setMaxWidth(130);
-        dtpStart.setMaxWidth(100);
-        dtpEnd.setMaxWidth(100);
-
+        dtpStart.setPrefWidth(130);
+        
         GridPane gp = new GridPane();
 
         gp.setPadding(new Insets(8));
@@ -126,34 +119,18 @@ public class AddAppointment implements Displayable {
         cboReminderType.setVisible(true);
         gp2.add(lblReminderType,0,0);gp2.add(cboReminderType,1,0);
 
-//        lblReminderDate.setVisible(false);
-//        dtpReminderDate.setVisible(false);
-//        lblReminderType.setVisible(false);
-//        cboReminderType.setVisible(false);
-//        lblIncrementTypeDescription.setVisible(false);
-//        txtaDescription.setVisible(false);
-
-
         sp.setPrefWidth(50);
 
-        HBox hb1 = new HBox();
-        HBox hb2 = new HBox();
         HBox hbButtons = new HBox();
 
         hbButtons.setAlignment(Pos.CENTER);
         hbButtons.setSpacing(20);
         hbButtons.getChildren().addAll(btnClear,btnSubmit);
-        hb1.setAlignment(Pos.CENTER_LEFT);
-        hb1.setSpacing(20);
-        hb2.setAlignment(Pos.CENTER_LEFT);
-        hb2.setSpacing(20);
-        hb1.getChildren().addAll(lblStartDate,dtpStart,cboStartTime);
-        hb2.getChildren().addAll(lblEndDate,dtpEnd,cboEndTime);
-
+        
         //Put the buttons in the gridpane
         gp.add(lblCustomerName,0,0,3,1);    ;       ;
-        gp.add(hb1,0,1,3,1);
-        gp.add(hb2,0,2,3,1);
+        gp.add(lblStartDate, 0, 1); gp.add(dtpStart, 1, 1);
+        gp.add(cboStartTime, 0, 2); gp.add(cboEndTime, 1, 2);
         gp.add(lblTitle,0,3); gp.add(txtControls.get("title"),1,3);
         gp.add(lblDescription,0,4); gp.add(txtControls.get("description"),1,4);
         gp.add(lblLocation,0,5); gp.add(txtControls.get("location"),1,5);
@@ -169,20 +146,12 @@ public class AddAppointment implements Displayable {
         //**              EVENT HANDLERS                 **
         //*************************************************
 
-
-        // todo check for valid date
-//        cboStartTime.setOnAction(event -> {
-//            //todo check for valid times
-//            String s = cboStartTime.getSelectionModel().getSelectedItem().toString();
-//            LocalTime t = AppointmentController.parseTime(s);
-//            lblOutputTime.setText(t.format(f));
-//        });
         TimeZoneController tzc = new TimeZoneController();
 
         btnSubmit.setOnAction(event -> {
             ZonedDateTime startDateTime = ZonedDateTime.of(dtpStart.getValue(),parseTime(cboStartTime.getSelectionModel().getSelectedItem()),tzc.getCurrentTimeZone());
 
-            ZonedDateTime endDateTime = ZonedDateTime.of(dtpEnd.getValue(),parseTime(cboEndTime.getSelectionModel().getSelectedItem()),tzc.getCurrentTimeZone());
+            ZonedDateTime endDateTime = ZonedDateTime.of(dtpStart.getValue(),parseTime(cboEndTime.getSelectionModel().getSelectedItem()),tzc.getCurrentTimeZone());
 
             LocalDate l = dtpStart.getValue();
 
@@ -208,7 +177,7 @@ public class AddAppointment implements Displayable {
                         // todo add createdBy / createDate
                         //ZonedDateTime
                         .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem().toString()))
-                        .setEnd(tzc.dateTimePickersToUtc(dtpEnd.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
+                        .setEnd(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
                         .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
                         .build();
 
@@ -264,10 +233,7 @@ public class AddAppointment implements Displayable {
             }
         });
 
-        dtpStart.setOnAction(event -> {
-            dtpEnd.setValue(dtpStart.getValue());
-
-        });
+        
         cboStartTime.setOnAction(event -> {
             cboEndTime.getSelectionModel().select(cboStartTime.getSelectionModel().getSelectedIndex());
         });
