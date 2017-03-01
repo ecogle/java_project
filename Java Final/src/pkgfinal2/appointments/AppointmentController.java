@@ -105,9 +105,11 @@ public class AppointmentController {
     public ObservableList<Appointment> getAppointmentList() {
         TimeZoneController tzc = new TimeZoneController();
         ObservableList<Appointment> apptList = FXCollections.observableArrayList();
-        String sql = "Select * from appointment where customerId = " + MainScreen.getSelectedCustomer().getCustomerId();
-        try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()) {
-            ResultSet rs = stmnt.executeQuery(sql);
+        String sql = "Select * from appointment where customerId = ? and createdBy = ?";
+        try (PreparedStatement stmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sql)) {
+            stmnt.setInt(1, MainScreen.getSelectedCustomer().getCustomerId());
+            stmnt.setString(2, MainScreen.getAuthUser());
+            ResultSet rs = stmnt.executeQuery();
             while (rs.next()) {
                 Appointment apt = new AppointmentBuilder()
                         .setAppointmentId(rs.getInt("appointmentId"))
@@ -131,9 +133,10 @@ public class AppointmentController {
     public static ObservableList<Appointment> getAppointmentListByDate(String sql) {
         ObservableList<Appointment> apptList = FXCollections.observableArrayList();
         TimeZoneController tzc = new TimeZoneController();
-        String sqls = "Select * from appointment where start like ?";
+        String sqls = "Select * from appointment where start like ? and createdBy = ?";
         try (PreparedStatement stmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sqls)) {
             stmnt.setString(1, sql + "%");
+            stmnt.setString(2, MainScreen.getAuthUser());
             ResultSet rs = stmnt.executeQuery();
             while (rs.next()) {
                 Appointment apt = new AppointmentBuilder()
