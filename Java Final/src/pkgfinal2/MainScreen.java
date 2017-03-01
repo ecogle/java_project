@@ -15,10 +15,9 @@ import pkgfinal2.appointments.reminder.PollingForReminders;
 import pkgfinal2.customer.*;
 import pkgfinal2.login.LoginWindow;
 import javafx.scene.layout.HBox;
-import sun.applet.Main;
-
 import java.time.ZoneId;
 import java.util.Optional;
+import pkgfinal2.appointments.ShowByWeek;
 
 /**
  * Main entry-point for the application. Login screen will pop-up as soon as main
@@ -68,6 +67,9 @@ public class MainScreen extends Application {
         Button btnDeleteCustomer = new Button("Delete Customer");
         Button btnRefreshList = new Button("Refresh list");
         Button btnAddAppointment = new Button("Schedule Appt.");
+        Button btnShowByWeek = new Button("Weekly Appts");
+        Button btnShowByMonth = new Button("Monthly Appts");
+        
 
         //set width of the buttons to be the same
         btnLogin.setPrefWidth(intButtonWidth);
@@ -76,6 +78,8 @@ public class MainScreen extends Application {
         btnEditCustomer.setPrefWidth(intButtonWidth);
         btnLogoff.setPrefWidth(intButtonWidth);
         btnAddAppointment.setPrefWidth(intButtonWidth);
+        btnShowByMonth.setPrefWidth(intButtonWidth);
+        btnShowByWeek.setPrefWidth(intButtonWidth);
 
         // using BorderPane for the generalized layout
         BorderPane layout = new BorderPane();
@@ -108,6 +112,8 @@ public class MainScreen extends Application {
         gpButtons.add(btnEditCustomer,0,2);
         gpButtons.add(btnDeleteCustomer,0,3);
         gpButtons.add(btnAddAppointment,0,4);
+        gpButtons.add(btnShowByWeek, 0, 5);
+        gpButtons.add(btnShowByMonth, 0, 6);
 
         // VBox nested inside the GridPane for vertical layout... probably not necessary
         VBox vbxLeft = new VBox();
@@ -177,6 +183,8 @@ public class MainScreen extends Application {
                 btnLogin.setVisible(false);
                 btnLogoff.setVisible(true);
                 btnAddAppointment.setVisible(true);
+                btnShowByMonth.setVisible(true);
+                btnShowByWeek.setVisible(true);
                 // Calls the static method "buildCustList" to set the items of the list
                 tvCustomer.setItems(MainClassController.buildCustList());
                 new PollingForReminders().startMe();
@@ -194,6 +202,10 @@ public class MainScreen extends Application {
             btnAddAppointment.setVisible(false);
         });
 
+        btnShowByWeek.setOnAction(event -> {
+            ShowByWeek sbw = new ShowByWeek();
+            sbw.display();
+        });
         //double-click event
         tvCustomer.setOnMouseClicked(event -> {
             if(event.getClickCount() ==2){
@@ -248,6 +260,9 @@ public class MainScreen extends Application {
         btnEditCustomer.setVisible(false);
         btnDeleteCustomer.setVisible(false);
         btnLogoff.setVisible(false);
+        btnShowByMonth.setVisible(false);
+        btnShowByWeek.setVisible(true);
+        
 
         //change for actual program
         tvCustomer.setVisible(false);
