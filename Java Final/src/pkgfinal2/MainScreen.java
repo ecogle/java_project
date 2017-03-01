@@ -261,7 +261,7 @@ public class MainScreen extends Application {
         btnDeleteCustomer.setVisible(false);
         btnLogoff.setVisible(false);
         btnShowByMonth.setVisible(false);
-        btnShowByWeek.setVisible(true);
+        btnShowByWeek.setVisible(false);
         
 
         //change for actual program

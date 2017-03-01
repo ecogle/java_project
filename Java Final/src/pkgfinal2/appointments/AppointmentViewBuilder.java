@@ -43,4 +43,13 @@ public class AppointmentViewBuilder {
         return this;
     }
 
+    public AppointmentViewBuilder setUrl(String s){
+        this.apptView.setUrl(s);
+        return this;
+    }
+
+    public AppointmentView build(){
+        return this.apptView;
+    }
+
 }
