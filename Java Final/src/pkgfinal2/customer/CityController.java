@@ -1,19 +1,13 @@
 package pkgfinal2.customer;
 
-import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 import pkgfinal2.appointments.TimeZoneController;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
 /**
  * Created by ecogle on 2/7/2017.
  */
@@ -73,7 +67,6 @@ public class CityController {
      */
     public void addCityToBase(String cityName, int countryId){
 
-        //todo fix the functionality of the add customer interface
         String sql = "insert into city (cityId,city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?,?)";
         try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){

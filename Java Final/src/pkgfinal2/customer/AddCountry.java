@@ -44,7 +44,6 @@ public class AddCountry implements Displayable {
 
         layout.setHgap(10);
         layout.setVgap(10);
-        //layout.setGridLinesVisible(true);
         layout.setPadding(new Insets(20, 0, 20, 20));
         layout.add(lblCountryName, 0, 0);
         layout.add(txtCountry, 1, 0);
@@ -71,13 +70,6 @@ public class AddCountry implements Displayable {
                 Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
                 String sql = "insert into U03PfE.country (countryId,country,createDate) values (" + getNextId() + ",'"+txtCountry.getText() + "'," + "'"+date+"')";
                 stmnt.execute(sql);
-                //PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement("insert into U03PfE.country (countryId,country,createDate)" +
-                //        "values (?,?,?)");
-                //pstmnt.setInt(1, getNextId());
-                //pstmnt.setString(2, txtCountry.getText());
-                //pstmnt.setString(3, nowDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
-                //System.out.println(pstmnt.toString());
-                //pstmnt.execute();
             } catch (SQLException f) {
                 System.out.println("There has been an error with the SQL statement");
             }
@@ -105,10 +97,6 @@ public class AddCountry implements Displayable {
         }
         return ++x;
     }
-
-
-
-
 }
 
 

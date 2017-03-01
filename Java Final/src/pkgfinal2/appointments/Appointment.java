@@ -3,11 +3,10 @@ package pkgfinal2.appointments;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import pkgfinal2.audit.Audit;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
  * Created by ecogle on 2/12/2017.
@@ -25,11 +24,8 @@ public class Appointment extends Audit {
     private SimpleStringProperty startTime = new SimpleStringProperty();
     private SimpleStringProperty endDate = new SimpleStringProperty();
     private SimpleStringProperty endTime = new SimpleStringProperty();
-    private SimpleStringProperty start= new SimpleStringProperty();;
-    private SimpleStringProperty end= new SimpleStringProperty();;
-
-
-
+    private SimpleStringProperty start= new SimpleStringProperty();
+    private SimpleStringProperty end= new SimpleStringProperty();
 
     public void setAppointmentId(int id){
         this.appointmentId.set(id);
@@ -59,13 +55,24 @@ public class Appointment extends Audit {
         this.url.set(str);
     }
 
+
     public void setStart(String z){
+
+        if(z.length()>16){
+            z = z.substring(0,16);
+        }
         this.start.set(z);
+        this.startDate.set(LocalDateTime.from(LocalDateTime.parse(z,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        this.startTime.set(LocalDateTime.from(LocalDateTime.parse(z,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofPattern("h:mm a")));
     }
 
     public void setEnd(String s){
+        if(s.length()>16){
+            s = s.substring(0,16);
+        }
         this.end.set(s);
-
+        this.endDate.set(LocalDateTime.from(LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        this.endTime.set(LocalDateTime.from(LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).format(DateTimeFormatter.ofPattern("h:mm a")));
     }
 
     public int getAppointmentId(){
@@ -117,6 +124,26 @@ public class Appointment extends Audit {
 
     public String getEndTime(){
         return this.endTime.get();
+    }
+
+    public static  boolean isConflicting(Appointment newAppt, Appointment existing){
+
+        TimeZoneController tx = new TimeZoneController();
+
+        LocalTime existingStart = LocalTime.parse(existing.getStart(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalTime existingEnd = LocalTime.parse(existing.getEnd(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalTime newApptStart = LocalTime.parse(newAppt.getStart(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalTime newApptEnd = LocalTime.parse(newAppt.getEnd(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+        if((newApptStart.isBefore(existingStart))&& (newApptEnd.isBefore(existingStart))){
+            return false;
+        }
+        else if(newApptStart.isAfter(existingEnd)){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
 

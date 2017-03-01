@@ -13,8 +13,6 @@ import pkgfinal2.MainScreen;
 import pkgfinal2.appointments.Appointment;
 import pkgfinal2.appointments.AppointmentController;
 import pkgfinal2.appointments.ShowAppointment;
-import sun.applet.Main;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -242,11 +240,6 @@ public class ShowCustomer {
         this.txtControls.put("txtPhoneNumber",new TextField());
         this.txtControls.put("txtCountry",new TextField());
     }
-
-    //todo can probably delete this
-//    private void assignNewFields(){
-//        modified.setCustomerId(completeCustomer.getCustomerId());
-//    }
 
     /**
      * Returns the selected customer from the MainScreen

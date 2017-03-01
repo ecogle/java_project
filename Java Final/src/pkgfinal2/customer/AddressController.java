@@ -1,22 +1,14 @@
 package pkgfinal2.customer;
 
-import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 import pkgfinal2.appointments.TimeZoneController;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  * Created by ecogle on 2/8/2017.
  */
@@ -155,10 +147,6 @@ public class AddressController {
         }
         return false;
     }
-
-//    public void changeAddress(CompleteCustomer modifiedFields){
-//
-//    }
 
     /**
      * Returns an instance of the myCountry object

@@ -3,18 +3,19 @@ package pkgfinal2.appointments.reminder;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 import pkgfinal2.appointments.AppointmentController;
+import pkgfinal2.appointments.TimeZoneController;
+import sun.applet.Main;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 /**
@@ -44,19 +45,28 @@ public class PollingForReminders {
 
 
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(6);
-
+        TimeZoneController tzc = new TimeZoneController();
 
         ScheduledFuture every15Minutes = pool.scheduleAtFixedRate(()-> {
             today=getTodaysAppointmentReminders();
-            today.stream().map(e-> AppointmentController.getZonedDateTime(e.getReminderDate())).forEach(System.out::println);
-        },0,5,TimeUnit.SECONDS);
 
+            Instant nowTime = ZonedDateTime.now().toInstant();
+
+            // today contains time where user is.
+            List<Reminder> temp = new ArrayList<>();
+            for(Reminder d: today){
+                String sdf = d.getReminderDate();
+                LocalDateTime ldt = LocalDateTime.from(LocalDateTime.parse(d.getReminderDate(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.n")));
+                ZonedDateTime apptTime = ZonedDateTime.of(ldt,tzc.getUTCTimeZone());
+                Instant ind = apptTime.toInstant();
+            }
+        },0,5,TimeUnit.SECONDS);
     }
 
     public List<Reminder> getTodaysAppointmentReminders(){
-        String sql ="select * from reminder where date_format(date(reminderDate),'%Y-%m-%d') <= ? ";
+        String sql ="select * from reminder where date_format(date(reminderDate),'%Y-%m-%d') = ? ";
         List<Reminder> todaysAppts = new ArrayList<>();
-
+        TimeZoneController tz = new TimeZoneController();
         try( PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
             ps.setString(1, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             ResultSet rs = ps.executeQuery();
@@ -78,11 +88,13 @@ public class PollingForReminders {
         return todaysAppts;
     }
 
-//    private ZonedDateTime getTime(String s){
-//        //ZonedDateTime time = ZonedDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//        //time = time.withZoneSameInstant(MainScreen.getZoneId());
-//        return time;
-//    }
+    //passing in the localized date from the base
+    //  comparing it to  the time now. If the
+    //  time is within 15 minutes, return true
+    //  else, false
+
+
+
 
 
 }

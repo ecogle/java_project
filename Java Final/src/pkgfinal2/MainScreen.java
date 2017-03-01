@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import sun.applet.Main;
 
 import java.time.ZoneId;
+import java.util.Optional;
 
 /**
  * Main entry-point for the application. Login screen will pop-up as soon as main
@@ -167,8 +168,6 @@ public class MainScreen extends Application {
             LoginWindow liwin = new LoginWindow(); //instantiates the login window
             liwin.display(); //displays the login window
             if(MainScreen.getAuthUser()!= null){
-            //if(liwin.getAuththenticatedUser()!= null){
-                //displays the username if authenticated properly
                 this.setAuththenticatedUser(liwin.getAuththenticatedUser());
                 lblAuthUserLabel.setText(MainScreen.getAuthUser());
                 btnAddCustomer.setVisible(true);
@@ -182,7 +181,6 @@ public class MainScreen extends Application {
                 tvCustomer.setItems(MainClassController.buildCustList());
                 new PollingForReminders().startMe();
             }
-
         });
 
         btnLogoff.setOnAction(event -> {
@@ -211,10 +209,17 @@ public class MainScreen extends Application {
 
         btnDeleteCustomer.setOnAction(event -> {
             if(tvCustomer.getSelectionModel().isEmpty() == false){
-                CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
-                MainClassController.deleteCustomer(compCust);
-                tvCustomer.setItems(MainClassController.buildCustList());
-                tvCustomer.refresh();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setContentText("Are you sure?");
+                alert.setHeaderText("Deleting Customer...");
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if(result.get()==ButtonType.OK){
+                    CompleteCustomer compCust = (CompleteCustomer) tvCustomer.getSelectionModel().getSelectedItem();
+                    MainClassController.deleteCustomer(compCust);
+                    tvCustomer.setItems(MainClassController.buildCustList());
+                    tvCustomer.refresh();
+                }
             }
         });
 
@@ -229,7 +234,6 @@ public class MainScreen extends Application {
                 setSelectedCustomer(compCust);
                 new AddAppointment().display();
             }
-
         });
         //**************************************************
         //              END EVENT HANDLERS                 *
@@ -246,8 +250,8 @@ public class MainScreen extends Application {
         btnLogoff.setVisible(false);
 
         //change for actual program
-        tvCustomer.setVisible(true);
-        btnAddAppointment.setVisible(true);
+        tvCustomer.setVisible(false);
+        btnAddAppointment.setVisible(false);
 
 
         Scene scene = new Scene(layout,700,600);        
@@ -271,7 +275,6 @@ public class MainScreen extends Application {
     
     public static String getAuthUser(){
         return authUserString;
-
     }
 
     private static void setSelectedCustomer(CompleteCustomer c){
@@ -279,9 +282,7 @@ public class MainScreen extends Application {
     }
 
     public static CompleteCustomer getSelectedCustomer(){
-
-        return selectedCustomer;
-    }
+        return selectedCustomer;    }
 
     public static void setZoneId(ZoneId zone){
         zoneId = zone;
@@ -291,6 +292,8 @@ public class MainScreen extends Application {
         ZoneId d = zoneId;
         return d;
     }
+
+
 
 
 

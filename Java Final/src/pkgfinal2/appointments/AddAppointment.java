@@ -1,8 +1,7 @@
 package pkgfinal2.appointments;
 
-//import javafx.collections.FXCollections;
-//import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,14 +16,11 @@ import pkgfinal2.MainScreen;
 import pkgfinal2.appointments.reminder.Reminder;
 import pkgfinal2.appointments.reminder.ReminderBuilder;
 import pkgfinal2.appointments.reminder.ReminderController;
-//import pkgfinal2.customer.CompleteCustomer;
+import pkgfinal2.messages.MessageFactory;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-//import java.util.stream.Stream;
 
 /**
  * Created by ecogle on 2/12/2017.
@@ -44,9 +40,8 @@ public class AddAppointment implements Displayable {
         DateTimeFormatter f = DateTimeFormatter.ofPattern("h:mma");
         BorderPane layout = new BorderPane();
         DatePicker dtpStart = new DatePicker();
-        DatePicker dtpEnd = new DatePicker();
-        ComboBox cboStartTime = new ComboBox();
-        ComboBox cboEndTime = new ComboBox();
+        ComboBox<String> cboStartTime = new ComboBox();
+        ComboBox<String> cboEndTime = new ComboBox();
         Button btnClear = new Button("Clear");
         Button btnSubmit = new Button("Submit");
 
@@ -80,9 +75,8 @@ public class AddAppointment implements Displayable {
         Label lblCustomerName = new Label(MainScreen.getSelectedCustomer().getCustomerName());
         lblCustomerName.setStyle("-fx-font-family:'sans-serif'; -fx-font-size:14pt ");
 
-        Label lblStartDate = new Label("Start Date");
-        Label lblEndDate = new Label("End Date");
-        //Label lblTime = new Label("Time");
+        Label lblStartDate = new Label("Appt. Date");
+        lblStartDate.setPrefWidth(80);
         Label lblOutputTime = new Label();
 
         // MAP of TextFields
@@ -99,9 +93,8 @@ public class AddAppointment implements Displayable {
         cboEndTime.setPromptText("End Time");
         cboStartTime.setMaxWidth(130);
         cboEndTime.setMaxWidth(130);
-        dtpStart.setMaxWidth(100);
-        dtpEnd.setMaxWidth(100);
-
+        dtpStart.setPrefWidth(130);
+        
         GridPane gp = new GridPane();
 
         gp.setPadding(new Insets(8));
@@ -120,34 +113,18 @@ public class AddAppointment implements Displayable {
         cboReminderType.setVisible(true);
         gp2.add(lblReminderType,0,0);gp2.add(cboReminderType,1,0);
 
-//        lblReminderDate.setVisible(false);
-//        dtpReminderDate.setVisible(false);
-//        lblReminderType.setVisible(false);
-//        cboReminderType.setVisible(false);
-//        lblIncrementTypeDescription.setVisible(false);
-//        txtaDescription.setVisible(false);
-
-
         sp.setPrefWidth(50);
 
-        HBox hb1 = new HBox();
-        HBox hb2 = new HBox();
         HBox hbButtons = new HBox();
 
         hbButtons.setAlignment(Pos.CENTER);
         hbButtons.setSpacing(20);
         hbButtons.getChildren().addAll(btnClear,btnSubmit);
-        hb1.setAlignment(Pos.CENTER_LEFT);
-        hb1.setSpacing(20);
-        hb2.setAlignment(Pos.CENTER_LEFT);
-        hb2.setSpacing(20);
-        hb1.getChildren().addAll(lblStartDate,dtpStart,cboStartTime);
-        hb2.getChildren().addAll(lblEndDate,dtpEnd,cboEndTime);
-
+        
         //Put the buttons in the gridpane
         gp.add(lblCustomerName,0,0,3,1);    ;       ;
-        gp.add(hb1,0,1,3,1);
-        gp.add(hb2,0,2,3,1);
+        gp.add(lblStartDate, 0, 1); gp.add(dtpStart, 1, 1);
+        gp.add(cboStartTime, 0, 2); gp.add(cboEndTime, 1, 2);
         gp.add(lblTitle,0,3); gp.add(txtControls.get("title"),1,3);
         gp.add(lblDescription,0,4); gp.add(txtControls.get("description"),1,4);
         gp.add(lblLocation,0,5); gp.add(txtControls.get("location"),1,5);
@@ -163,35 +140,23 @@ public class AddAppointment implements Displayable {
         //**              EVENT HANDLERS                 **
         //*************************************************
 
-
-        // todo check for valid date
-        cboStartTime.setOnAction(event -> {
-            //todo check for valid times
-            String s = cboStartTime.getSelectionModel().getSelectedItem().toString();
-            LocalTime t = AppointmentController.parseTime(s);
-            lblOutputTime.setText(t.format(f));
-        });
         TimeZoneController tzc = new TimeZoneController();
-        btnSubmit.setOnAction(event -> {
-            
 
-            Appointment apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId())
+        btnSubmit.setOnAction(event -> {
+
+            String t = cboStartTime.getSelectionModel().getSelectedItem().toString();
+
+            apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId()+1)
                     .setContact(txtControls.get("contact").getText())
                     .setTitle(txtControls.get("title").getText())
                     .setDescription(txtControls.get("description").getText())
                     .setLocation(txtControls.get("location").getText())
                     .setUrl(txtControls.get("url").getText())
-                    // todo add createdBy / createDate
                     //ZonedDateTime
                     .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem().toString()))
-                    .setEnd(tzc.dateTimePickersToUtc(dtpEnd.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
-                    //.setStart(ZonedDateTime.of(dtpStart.getValue(),AppointmentController.parseTime(cboStartTime.getSelectionModel().getSelectedItem().toString()),ZoneId.of("UTC")))
-                   // .setEnd(ZonedDateTime.of(dtpEnd.getValue(),AppointmentController.parseTime(cboEndTime.getSelectionModel().getSelectedItem().toString()),ZoneId.of("UTC")))
+                    .setEnd(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
                     .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
                     .build();
-
-
-
             reminder = new ReminderBuilder()
                     .setFkAppointmentId(apt.getAppointmentId())
                     .setReminderDate(apt.getStart())
@@ -200,23 +165,41 @@ public class AddAppointment implements Displayable {
                     .setReminderSnoozeIncrement(0)
                     .build();
 
+            // pull all appointments for the Appt. Date
+            ObservableList<Appointment> apptList = AppointmentController.getAppointmentListByDate(dtpStart.getValue().format(DateTimeFormatter.ofPattern("yyy-MM-dd")));
 
-            // todo add reminder to database
+            // call the isConflicting on the appt
+            boolean flag = false;
 
-            // lambda to schedule appointment
-            addToDatabase((a,b) -> {
-                new AppointmentController(a).addToDatabase();
-                new ReminderController(b).addReminderToDatabase(2,a.getAppointmentId());
-            });
-            // todo check for date conflicts
-
-            // todo check for appointments outside of office hours
-
-
-            window.close();
-
-
-
+            if(apptList.isEmpty()){
+                addToDatabase((a, b) -> {
+                    new AppointmentController(a).addToDatabase();
+                    new ReminderController(b).addReminderToDatabase(2, a.getAppointmentId());
+                });
+                window.close();
+            }
+            else{
+                for(Appointment a : apptList){
+                    if(Appointment.isConflicting(apt,a)){
+                        flag=true;
+                        break;
+                    }
+                }
+                if(flag == false){
+                    addToDatabase((a, b) -> {
+                        new AppointmentController(a).addToDatabase();
+                        new ReminderController(b).addReminderToDatabase(2, a.getAppointmentId());
+                    });
+                    window.close();
+                }
+                else{
+                    new MessageFactory().showMessage(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Conflicting appointments");
+                        alert.showAndWait();
+                    });
+                }
+            }
         });
 
         chkReminder.setOnAction(event -> {
@@ -240,6 +223,11 @@ public class AddAppointment implements Displayable {
             }
         });
 
+        
+        cboStartTime.setOnAction(event -> {
+            cboEndTime.getSelectionModel().select(cboStartTime.getSelectionModel().getSelectedIndex());
+        });
+
         //*************************************************
         //**            END EVENT HANDLERS               **
         //*************************************************
@@ -253,5 +241,29 @@ public class AddAppointment implements Displayable {
 
     private void addToDatabase(Schedulable d){
         d.scheduleMe(apt,reminder);
+    }
+
+    private boolean dateIsValid(ZonedDateTime start, ZonedDateTime end){
+
+        //if end time is before start time -> false
+        if (!start.isBefore(end)){
+            return false;
+        }
+        //if on weekend -> false
+        else if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY) || start.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+            return false;
+        }
+        //todo fix this logic as per paper
+        else if(end.toLocalDate().isAfter(start.toLocalDate())){
+            new MessageFactory().showMessage(()->{
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("Appointment can't span more than one day");
+                a.showAndWait();
+            });
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }

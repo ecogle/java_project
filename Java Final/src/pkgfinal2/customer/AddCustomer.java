@@ -123,17 +123,6 @@ public class AddCustomer extends Audit implements Displayable {
         
         gpControls.add(btnGridPane, 1, 9);
 
-        // todo error check and trim the test input
-
-
-
-        //provide functionality for the ADD button
-
-        //todo create a CompleteCustomer object and use the Customer controller to \n manipulate the database
-
-
-
-
         btnAdd.setOnAction(event -> {
             String k = "hi";
             try {
@@ -222,7 +211,7 @@ public class AddCustomer extends Audit implements Displayable {
                 window.close();           
                 
             } catch (InputEmptyException | InputTypeException e) {
-                //System.out.println(e.getMessage());
+                System.out.println(e.getMessage());
             }
 
 
