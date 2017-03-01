@@ -1,8 +1,7 @@
 package pkgfinal2.appointments;
 
-//import javafx.collections.FXCollections;
-//import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,15 +17,10 @@ import pkgfinal2.appointments.reminder.Reminder;
 import pkgfinal2.appointments.reminder.ReminderBuilder;
 import pkgfinal2.appointments.reminder.ReminderController;
 import pkgfinal2.messages.MessageFactory;
-//import pkgfinal2.customer.CompleteCustomer;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import static pkgfinal2.appointments.AppointmentController.parseTime;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-//import java.util.stream.Stream;
 
 /**
  * Created by ecogle on 2/12/2017.
@@ -149,66 +143,62 @@ public class AddAppointment implements Displayable {
         TimeZoneController tzc = new TimeZoneController();
 
         btnSubmit.setOnAction(event -> {
-            ZonedDateTime startDateTime = ZonedDateTime.of(dtpStart.getValue(),parseTime(cboStartTime.getSelectionModel().getSelectedItem()),tzc.getCurrentTimeZone());
-
-            ZonedDateTime endDateTime = ZonedDateTime.of(dtpStart.getValue(),parseTime(cboEndTime.getSelectionModel().getSelectedItem()),tzc.getCurrentTimeZone());
-
-            LocalDate l = dtpStart.getValue();
 
             String t = cboStartTime.getSelectionModel().getSelectedItem().toString();
-            //LocalTime localTime = parseTime(cboStartTime.getSelectionModel().getSelectedItem());
 
-            if(dateIsValid(startDateTime,endDateTime)){
+            apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId()+1)
+                    .setContact(txtControls.get("contact").getText())
+                    .setTitle(txtControls.get("title").getText())
+                    .setDescription(txtControls.get("description").getText())
+                    .setLocation(txtControls.get("location").getText())
+                    .setUrl(txtControls.get("url").getText())
+                    //ZonedDateTime
+                    .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem().toString()))
+                    .setEnd(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
+                    .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
+                    .build();
+            reminder = new ReminderBuilder()
+                    .setFkAppointmentId(apt.getAppointmentId())
+                    .setReminderDate(apt.getStart())
+                    .setFkSnoozeIncrementTypeId(0)
+                    .setReminderCol(" ")
+                    .setReminderSnoozeIncrement(0)
+                    .build();
 
+            // pull all appointments for the Appt. Date
+            ObservableList<Appointment> apptList = AppointmentController.getAppointmentListByDate(dtpStart.getValue().format(DateTimeFormatter.ofPattern("yyy-MM-dd")));
 
-                new MessageFactory().showMessage(() -> {
-                    Alert a = new Alert(Alert.AlertType.INFORMATION);
-                    a.setHeaderText("Valid Date");
-                    a.setContentText("Dates are valid");
-                    a.showAndWait();
-                });
+            // call the isConflicting on the appt
+            boolean flag = false;
 
-                apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId()+1)
-                        .setContact(txtControls.get("contact").getText())
-                        .setTitle(txtControls.get("title").getText())
-                        .setDescription(txtControls.get("description").getText())
-                        .setLocation(txtControls.get("location").getText())
-                        .setUrl(txtControls.get("url").getText())
-                        // todo add createdBy / createDate
-                        //ZonedDateTime
-                        .setStart(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboStartTime.getSelectionModel().getSelectedItem().toString()))
-                        .setEnd(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
-                        .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
-                        .build();
-
-
-
-                reminder = new ReminderBuilder()
-                        .setFkAppointmentId(apt.getAppointmentId())
-                        .setReminderDate(apt.getStart())
-                        .setFkSnoozeIncrementTypeId(0)
-                        .setReminderCol(" ")
-                        .setReminderSnoozeIncrement(0)
-                        .build();
-
-                // todo add reminder to database
-
-                // lambda to schedule appointment
-                addToDatabase((a,b) -> {
+            if(apptList.isEmpty()){
+                addToDatabase((a, b) -> {
                     new AppointmentController(a).addToDatabase();
-                    new ReminderController(b).addReminderToDatabase(2,a.getAppointmentId());
+                    new ReminderController(b).addReminderToDatabase(2, a.getAppointmentId());
                 });
-
                 window.close();
-
             }
             else{
-                new MessageFactory().showMessage(() -> {
-                    Alert a = new Alert(Alert.AlertType.ERROR);
-                    a.setHeaderText("Invalid Date");
-                    a.setContentText("Dates are NOT valid");
-                    a.showAndWait();
-                });
+                for(Appointment a : apptList){
+                    if(Appointment.isConflicting(apt,a)){
+                        flag=true;
+                        break;
+                    }
+                }
+                if(flag == false){
+                    addToDatabase((a, b) -> {
+                        new AppointmentController(a).addToDatabase();
+                        new ReminderController(b).addReminderToDatabase(2, a.getAppointmentId());
+                    });
+                    window.close();
+                }
+                else{
+                    new MessageFactory().showMessage(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Conflicting appointments");
+                        alert.showAndWait();
+                    });
+                }
             }
         });
 
@@ -255,10 +245,12 @@ public class AddAppointment implements Displayable {
 
     private boolean dateIsValid(ZonedDateTime start, ZonedDateTime end){
 
-        if (!start.isBefore(end)){ //if end time is before start time -> false
+        //if end time is before start time -> false
+        if (!start.isBefore(end)){
             return false;
         }
-        else if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY) || start.getDayOfWeek().equals(DayOfWeek.SUNDAY)){ // if on weekend -> 
+        //if on weekend -> false
+        else if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY) || start.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
             return false;
         }
         //todo fix this logic as per paper

@@ -22,24 +22,7 @@ public class MySQLDatabase implements AutoCloseable{
 
     private static Connection conn;
 
-    public static DataSource getMySQLDataSource(){
-        Properties mySQL = new Properties();
-        FileInputStream fis = null;
-        MysqlDataSource mds = null;
-        System.out.println(System.getProperty("user.dir"));
-        try{
-            fis = new FileInputStream(System.getProperty("user.dir") + "Java Final/src/db.properties");
-            mySQL.load(fis);
-            mds = new MysqlDataSource();
-            mds.setURL(mySQL.getProperty("MYSQL_DB_URL"));
-            mds.setUser(mySQL.getProperty("MYSQL_DB_USERNAME"));
-            mds.setPassword("MYSQL_DB_PASSWORD");
-        }
-        catch (IOException e){
 
-        }
-        return mds;
-    }
 
     public static Connection getMySQLConnection(){
 
@@ -57,11 +40,8 @@ public class MySQLDatabase implements AutoCloseable{
         catch (SQLException e){
             e.printStackTrace();
         }
-
         return conn;
     }
-
-
 
     @Override
     public void close()  {

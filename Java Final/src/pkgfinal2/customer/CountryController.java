@@ -1,19 +1,13 @@
 package pkgfinal2.customer;
 
-import javafx.scene.control.Alert;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 import pkgfinal2.appointments.TimeZoneController;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
 /**
  * This is the controller class for the country aspect of the database.
  * Created by ecogle on 2/7/2017.

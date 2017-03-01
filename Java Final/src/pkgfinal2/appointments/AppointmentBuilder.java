@@ -3,9 +3,6 @@ package pkgfinal2.appointments;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import pkgfinal2.MainScreen;
-import pkgfinal2.login.LoginWindow;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

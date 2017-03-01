@@ -17,11 +17,8 @@ public class TimeZoneController {
 
     public TimeZoneController(){
         super();
-        //currentTimeZone=ZoneId.systemDefault();
         currentTimeZone=MainScreen.getZoneId();
     }
-
-
 
     /**
      * Takes a string and returns the UTC time
@@ -34,8 +31,6 @@ public class TimeZoneController {
                         .parse(str, getDtf()), currentTimeZone);
         return zdt.withZoneSameInstant(getUTCTimeZone()).format(getDtf());
     }
-
-
 
     public String stringToLocalTime(String str){
         ZonedDateTime zdt = ZonedDateTime
@@ -55,7 +50,6 @@ public class TimeZoneController {
 
     public String dateTimePickersToUtc(LocalDate ld, String str){
 
-        //String d = str.substring(0,str.indexOf("M")+1);
         LocalTime lt = LocalTime.from(DateTimeFormatter.ofPattern("h:mma z").parse(str));
         ZonedDateTime zdt = ZonedDateTime.of(ld,lt,this.currentTimeZone);
         return zdt.withZoneSameInstant(getUTCTimeZone()).format(dtf);
@@ -86,16 +80,5 @@ public class TimeZoneController {
 
     public ZoneId getUTCTimeZone() {
         return UTCTimeZone;
-    }
-
-    public ZonedDateTime dateTimePickersToUTC(LocalDate ld, LocalTime lt){
-
-        ZonedDateTime zdt = ZonedDateTime.of(ld,lt,this.currentTimeZone);
-        return zdt.withZoneSameInstant(ZoneId.of("UTC"));
-
-    }
-
-    public ZoneId getCurrentTimeZone(){
-        return this.currentTimeZone;
     }
 }

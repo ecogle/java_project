@@ -13,9 +13,6 @@ public class LoginController {
     private static Locale userLocation;
     private static String userName;
 
-
-
-
     public static boolean userLogin(){
         return true;
     }

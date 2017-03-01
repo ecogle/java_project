@@ -8,7 +8,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import pkgfinal2.MainScreen;
 
 /**
  * Created by ecogle on 2/15/2017.

@@ -27,7 +27,6 @@ public class LoginWindow {
     private boolean success=false;
     private String language;
     private Locale locale;
-    //private static ZoneId zoneId;
     private String s;
     private Map<String,ZoneId> zoneIdMap;
     private String auththenticatedUser;
@@ -77,9 +76,6 @@ public class LoginWindow {
         cbLocation.setOnAction(event -> {
             s = cbLocation.getSelectionModel().getSelectedItem().toString();
         });
-
-
-        //zoneId=getTimeZone(s);
         //sets up the controls
         Label lblUsername = new Label("Username: ");
         layout.add(lblUsername, 0, 1);
@@ -99,18 +95,14 @@ public class LoginWindow {
         layout.add(hbxLang, 0, 4,2,1);
         //functionality of the login button
         Button btnLogin = new Button("Login");
-
-
         btnLogin.setOnAction(e->{
             ResourceBundle rb = null;
             try{
                 //validates the login
                 success = checkValidLogin(txtUsername.getText().trim(), passPassword.getText().trim());
                 language = (String) cbLanguage.getValue();
-                //location = (String) cbLocation.getValue();
                 if(success){                    
                     MainScreen.setAuthUser(txtUsername.getText().trim());
-                   // this.auththenticatedUser = txtUsername.getText().trim();
                     if(language != null){                         
                         rb = ResourceBundle.getBundle("login",getLanguage(language));
                         s = cbLocation.getSelectionModel().getSelectedItem().toString();
@@ -193,7 +185,4 @@ public class LoginWindow {
         }
         return zoneId;
     }
-
-    
-    
 }

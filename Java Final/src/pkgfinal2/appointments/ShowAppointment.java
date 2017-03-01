@@ -45,6 +45,7 @@ public class ShowAppointment {
 
         window.setTitle("Display Appointment for " + MainScreen.getSelectedCustomer().getCustomerName());
         layout.setPadding(new Insets(8));
+
         //Labels and TextFields
         Label lblTitle = new Label("Title");
         Label lblDescription = new Label("Description");
@@ -56,10 +57,6 @@ public class ShowAppointment {
         Label lblCustomerName = new Label(MainScreen.getSelectedCustomer().getCustomerName());
         lblCustomerName.setStyle("-fx-font-family:'sans-serif'; -fx-font-size:14pt ");
 
-        Label lblStartDate = new Label("Start Date");
-        Label lblEndDate = new Label("End Date");
-        //Label lblTime = new Label("Time");
-        Label lblOutputTime = new Label();
 
         // MAP of TextFields
         txtControls.put("title",new TextField());

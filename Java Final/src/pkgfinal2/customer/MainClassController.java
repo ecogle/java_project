@@ -1,6 +1,5 @@
 package pkgfinal2.customer;
 
-import com.sun.scenario.effect.impl.prism.ps.PPSDrawable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,20 +23,10 @@ public class MainClassController {
         return c;
     }
 
-    public static void editCustomer(CompleteCustomer originalCust, CompleteCustomer modifiedCust){
-        
-        // edit the customer information
-        //updateCountry(originalCust,modifiedCust);
-        //updateCity(originalCust,modifiedCust);
-        //updateAddress(originalCust,modifiedCust);
-        // updateCustomer(originalCust,modifiedCust);
-    }
-    
     public static void deleteCustomer(CompleteCustomer compCust){
         String sql = "delete from customer where customerId = ?";
         try(PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){
             pstmnt.setInt(1,compCust.getCustomerId());
-
             pstmnt.execute();
         }
         catch (SQLException e){
