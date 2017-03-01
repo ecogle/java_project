@@ -9,11 +9,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -68,6 +65,15 @@ public class ShowByWeek implements Displayable{
         btnNext.setOnAction(event -> {
             LocalDate startOfWeek = avc.getStartOfWeek(today);
             increment = increment + 7;
+            startOfWeek = startOfWeek.plusDays(increment);
+            tvAppointments.setItems(avc.getApptByWeek(startOfWeek));
+            lblWeek.setText("Week of: " + startOfWeek.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+            tvAppointments.refresh();
+        });
+
+        btnPrevious.setOnAction(event -> {
+            LocalDate startOfWeek = avc.getStartOfWeek(today);
+            increment = increment - 7;
             startOfWeek = startOfWeek.plusDays(increment);
             tvAppointments.setItems(avc.getApptByWeek(startOfWeek));
             lblWeek.setText("Week of: " + startOfWeek.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));

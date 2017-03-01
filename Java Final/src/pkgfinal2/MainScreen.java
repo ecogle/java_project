@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pkgfinal2.appointments.AddAppointment;
+import pkgfinal2.appointments.ShowByMonth;
 import pkgfinal2.appointments.reminder.PollingForReminders;
 import pkgfinal2.customer.*;
 import pkgfinal2.login.LoginWindow;
@@ -205,6 +206,11 @@ public class MainScreen extends Application {
         btnShowByWeek.setOnAction(event -> {
             ShowByWeek sbw = new ShowByWeek();
             sbw.display();
+        });
+
+        btnShowByMonth.setOnAction(event -> {
+            ShowByMonth sbm = new ShowByMonth();
+            sbm.display();
         });
         //double-click event
         tvCustomer.setOnMouseClicked(event -> {
