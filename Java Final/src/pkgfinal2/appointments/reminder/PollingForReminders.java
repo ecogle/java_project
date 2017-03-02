@@ -30,7 +30,7 @@ public class PollingForReminders {
 
     }
 
-    // pull all of the appointments for today
+    
 
         // write to a Map of some sort (treeset?)
 
