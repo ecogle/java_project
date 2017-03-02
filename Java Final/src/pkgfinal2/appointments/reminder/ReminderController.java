@@ -44,9 +44,6 @@ public class ReminderController {
             ps.setString(6,"Heathen");
             ps.setString(7, ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             ps.setString(8,this.reminder.getReminderCol());
-
-            System.out.println(ps);
-
             ps.execute();
 
         }

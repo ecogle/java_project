@@ -41,6 +41,16 @@ public class ReminderBuilder {
         return this;
     }
 
+    public ReminderBuilder setCreatedBy(String str){
+        this.reminder.setCreatedBy(str);
+        return this;
+    }
+
+    public ReminderBuilder setCreateDate(String str){
+        this.reminder.setCreateDate(str);
+        return this;
+    }
+
     public Reminder build(){
         return this.reminder;
     }
