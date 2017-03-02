@@ -80,6 +80,16 @@ public class ShowByWeek implements Displayable{
             tvAppointments.refresh();
         });
 
+//        tvAppointments.setOnMouseClicked(event -> {
+//            if(event.getClickCount()==2){
+//                Appointment apt = ((AppointmentView) tvAppointments.getSelectionModel().getSelectedItem()).toAppointment();
+//                ShowAppointment ap = new ShowAppointment(apt);
+//                ap.display();
+//            }
+//        });
+
+
+
 
         
         GridPane p = new GridPane();

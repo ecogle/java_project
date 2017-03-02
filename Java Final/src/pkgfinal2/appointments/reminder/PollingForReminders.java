@@ -64,11 +64,12 @@ public class PollingForReminders {
     }
 
     public List<Reminder> getTodaysAppointmentReminders(){
-        String sql ="select * from reminder where date_format(date(reminderDate),'%Y-%m-%d') = ? ";
+        String sql ="select * from reminder where date_format(date(reminderDate),'%Y-%m-%d') = ? and createdBy = ?";
         List<Reminder> todaysAppts = new ArrayList<>();
         TimeZoneController tz = new TimeZoneController();
         try( PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
             ps.setString(1, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            ps.setString(2,MainScreen.getAuthUser());
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 todaysAppts.add(new ReminderBuilder()

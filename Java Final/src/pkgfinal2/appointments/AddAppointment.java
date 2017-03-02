@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.MainScreen;
@@ -17,6 +18,8 @@ import pkgfinal2.appointments.reminder.Reminder;
 import pkgfinal2.appointments.reminder.ReminderBuilder;
 import pkgfinal2.appointments.reminder.ReminderController;
 import pkgfinal2.messages.MessageFactory;
+
+import javax.swing.text.LabelView;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -44,22 +47,29 @@ public class AddAppointment implements Displayable {
         ComboBox<String> cboEndTime = new ComboBox();
         Button btnClear = new Button("Clear");
         Button btnSubmit = new Button("Submit");
+        ComboBox<String> cboDescription = new ComboBox<>();
+        cboDescription.setItems(FXCollections.observableArrayList("Physical","Illness","Checkup"));
 
         //reminder gui
-        CheckBox chkReminder = new CheckBox("Add Reminder");
-        DatePicker dtpReminderDate = new DatePicker();
-        Label lblReminderDate = new Label("Reminder date");
-        Label lblReminderType = new Label("Type");
-        Label lblIncrementTypeDescription = new Label("Inc. Description");
-        lblIncrementTypeDescription.setAlignment(Pos.TOP_LEFT);
-        TextArea txtaDescription = new TextArea();
-        txtaDescription.setPrefColumnCount(5);
-        txtaDescription.setPrefWidth(100d);
-        txtaDescription.setWrapText(true);
 
+        //CheckBox chkReminder = new CheckBox("Add Reminder");
+        //DatePicker dtpReminderDate = new DatePicker();
+        //Label lblReminderDate = new Label("Reminder date");
+//        Label lblIncrementTypeDescription = new Label("Inc. Description");
+//        lblIncrementTypeDescription.setAlignment(Pos.TOP_LEFT);
+//        TextArea txtaDescription = new TextArea();
+//        txtaDescription.setPrefColumnCount(5);
+//        txtaDescription.setPrefWidth(100d);
+//        txtaDescription.setWrapText(true);
+        Label lblReminderType = new Label("Type");
+        Label lblReminderText = new Label("Reminder Text:");
+        TextField txtReminderText = new TextField();
+        ChoiceBox cbSnoozeInc = new ChoiceBox();
+        Label lblSnoozeInc = new Label("Snooze Inc.");
         ComboBox cboReminderType = new ComboBox();
         cboReminderType.setPromptText("Reminder Type");
         cboReminderType.setItems(FXCollections.observableArrayList("Illness","Physical","Procedure"));
+
 
 
         window.setTitle("Add Appointment for " + MainScreen.getSelectedCustomer().getCustomerName());
@@ -81,7 +91,7 @@ public class AddAppointment implements Displayable {
 
         // MAP of TextFields
         txtControls.put("title",new TextField());
-        txtControls.put("description",new TextField());
+        //txtControls.put("description",new TextField());
         txtControls.put("location",new TextField());
         txtControls.put("contact",new TextField());
         txtControls.put("url",new TextField());
@@ -126,7 +136,8 @@ public class AddAppointment implements Displayable {
         gp.add(lblStartDate, 0, 1); gp.add(dtpStart, 1, 1);
         gp.add(cboStartTime, 0, 2); gp.add(cboEndTime, 1, 2);
         gp.add(lblTitle,0,3); gp.add(txtControls.get("title"),1,3);
-        gp.add(lblDescription,0,4); gp.add(txtControls.get("description"),1,4);
+        // todo change this to combobox
+        gp.add(lblDescription,0,4); gp.add(cboDescription,1,4);
         gp.add(lblLocation,0,5); gp.add(txtControls.get("location"),1,5);
         gp.add(lblContact,0,6); gp.add(txtControls.get("contact"),1,6);
         gp.add(lblUrl,0,7); gp.add(txtControls.get("url"),1,7);
@@ -149,7 +160,7 @@ public class AddAppointment implements Displayable {
             apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId()+1)
                     .setContact(txtControls.get("contact").getText())
                     .setTitle(txtControls.get("title").getText())
-                    .setDescription(txtControls.get("description").getText())
+                    .setDescription(cboDescription.getSelectionModel().getSelectedItem())
                     .setLocation(txtControls.get("location").getText())
                     .setUrl(txtControls.get("url").getText())
                     //ZonedDateTime
@@ -161,8 +172,10 @@ public class AddAppointment implements Displayable {
                     .setFkAppointmentId(apt.getAppointmentId())
                     .setReminderDate(apt.getStart())
                     .setFkSnoozeIncrementTypeId(0)
-                    .setReminderCol(" ")
-                    .setReminderSnoozeIncrement(0)
+                    .setReminderCol(" ") //textBox
+                    .setReminderSnoozeIncrement(0) //comboBox
+                    .setCreatedBy(MainScreen.getAuthUser())
+                    .setCreateDate(apt.getStart())
                     .build();
 
             // pull all appointments for the Appt. Date
@@ -202,7 +215,7 @@ public class AddAppointment implements Displayable {
             }
         });
 
-        chkReminder.setOnAction(event -> {
+        /*chkReminder.setOnAction(event -> {
             if(chkReminder.isSelected()){
                 lblReminderDate.setVisible(true);
                 dtpReminderDate.setVisible(true);
@@ -221,7 +234,7 @@ public class AddAppointment implements Displayable {
                 lblIncrementTypeDescription.setVisible(false);
                 txtaDescription.setVisible(false);
             }
-        });
+        });*/
 
         
         cboStartTime.setOnAction(event -> {
@@ -253,7 +266,7 @@ public class AddAppointment implements Displayable {
         else if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY) || start.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
             return false;
         }
-        //todo fix this logic as per paper
+
         else if(end.toLocalDate().isAfter(start.toLocalDate())){
             new MessageFactory().showMessage(()->{
                 Alert a = new Alert(Alert.AlertType.ERROR);

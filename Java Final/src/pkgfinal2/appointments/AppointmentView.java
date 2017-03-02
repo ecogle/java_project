@@ -1,13 +1,15 @@
 package pkgfinal2.appointments;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import pkgfinal2.audit.Audit;
 
 public class AppointmentView extends Audit{
-    
+
     private SimpleStringProperty custName = new SimpleStringProperty();
+    private SimpleIntegerProperty apptId = new SimpleIntegerProperty();
     private SimpleStringProperty date = new SimpleStringProperty();
     private SimpleStringProperty startTime = new SimpleStringProperty();
     private SimpleStringProperty endTime = new SimpleStringProperty();
@@ -24,11 +26,13 @@ public class AppointmentView extends Audit{
     public void setCustName(String s){
         this.custName.set(s);
     }
-    
+    public void setApptId(int s){
+        this.apptId.set(s);
+    }
     public void setDate(String s){
         this.date.set(s);
     }
-    
+
     public void setStartTime(String s){
         this.startTime.set(s);
     }
@@ -36,23 +40,23 @@ public class AppointmentView extends Audit{
     public void setEndTime(String s){
         this.endTime.set(s);
     }
-    
+
     public void setTitle(String s){
         this.title.set(s);
     }
-    
+
     public void setDescription(String s){
         this.description.set(s);
     }
-    
+
     public void setLocation(String s){
         this.location.set(s);
     }
-    
+
     public void setContact(String s){
         this.contact.set(s);
     }
-    
+
     public void setUrl(String s){
         this.url.set(s);
     }
@@ -63,6 +67,10 @@ public class AppointmentView extends Audit{
 
     public String getCustName(){
         return this.custName.get();
+    }
+
+    public int getApptId(){
+        return this.apptId.get();
     }
     public String getDate(){
         return this.date.get();
@@ -87,5 +95,11 @@ public class AppointmentView extends Audit{
     }
     public String getUrl(){
         return this.url.get();
+    }
+
+    public Appointment toAppointment() {
+        AppointmentViewController avc = new AppointmentViewController();
+
+        return avc.getAppointment(this.getApptId());
     }
 }

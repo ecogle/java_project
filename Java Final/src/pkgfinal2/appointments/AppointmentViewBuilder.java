@@ -7,6 +7,10 @@ public class AppointmentViewBuilder {
         this.apptView.setCustName(s);
         return this;
     }
+    public AppointmentViewBuilder setApptId(int s){
+        this.apptView.setApptId(s);
+        return this;
+    }
     
     public AppointmentViewBuilder setDate(String s){
         this.apptView.setDate(s);

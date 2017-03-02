@@ -74,7 +74,7 @@ public class AppointmentViewController {
         LocalDate startMonth = LocalDate.of(ld.getYear(),ld.getMonth(),1);
         LocalDate endMonth = startMonth.plusMonths(1);
         endMonth = endMonth.minusDays(1);
-        String sql = "select c.customerName, a.title, a.description, a.location, a.contact, a.url,a.start,a.end from " +
+        String sql = "select c.customerName, a.appointmentId, a.title, a.description, a.location, a.contact, a.url,a.start,a.end from " +
                 "appointment a inner join " +
                 "customer c on a.customerId = c.customerId where a.createdBy = ? and (start between ? and ?)";
 
@@ -95,6 +95,7 @@ public class AppointmentViewController {
                 LocalTime ldEndTime = zdtEnd.toLocalTime();
 
                 apptList.add(new AppointmentViewBuilder()
+                        .setApptId(rs.getInt("appointmentId"))
                         .setName(rs.getString("customerName"))
                         .setTitle(rs.getString("title"))
                         .setDate(zdtStart.toLocalDate().toString())
@@ -140,13 +141,38 @@ public class AppointmentViewController {
     }
 
 
-
+    // ok to delete
     public static void main(String[] s){
         AppointmentViewController av = new AppointmentViewController();
         System.out.println(av.getStartOfWeek(LocalDate.of(2017,3,4)).toString());
         ObservableList<AppointmentView> aptList = av.getApptByWeek(LocalDate.parse("2017-03-01", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         System.out.println(LocalDate.now().getMonth());
 
+    }
+
+    public Appointment getAppointment(int apptId){
+        String sql = "select * from apppointment where appointmentId = ?";
+
+        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+            ps.setInt(1,apptId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return new AppointmentBuilder()
+                        .setAppointmentId(rs.getInt("appointmentId"))
+                        .setLocation(rs.getString("location"))
+                        .setContact(rs.getString("contact"))
+                        .setStart(rs.getString("start"))
+                        .setEnd(rs.getString("end"))
+                        .setDescription(rs.getString("description"))
+                        .setTitle(rs.getString("title"))
+                        .setUrl(rs.getString("url"))
+                        .build();
+            }
+        }
+        catch (SQLException e){
+
+        }
+        return null;
     }
 
 }

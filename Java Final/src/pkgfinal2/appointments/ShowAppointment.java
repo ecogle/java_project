@@ -1,5 +1,6 @@
 package pkgfinal2.appointments;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -42,6 +43,8 @@ public class ShowAppointment {
         Button btnEdit = new Button("Edit");
         Button btnDelete = new Button("Delete");
         CheckBox chkEdit = new CheckBox("Edit");
+        ComboBox<String> cboDescription = new ComboBox<>();
+        cboDescription.setItems(FXCollections.observableArrayList("Physical","Illness","Checkup"));
 
         window.setTitle("Display Appointment for " + MainScreen.getSelectedCustomer().getCustomerName());
         layout.setPadding(new Insets(8));
@@ -60,14 +63,14 @@ public class ShowAppointment {
 
         // MAP of TextFields
         txtControls.put("title",new TextField());
-        txtControls.put("description",new TextField());
+        //txtControls.put("description",new TextField());
         txtControls.put("location",new TextField());
         txtControls.put("contact",new TextField());
         txtControls.put("url",new TextField());
 
         //populate fields
         txtControls.get("title").setText(this.apt.getTitle());
-        txtControls.get("description").setText(this.apt.getDescription());
+        cboDescription.getSelectionModel().select(this.apt.getDescription());
         txtControls.get("location").setText(this.apt.getLocation());
         txtControls.get("contact").setText(this.apt.getContact());
         txtControls.get("url").setText(this.apt.getUrl());
@@ -87,7 +90,7 @@ public class ShowAppointment {
         gp.add(chkEdit,0,0,3,1);
         gp.add(lblCustomerName,0,1,3,1);    ;       ;
         gp.add(lblTitle,0,5); gp.add(txtControls.get("title"),1,5);
-        gp.add(lblDescription,0,6); gp.add(txtControls.get("description"),1,6);
+        gp.add(lblDescription,0,6); gp.add(cboDescription,1,6);
         gp.add(lblLocation,0,7); gp.add(txtControls.get("location"),1,7);
         gp.add(lblContact,0,8); gp.add(txtControls.get("contact"),1,8);
         gp.add(lblUrl,0,9); gp.add(txtControls.get("url"),1,9);
