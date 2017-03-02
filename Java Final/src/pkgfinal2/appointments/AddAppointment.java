@@ -65,6 +65,7 @@ public class AddAppointment implements Displayable {
         Label lblReminderText = new Label("Reminder Text:");
         TextField txtReminderText = new TextField();
         ChoiceBox cbSnoozeInc = new ChoiceBox();
+        cbSnoozeInc.setItems(FXCollections.observableArrayList("5 min","10 min","15 min"));
         Label lblSnoozeInc = new Label("Snooze Inc.");
         ComboBox cboReminderType = new ComboBox();
         cboReminderType.setPromptText("Reminder Type");
@@ -121,8 +122,8 @@ public class AddAppointment implements Displayable {
 
         lblReminderType.setVisible(true);
         cboReminderType.setVisible(true);
-        gp2.add(lblReminderType,0,0);gp2.add(cboReminderType,1,0);
-
+        gp2.add(lblReminderText,0,0);gp2.add(txtReminderText,1,0);
+        gp2.add(lblSnoozeInc,0,1); gp2.add(cbSnoozeInc,1,1);
         sp.setPrefWidth(50);
 
         HBox hbButtons = new HBox();
