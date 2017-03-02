@@ -26,6 +26,7 @@ public class PollingForReminders {
 
     List<Reminder> today;
 
+    ThreadGroup tg = new ThreadGroup("Reminders");
     public PollingForReminders(){
 
     }
@@ -42,7 +43,9 @@ public class PollingForReminders {
     public void startMe(){
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(6);
         TimeZoneController tzc = new TimeZoneController();
+        ShowReminders sr = (rr) -> {
 
+        };
         ScheduledFuture every5Minutes = pool.scheduleAtFixedRate(()-> {
             today=getTodaysAppointmentReminders();
 
@@ -57,9 +60,16 @@ public class PollingForReminders {
                 if(zdtNow.isAfter(temp)){
                     // throw reminder.
                     System.out.println("Throwing reminder" + r.getReminderDate());
+                    Thread th =new Thread(tg,()->{},"reminder");
+                    try {
+                        Thread.sleep(Duration.ofMinutes(2).toMillis());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
+
 
 
 
