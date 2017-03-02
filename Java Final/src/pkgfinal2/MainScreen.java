@@ -52,7 +52,7 @@ public class MainScreen extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //new PollingForReminders().startMe();
+        new PollingForReminders().startMe();
         int intButtonWidth = 110; //width of the buttons
         window = primaryStage; //primary stage
         window.setTitle("Customer Main");
@@ -188,7 +188,7 @@ public class MainScreen extends Application {
                 btnShowByWeek.setVisible(true);
                 // Calls the static method "buildCustList" to set the items of the list
                 tvCustomer.setItems(MainClassController.buildCustList());
-                new PollingForReminders().startMe();
+                //new PollingForReminders().startMe();
             }
         });
 

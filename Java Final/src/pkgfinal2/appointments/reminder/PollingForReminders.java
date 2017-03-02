@@ -6,6 +6,7 @@ import pkgfinal2.appointments.AppointmentController;
 import pkgfinal2.appointments.TimeZoneController;
 import sun.applet.Main;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,7 +68,8 @@ public class PollingForReminders {
         String sql ="select * from reminder where date_format(date(reminderDate),'%Y-%m-%d') = ? and createdBy = ?";
         List<Reminder> todaysAppts = new ArrayList<>();
         TimeZoneController tz = new TimeZoneController();
-        try( PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+        try( Connection conn = MySQLDatabase.getMySQLConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             ps.setString(2,MainScreen.getAuthUser());
             ResultSet rs = ps.executeQuery();
