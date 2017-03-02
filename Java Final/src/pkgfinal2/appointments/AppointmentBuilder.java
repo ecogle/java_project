@@ -66,6 +66,7 @@ public class AppointmentBuilder {
         return this;
     }
 
+    //set as UTC
     public AppointmentBuilder setEnd(String s){
         this.end.set(s);
         return this;

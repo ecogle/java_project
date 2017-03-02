@@ -1,9 +1,7 @@
 package pkgfinal2.customer;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pkgfinal2.MySQLDatabase;
@@ -25,7 +23,8 @@ public class MainClassController {
 
     public static void deleteCustomer(CompleteCustomer compCust){
         String sql = "delete from customer where customerId = ?";
-        try(PreparedStatement pstmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){
+        try(Connection conn = MySQLDatabase.getMySQLConnection()){
+            PreparedStatement pstmnt = conn.prepareStatement(sql);
             pstmnt.setInt(1,compCust.getCustomerId());
             pstmnt.execute();
         }
@@ -36,7 +35,8 @@ public class MainClassController {
     
     private static boolean updateCountry(CompleteCustomer c){
         String sql = "UDATE country set countryId= ?,countryName = ?" + " where customerId = ?";
-        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){            
+        try(Connection conn = MySQLDatabase.getMySQLConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1,c.getFkCountryId());
             ps.setString(2, c.getCountry());
             ps.setInt(3,c.getCustomerId());
@@ -53,7 +53,8 @@ public class MainClassController {
 
     private static boolean updateCity(CompleteCustomer c){
         String sql = "UPDATE city set cityId=?,city=?,countryId=?" + " where cityId = ?";
-        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);){            
+        try(Connection conn = MySQLDatabase.getMySQLConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, c.getFkCityId());
             ps.setString(2, c.getCity());
             ps.setInt(3, c.getFkCountryId());
@@ -71,7 +72,8 @@ public class MainClassController {
     
     private static boolean updateAddress(CompleteCustomer compCust){
         String sql = "UPDATE address set addressId=?,address=?,address2=?,cityId=?,postalCode=?,phone=?";
-        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);) {            
+        try(Connection conn = MySQLDatabase.getMySQLConnection()) {
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, compCust.getFkAddressId());
             ps.setString(2, compCust.getAddress());
             ps.setString(3, compCust.getAddress2());
@@ -91,7 +93,8 @@ public class MainClassController {
     
     private static boolean updateCustomer(CompleteCustomer compCust){
         String sql = "UPDATE customer set customerId = ?,customerName=?, addressId = ?";
-        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql);) {            
+        try(Connection conn = MySQLDatabase.getMySQLConnection()) {
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, compCust.getCustomerId());
             ps.setString(2, compCust.getCustomerName());
             ps.setInt(3, compCust.getFkAddressId());
@@ -106,7 +109,8 @@ public class MainClassController {
     }
     public static ObservableList<CompleteCustomer> buildCustList(){
         ObservableList<CompleteCustomer> custList = FXCollections.observableArrayList();
-        try(Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()) {
+        try(Connection conn = MySQLDatabase.getMySQLConnection()) {
+            Statement stmnt = conn.createStatement();
             String sql = "select customerId,customerName,active,addr.addressId,address,address2,postalCode,phone,ci.cityId,city,co.countryId,country from customer cou inner join\n" +
                     "address addr on cou.addressId = addr.addressId inner join city ci on addr.cityId = ci.cityId inner join\n" +
                     "country co on ci.countryId = co.countryId";

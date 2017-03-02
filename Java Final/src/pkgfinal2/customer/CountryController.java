@@ -3,10 +3,8 @@ package pkgfinal2.customer;
 import pkgfinal2.MainScreen;
 import pkgfinal2.MySQLDatabase;
 import pkgfinal2.appointments.TimeZoneController;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.time.ZonedDateTime;
 /**
  * This is the controller class for the country aspect of the database.
@@ -50,7 +48,8 @@ public class CountryController {
         -- could probably return void and just set the private property
     */
     private int getHighestCountryId(){
-        try(Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement()){            
+        try(Connection conn = MySQLDatabase.getMySQLConnection()){
+            Statement stmnt = conn.createStatement();
             ResultSet rs = stmnt.executeQuery("select max(countryId) as maxId from country");
             if(rs.next()){
                 return rs.getInt("maxId");
@@ -70,7 +69,8 @@ public class CountryController {
     public void addCountryToBase(String countryName){
         String sql = "insert into country (countryId,country,createDate,createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?)";
-        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)) {
+        try(Connection conn = MySQLDatabase.getMySQLConnection()) {
+            PreparedStatement ps = conn.prepareStatement(sql);
             TimeZoneController tzc = new TimeZoneController();
             this.myCountry = new Country();
             this.myCountry.setCountryName(countryName.trim());
@@ -102,7 +102,8 @@ public class CountryController {
      */
     private boolean countryExists(String str){
 
-        try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){            
+        try (Connection conn = MySQLDatabase.getMySQLConnection()){
+            Statement stmnt = conn.createStatement();
             ResultSet rs = stmnt.executeQuery("Select * from U03PfE.country where country = '" + str.trim() + "'");
             if(rs.next()){
                 this.myCountry = new Country();

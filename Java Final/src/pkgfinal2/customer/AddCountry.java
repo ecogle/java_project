@@ -10,10 +10,7 @@ import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.MySQLDatabase;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -64,10 +61,10 @@ public class AddCountry implements Displayable {
         });
 
         btnAdd.setOnAction(e -> {
-            try {
+            try (Connection conn = MySQLDatabase.getMySQLConnection()){
                 LocalDate nowDate = LocalDate.now();
                 String date = nowDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
-                Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+                Statement stmnt = conn.createStatement();
                 String sql = "insert into U03PfE.country (countryId,country,createDate) values (" + getNextId() + ",'"+txtCountry.getText() + "'," + "'"+date+"')";
                 stmnt.execute(sql);
             } catch (SQLException f) {
@@ -85,8 +82,8 @@ public class AddCountry implements Displayable {
     private static int getNextId() {
         int c = 0;
         int x = -1;
-        try {
-            Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement();
+        try (Connection conn = MySQLDatabase.getMySQLConnection()){
+            Statement stmnt = conn.createStatement();
             String sql = "Select count(country) as myInt from country;";
             ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){

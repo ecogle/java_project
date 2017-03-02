@@ -26,7 +26,7 @@ public class AppointmentViewController {
         ObservableList<AppointmentView> apptList = FXCollections.observableArrayList();
 
         LocalDate startWeek = this.getStartOfWeek(ld);
-        LocalDate endWeek = startWeek.plusDays(4);
+        LocalDate endWeek = startWeek.plusDays(5);
         String sql = "select c.customerName, a.title, a.description, a.location, a.contact, a.url,a.start,a.end from " +
                 "appointment a inner join " +
                 "customer c on a.customerId = c.customerId where a.createdBy = ? and (start between ? and ?)";

@@ -64,7 +64,8 @@ public class AppointmentController {
     }
 
     public static int getHighestAppointmentId() {
-        try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()) {
+        try (Connection conn = MySQLDatabase.getMySQLConnection()) {
+            Statement stmnt = conn.createStatement();
             ResultSet rs = stmnt.executeQuery("select max(appointmentId) as maxId from appointment");
             if (rs.next()) {
                 return rs.getInt("maxId");
@@ -81,7 +82,8 @@ public class AppointmentController {
                 " values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 
-        try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(mysqldg)) {
+        try (Connection conn = MySQLDatabase.getMySQLConnection()) {
+            PreparedStatement ps = conn.prepareStatement(mysqldg);
             ps.setInt(1, this.appointment.getAppointmentId());
             ps.setInt(2, this.appointment.getFkCustomerId());
             ps.setString(3, this.appointment.getTitle());
@@ -106,7 +108,8 @@ public class AppointmentController {
         TimeZoneController tzc = new TimeZoneController();
         ObservableList<Appointment> apptList = FXCollections.observableArrayList();
         String sql = "Select * from appointment where customerId = ? and createdBy = ?";
-        try (PreparedStatement stmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sql)) {
+        try (Connection conn = MySQLDatabase.getMySQLConnection()) {
+            PreparedStatement stmnt = conn.prepareStatement(sql);
             stmnt.setInt(1, MainScreen.getSelectedCustomer().getCustomerId());
             stmnt.setString(2, MainScreen.getAuthUser());
             ResultSet rs = stmnt.executeQuery();
@@ -134,7 +137,8 @@ public class AppointmentController {
         ObservableList<Appointment> apptList = FXCollections.observableArrayList();
         TimeZoneController tzc = new TimeZoneController();
         String sqls = "Select * from appointment where start like ? and createdBy = ?";
-        try (PreparedStatement stmnt = MySQLDatabase.getMySQLConnection().prepareStatement(sqls)) {
+        try (Connection conn = MySQLDatabase.getMySQLConnection()) {
+            PreparedStatement stmnt = conn.prepareStatement(sqls);
             stmnt.setString(1, sql + "%");
             stmnt.setString(2, MainScreen.getAuthUser());
             ResultSet rs = stmnt.executeQuery();

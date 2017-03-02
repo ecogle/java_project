@@ -30,7 +30,7 @@ public class PollingForReminders {
 
     }
 
-    
+
 
         // write to a Map of some sort (treeset?)
 
@@ -40,15 +40,10 @@ public class PollingForReminders {
         // have a spot on there for snooze
 
     public void startMe(){
-
-
-        //System.out.println(getTime(today.get(0).getReminderDate()));
-
-
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(6);
         TimeZoneController tzc = new TimeZoneController();
 
-        ScheduledFuture every15Minutes = pool.scheduleAtFixedRate(()-> {
+        ScheduledFuture every5Minutes = pool.scheduleAtFixedRate(()-> {
             today=getTodaysAppointmentReminders();
 
             Instant nowTime = ZonedDateTime.now().toInstant();
@@ -61,7 +56,7 @@ public class PollingForReminders {
                 ZonedDateTime apptTime = ZonedDateTime.of(ldt,tzc.getUTCTimeZone());
                 Instant ind = apptTime.toInstant();
             }
-        },0,5,TimeUnit.SECONDS);
+        },0,5,TimeUnit.MINUTES);
     }
 
     public List<Reminder> getTodaysAppointmentReminders(){

@@ -56,8 +56,9 @@ public class UserList implements Displayable {
 
     private void buildUsers(){
         Statement ps = null;
-        try {
-            ps = MySQLDatabase.getMySQLConnection().createStatement();
+        try(Connection conn = MySQLDatabase.getMySQLConnection()) {
+
+            ps = conn.createStatement();
             ResultSet rs = ps.executeQuery("Select userId,username, active, createBy,lastUpdate from U03Pfe.user");
 
             /*

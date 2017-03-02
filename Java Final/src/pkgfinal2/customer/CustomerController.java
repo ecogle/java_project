@@ -1,9 +1,6 @@
 package pkgfinal2.customer;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import pkgfinal2.MainScreen;
@@ -60,7 +57,8 @@ public class CustomerController {
         -- could probably return void and just set the private property
     */
     private int getHighestCustomerId(){
-        try(Statement stmnt= MySQLDatabase.getMySQLConnection().createStatement()){            
+        try(Connection conn = MySQLDatabase.getMySQLConnection()){
+            Statement stmnt = conn.createStatement();
             ResultSet rs = stmnt.executeQuery("select max(customerId) as maxId from customer");
             if(rs.next()){
                 return rs.getInt("maxId");
@@ -80,7 +78,8 @@ public class CustomerController {
     public void addCustomerToBase(Map<String,String> customerFields, int addressId){
         String sql = "insert into customer (customerId,customerName, addressId, active,createDate, createdBy,lastUpdate,lastUpdateBy) values "
                     + " (?,?,?,?,?,?,?,?)";
-        try (PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+        try (Connection conn = MySQLDatabase.getMySQLConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             TimeZoneController tzc = new TimeZoneController();
             this.myCustomer = new Customer();
@@ -118,7 +117,8 @@ public class CustomerController {
      */
     private boolean customerExists(Map<String,String> customerFields){
         String sql = "Select * from U03PfE.customer where customerName = '" + customerFields.get("customerName") + "'";
-        try (Statement stmnt = MySQLDatabase.getMySQLConnection().createStatement()){
+        try (Connection conn = MySQLDatabase.getMySQLConnection()){
+            Statement stmnt = conn.createStatement();
             ResultSet rs = stmnt.executeQuery(sql);
             if(rs.next()){
                 // sets up a new Customer object
@@ -154,7 +154,8 @@ public class CustomerController {
     // updates the Customer name ONLY
     public static void updateCustomerName(int index, String newName){
         String sql = "UPDATE customer set customerName = ? where customerId = ?;";
-        try(PreparedStatement ps = MySQLDatabase.getMySQLConnection().prepareStatement(sql)){
+        try(Connection conn = MySQLDatabase.getMySQLConnection()){
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(2,index);
             ps.setString(1,newName);
             ps.execute();

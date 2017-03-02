@@ -1,5 +1,12 @@
 package pkgfinal2.appointments.reminder;
 
+import pkgfinal2.MainScreen;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Created by ecogle on 2/14/2017.
  */
@@ -17,6 +24,7 @@ public class ReminderBuilder {
         return this;
     }
     public ReminderBuilder setReminderDate(String date){
+
         this.reminder.setReminderDate(date);
         return this;
     }
@@ -47,7 +55,10 @@ public class ReminderBuilder {
     }
 
     public ReminderBuilder setCreateDate(String str){
-        this.reminder.setCreateDate(str);
+        LocalDateTime ldt = LocalDateTime.parse(str, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        ZonedDateTime zdt = ZonedDateTime.of(ldt, MainScreen.getZoneId());
+        zdt = zdt.withZoneSameInstant(ZoneId.of("UTC"));
+        this.reminder.setCreateDate(zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         return this;
     }
 

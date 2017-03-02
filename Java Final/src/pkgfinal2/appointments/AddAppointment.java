@@ -64,7 +64,7 @@ public class AddAppointment implements Displayable {
         Label lblReminderType = new Label("Type");
         Label lblReminderText = new Label("Reminder Text:");
         TextField txtReminderText = new TextField();
-        ChoiceBox cbSnoozeInc = new ChoiceBox();
+        ChoiceBox<String> cbSnoozeInc = new ChoiceBox();
         cbSnoozeInc.setItems(FXCollections.observableArrayList("5 min","10 min","15 min"));
         Label lblSnoozeInc = new Label("Snooze Inc.");
         ComboBox cboReminderType = new ComboBox();
@@ -156,8 +156,6 @@ public class AddAppointment implements Displayable {
 
         btnSubmit.setOnAction(event -> {
 
-            String t = cboStartTime.getSelectionModel().getSelectedItem().toString();
-
             apt = new AppointmentBuilder().setAppointmentId(AppointmentController.getHighestAppointmentId()+1)
                     .setContact(txtControls.get("contact").getText())
                     .setTitle(txtControls.get("title").getText())
@@ -169,14 +167,15 @@ public class AddAppointment implements Displayable {
                     .setEnd(tzc.dateTimePickersToUtc(dtpStart.getValue(),cboEndTime.getSelectionModel().getSelectedItem().toString()))
                     .setFkCustomerId(MainScreen.getSelectedCustomer().getCustomerId())
                     .build();
+            String strSnoozeInc = cbSnoozeInc.getSelectionModel().getSelectedItem();
             reminder = new ReminderBuilder()
                     .setFkAppointmentId(apt.getAppointmentId())
                     .setReminderDate(apt.getStart())
                     .setFkSnoozeIncrementTypeId(0)
-                    .setReminderCol(" ") //textBox
-                    .setReminderSnoozeIncrement(0) //comboBox
+                    .setReminderCol(txtReminderText.getText()) //textBox
+                    .setReminderSnoozeIncrement(Integer.parseInt(strSnoozeInc.substring(0,strSnoozeInc.indexOf("m")-1)))
                     .setCreatedBy(MainScreen.getAuthUser())
-                    .setCreateDate(apt.getStart())
+                    .setCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                     .build();
 
             // pull all appointments for the Appt. Date
