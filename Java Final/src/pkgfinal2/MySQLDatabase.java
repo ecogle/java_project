@@ -27,7 +27,8 @@ public class MySQLDatabase implements AutoCloseable{
     public static Connection getMySQLConnection(){
 
         try{
-            conn = DriverManager.getConnection("jdbc:mysql://52.206.157.109:3306/U03PfE","U03PfE","53688042834");
+
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/U03PfE","U03PfE","53688042834");
         }
         catch (CommunicationsException r){
             new MessageFactory().showMessage(()->{

@@ -39,7 +39,7 @@ public class AppointmentController {
 
         while (zdtTimes.isBefore(zdtTimesEnd)) {
             filler.add(zdtTimes.format(DateTimeFormatter.ofPattern("h:mma z")));
-            zdtTimes = zdtTimes.plusMinutes(30);
+            zdtTimes = zdtTimes.plusMinutes(10);
         }
         return filler;
     }
@@ -169,5 +169,26 @@ public class AppointmentController {
     private static String hackTheDot(String s) {
         String d = s.substring(0, s.indexOf("."));
         return d;
+    }
+
+    public ObservableList<String> getIncTypes(){
+        ObservableList<String> incList = FXCollections.observableArrayList();
+        String sql = "select * from incrementtypes";
+        try(Connection conn = MySQLDatabase.getMySQLConnection()){
+            Statement stmnt = conn.createStatement();
+            ResultSet rs = stmnt.executeQuery(sql);
+            while(rs.next()){
+                incList.add(rs.getString(2));
+            }
+        }
+        catch (SQLException e){
+            new MessageFactory().showMessage(()->{
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setHeaderText("SQL Error");
+                a.setContentText("There was an error loading the increment types");
+                a.showAndWait();
+            });
+        }
+        return incList;
     }
 }

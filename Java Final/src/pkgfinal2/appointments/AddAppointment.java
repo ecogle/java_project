@@ -10,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import pkgfinal2.Displayable;
 import pkgfinal2.MainScreen;
@@ -18,8 +17,6 @@ import pkgfinal2.appointments.reminder.Reminder;
 import pkgfinal2.appointments.reminder.ReminderBuilder;
 import pkgfinal2.appointments.reminder.ReminderController;
 import pkgfinal2.messages.MessageFactory;
-
-import javax.swing.text.LabelView;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -37,6 +34,7 @@ public class AddAppointment implements Displayable {
 
     @Override
     public void display(){
+        AppointmentController ac = new AppointmentController();
 
         //appointment gui
         Stage window = new Stage();
@@ -52,21 +50,15 @@ public class AddAppointment implements Displayable {
 
         //reminder gui
 
-        //CheckBox chkReminder = new CheckBox("Add Reminder");
-        //DatePicker dtpReminderDate = new DatePicker();
-        //Label lblReminderDate = new Label("Reminder date");
-//        Label lblIncrementTypeDescription = new Label("Inc. Description");
-//        lblIncrementTypeDescription.setAlignment(Pos.TOP_LEFT);
-//        TextArea txtaDescription = new TextArea();
-//        txtaDescription.setPrefColumnCount(5);
-//        txtaDescription.setPrefWidth(100d);
-//        txtaDescription.setWrapText(true);
         Label lblReminderType = new Label("Type");
         Label lblReminderText = new Label("Reminder Text:");
         TextField txtReminderText = new TextField();
         ChoiceBox<String> cbSnoozeInc = new ChoiceBox();
         cbSnoozeInc.setItems(FXCollections.observableArrayList("5 min","10 min","15 min"));
         Label lblSnoozeInc = new Label("Snooze Inc.");
+        Label lblIncType = new Label("Inc Type");
+        ComboBox<String> cboIncType = new ComboBox<>();
+        cboIncType.setItems(ac.getIncTypes());
         ComboBox cboReminderType = new ComboBox();
         cboReminderType.setPromptText("Reminder Type");
         cboReminderType.setItems(FXCollections.observableArrayList("Illness","Physical","Procedure"));
@@ -124,6 +116,7 @@ public class AddAppointment implements Displayable {
         cboReminderType.setVisible(true);
         gp2.add(lblReminderText,0,0);gp2.add(txtReminderText,1,0);
         gp2.add(lblSnoozeInc,0,1); gp2.add(cbSnoozeInc,1,1);
+        gp2.add(lblIncType,0,2); gp2.add(cboIncType,1,2);
         sp.setPrefWidth(50);
 
         HBox hbButtons = new HBox();
@@ -176,6 +169,7 @@ public class AddAppointment implements Displayable {
                     .setReminderSnoozeIncrement(Integer.parseInt(strSnoozeInc.substring(0,strSnoozeInc.indexOf("m")-1)))
                     .setCreatedBy(MainScreen.getAuthUser())
                     .setCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                    .setFkSnoozeIncrementTypeId(cboIncType.getSelectionModel().getSelectedIndex())
                     .build();
 
             // pull all appointments for the Appt. Date

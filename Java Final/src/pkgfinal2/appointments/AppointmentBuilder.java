@@ -73,6 +73,8 @@ public class AppointmentBuilder {
     }
 
     public Appointment build(){
+        TimeZoneController tzc = new TimeZoneController();
+
         this.appt.setAppointmentId(this.appointmentId.get());
         this.appt.setFkCustomerId(this.fkCustomerId.get());
         this.appt.setTitle(this.title.get());
@@ -82,9 +84,9 @@ public class AppointmentBuilder {
         this.appt.setUrl(this.url.get());
         this.appt.setStart(this.start.get());
         this.appt.setEnd(this.end.get());
-        this.appt.setCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        this.appt.setCreateDate(tzc.ldtToZdtStringUTC(LocalDateTime.now()));
         this.appt.setCreatedBy(MainScreen.getAuthUser());
-        this.appt.setLastUpdate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        this.appt.setLastUpdate(tzc.ldtToZdtStringUTC(LocalDateTime.now()));
         this.appt.setLastUpdateBy(MainScreen.getAuthUser());
 
         return appt;

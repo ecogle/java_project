@@ -46,17 +46,32 @@ public class PollingForReminders {
         ScheduledFuture every5Minutes = pool.scheduleAtFixedRate(()-> {
             today=getTodaysAppointmentReminders();
 
-            Instant nowTime = ZonedDateTime.now().toInstant();
+            ZonedDateTime zdtNow = ZonedDateTime.now(MainScreen.getZoneId());
+            zdtNow = zdtNow.withZoneSameInstant(tzc.getUTCTimeZone()); // now ZonedDateTime
+            zdtNow = zdtNow.plusMinutes(16);
+            // for each reminder
+            for(Reminder r : today){
+                // convert the reminder start (yyyy-MM-dd HH:mm:ss.n) into UTC ZonedDateTime
+                ZonedDateTime temp = tzc.zdtFromBase(r.getReminderDate());
+                // if now time(+16 min) is after reminder time
+                if(zdtNow.isAfter(temp)){
+                    // throw reminder.
+                    System.out.println("Throwing reminder" + r.getReminderDate());
+                }
 
-            // today contains time where user is.
-            List<Reminder> temp = new ArrayList<>();
-            for(Reminder d: today){
-                String sdf = d.getReminderDate();
-                LocalDateTime ldt = LocalDateTime.from(LocalDateTime.parse(d.getReminderDate(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.n")));
-                ZonedDateTime apptTime = ZonedDateTime.of(ldt,tzc.getUTCTimeZone());
-                Instant ind = apptTime.toInstant();
             }
-        },0,5,TimeUnit.MINUTES);
+
+
+
+
+
+
+
+        },3,5,TimeUnit.SECONDS);
+
+        ScheduledFuture everyThirtySecs = pool.scheduleAtFixedRate(()->{
+            System.out.println("Hello world!");
+        },5,30,TimeUnit.SECONDS);
     }
 
     public List<Reminder> getTodaysAppointmentReminders(){

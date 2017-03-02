@@ -61,6 +61,11 @@ public class TimeZoneController {
         return zdt.withZoneSameInstant(getUTCTimeZone()).format(dtf);
 
     }
+    public String ldtToZdtStringUTC(LocalDateTime ldt){
+        ZonedDateTime zdt = ZonedDateTime.of(ldt,this.currentTimeZone);
+        zdt = zdt.withZoneSameInstant(this.getUTCTimeZone());
+        return zdt.format(this.getDtf());
+    }
 
     public String stringZonedLocalTimeFromBase(String s){
         LocalDateTime ldt = LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.n"));
@@ -72,6 +77,16 @@ public class TimeZoneController {
     private static String hackTheDot(String s){
         String d = s.substring(0,s.indexOf("."));
         return d;
+    }
+
+    public ZoneId getCurrentTimeZone(){
+        return this.currentTimeZone;
+    }
+
+    public ZonedDateTime zdtFromBase(String s){
+        LocalDateTime ldt = LocalDateTime.parse(s,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.n"));
+        ZonedDateTime zdt = ZonedDateTime.of(ldt,this.UTCTimeZone);
+        return zdt;
     }
 
     public DateTimeFormatter getDtf() {
