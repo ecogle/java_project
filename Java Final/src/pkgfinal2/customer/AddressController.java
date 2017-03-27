@@ -85,7 +85,13 @@ public class AddressController {
             this.myAddress = new Address();
             this.myAddress.setAddressId(this.highestAddressId+1);
             this.myAddress.setAddress(addressFields.get("address").trim());
-            this.myAddress.setAddress2(addressFields.get("address2").trim());
+            if(addressFields.get("address2").trim().equals("")){
+                this.myAddress.setAddress2("");
+            }
+            else{
+                this.myAddress.setAddress2(addressFields.get("address2").trim());
+            }
+            
             this.myAddress.setCityId(cityId);
             this.myAddress.setCreateDate(tzc.zonedDateTimeToUTCString(ZonedDateTime.now()));
             this.myAddress.setCreatedBy(MainScreen.getAuthUser());
