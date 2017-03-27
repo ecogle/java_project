@@ -57,6 +57,8 @@ public class EditCustomerName {
             // CONFIRMS the modification of the name
             //todo add some text to the alert box
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setContentText("Are you sure?");
+            confirm.setTitle("Change name...");
              Optional<ButtonType> flag= confirm.showAndWait();
              if (flag.get()==ButtonType.OK){
                  // uses a static method of the CustomerController to update the customer
