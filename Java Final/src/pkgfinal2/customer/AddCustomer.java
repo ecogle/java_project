@@ -130,23 +130,11 @@ public class AddCustomer extends Audit implements Displayable {
                 if(checkForEmpty(txtAddress1.getText())){
                     txtAddress1.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
                     throw new InputEmptyException();
-                }else if(textContainsNumbers(txtAddress1.getText())){
-                    txtAddress1.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
-                    throw new InputTypeException();
                 }
                 else{
                     map.put("address",txtAddress1.getText());
                 }
-                //**************************************************
-                if(checkForEmpty(txtAddress2.getText())){
-                    txtAddress2.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
-                    throw new InputEmptyException();
-                }else if(textContainsNumbers(txtAddress2.getText())){
-                    txtAddress2.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
-                    throw new InputTypeException();
-                }else{
-                    map.put("address2",txtAddress2.getText());
-                }
+                
                 //**************************************************
                 if(checkForEmpty(txtPhoneNumber.getText())){
                     txtPhoneNumber.setStyle("-fx-backgound-color: lightred; -fx-color:yellow;");
@@ -201,7 +189,7 @@ public class AddCustomer extends Audit implements Displayable {
                 }else{
                     map.put("country",txtCountry.getText());
                 }
-
+                map.put("address2",txtAddress2.getText());
                 map.put("active",((Boolean)chkActive.isSelected()).toString());
     
                 AddCustomerControl.countryWork(txtCountry.getText());
