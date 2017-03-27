@@ -137,7 +137,7 @@ public class MainScreen extends Application {
         mnuMenuBar.getMenus().addAll(fileMenu,editMenu,logMenu);
         mnuHbox.getChildren().add(mnuMenuBar);
         layout.setTop(mnuHbox); // ADDS THE HBOX TO THE BORDERPANE TOP
-
+        mnuLogoff.setDisable(true);
         //**************************************************
         //                  EVENT HANDLERS                 *
         //**************************************************
@@ -151,20 +151,21 @@ public class MainScreen extends Application {
                 tvCustomer.refresh();
             }
         };
-
-        mnuExit.setOnAction(event -> {
-            System.exit(0);
-        });
-        mnuEditCustomer.setOnAction(editMe);
-
-        btnAddCustomer.setOnAction(event -> {
-            AddCustomer a = new AddCustomer();
-            a.display();
-            tvCustomer.setItems(MainClassController.buildCustList());
-            tvCustomer.refresh();
-        });
-
-        btnLogin.setOnAction(e-> {
+        
+        EventHandler logOff = event -> {
+            MainScreen.setAuthUser(null);
+            btnAddCustomer.setVisible(false);
+            btnEditCustomer.setVisible(false);
+            btnDeleteCustomer.setVisible(false);
+            tvCustomer.setVisible(false);
+            btnLogin.setVisible(true);
+            btnLogoff.setVisible(false);
+            btnAddAppointment.setVisible(false);
+            mnuLogin.setDisable(false);
+            mnuLogoff.setDisable(true);
+        };
+        
+        EventHandler logIn = e-> {
             LoginWindow liwin = new LoginWindow(); //instantiates the login window
             liwin.display(); //displays the login window
             if(MainScreen.getAuthUser()!= null){
@@ -179,20 +180,29 @@ public class MainScreen extends Application {
                 btnAddAppointment.setVisible(true);
                 // Calls the static method "buildCustList" to set the items of the list
                 tvCustomer.setItems(MainClassController.buildCustList());
-                new PollingForReminders().startMe();
+                mnuLogin.setDisable(true);
+                mnuLogoff.setDisable(false);
             }
+        };
+        
+        
+
+        mnuExit.setOnAction(event -> {
+            System.exit(0);
+        });
+        mnuEditCustomer.setOnAction(editMe);
+
+        btnAddCustomer.setOnAction(event -> {
+            AddCustomer a = new AddCustomer();
+            a.display();
+            tvCustomer.setItems(MainClassController.buildCustList());
+            tvCustomer.refresh();
         });
 
-        btnLogoff.setOnAction(event -> {
-            MainScreen.setAuthUser(null);
-            btnAddCustomer.setVisible(false);
-            btnEditCustomer.setVisible(false);
-            btnDeleteCustomer.setVisible(false);
-            tvCustomer.setVisible(false);
-            btnLogin.setVisible(true);
-            btnLogoff.setVisible(false);
-            btnAddAppointment.setVisible(false);
-        });
+        btnLogin.setOnAction(logIn);
+        mnuLogin.setOnAction(logIn);
+        btnLogoff.setOnAction(logOff);
+        mnuLogoff.setOnAction(logOff);
 
         //double-click event
         tvCustomer.setOnMouseClicked(event -> {
